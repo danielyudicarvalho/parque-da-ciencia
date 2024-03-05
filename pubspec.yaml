@@ -52,6 +52,12 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
+  assets:
+    - lib/images/feliz.jpeg
+    - lib/images/ruim.jpeg
+    - lib/images/medio.jpeg
+    - lib/images/meioruim.jpeg
+    - lib/images/meiofeliz.jpeg
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
