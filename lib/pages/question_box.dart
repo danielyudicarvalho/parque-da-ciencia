@@ -35,7 +35,7 @@ class _QuestionBoxState extends State<QuestionBox> {
         child: Column(
           children: [
             RadioListTile<String>(
-              title: Text('Gostei!', style: TextStyle(color: Colors.white, fontSize: 25),),
+              title: const Text('Gostei!', style: TextStyle(color: Colors.white, fontSize: 25),),
               value: 'Opção 1',
               groupValue: selectedOption,
               onChanged: (value) {
@@ -46,7 +46,7 @@ class _QuestionBoxState extends State<QuestionBox> {
             ),
 
             RadioListTile<String>(
-              title: Text('Nao tenho opiniao..', style: TextStyle(color: Colors.white, fontSize: 25),),
+              title: const Text('Nao tenho opiniao..', style: TextStyle(color: Colors.white, fontSize: 25),),
               value: 'Opção 2',
               groupValue: selectedOption,
               onChanged: (value) {
@@ -57,7 +57,7 @@ class _QuestionBoxState extends State<QuestionBox> {
             ),
 
             RadioListTile<String>(
-              title: Text('Meio confuso...', style: TextStyle(color: Colors.white, fontSize: 25),),
+              title: const Text('Meio confuso...', style: TextStyle(color: Colors.white, fontSize: 25),),
               value: 'Opção 3',
               groupValue: selectedOption,
               onChanged: (value) {
@@ -68,7 +68,7 @@ class _QuestionBoxState extends State<QuestionBox> {
             ),
 
             RadioListTile<String>(
-              title: Text('Estou insatisfeito!', style: TextStyle(color: Colors.white, fontSize: 25),),
+              title: const Text('Estou insatisfeito!', style: TextStyle(color: Colors.white, fontSize: 25),),
               value: 'Opção 4',
               groupValue: selectedOption,
               onChanged: (value) {
@@ -77,7 +77,9 @@ class _QuestionBoxState extends State<QuestionBox> {
                 });
               },
             ),
-            Spacer(),
+            const Spacer(),
+
+            // Campo de explicaçao
             const TextField(
               //controller: controller,
               decoration: InputDecoration(
@@ -86,7 +88,9 @@ class _QuestionBoxState extends State<QuestionBox> {
                 hintStyle: TextStyle(color: Colors.white70, fontSize: 25),
               )
             ),
-            Spacer(flex: 2,),
+            const Spacer(flex: 2,),
+
+            // Botoes cancelar e salvar
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -94,10 +98,10 @@ class _QuestionBoxState extends State<QuestionBox> {
                 MyButton(text: "Cancelar", onPressed: widget.onCancel),
                 const SizedBox(width: 75,),
                 MyButton(text: "Salvar", onPressed: widget.onSave,),
-                Spacer()
+                const Spacer()
               ]
             ),
-            Spacer(flex: 1,)
+            const Spacer(flex: 1,)
           ],
         ),
       ),
