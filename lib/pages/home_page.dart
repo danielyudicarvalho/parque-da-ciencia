@@ -11,28 +11,6 @@ import 'package:pc_app/review_model.dart';
 import 'package:sqflite/sqflite.dart';
 
 
-// Initialize a database
-Future<Database> initDatabase() async {
-  final path = join(await getDatabasesPath(), 'database.db');
-  return openDatabase(path, onCreate: (db, version) {
-    return db.execute(
-      'CREATE TABLE review(id INTEGER PRIMARY KEY, score INTEGER, reason INTEGER, feedback STRING)',
-    );
-  }, version: 1);
-}
-
-// Insert data into the database
-Future<void> insertData(String name) async {
-  final db = await initDatabase();
-  await db.insert('my_table', {'name': name});
-}
-
-// Query data from the database
-Future<List<Map<String, dynamic>>?> fetchData() async {
-  final db = await initDatabase();
-  return db.query('my_table');
-}
-
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -42,31 +20,32 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   // Methods
-  void saveNewReview(){
-/*    setState(() {
-      db.toDoList.add([_controller.text, false]);
-      _controller.clear();
-    });
-    Navigator.of(context).pop();
-    db.updateDataBase();*/
-    print("Salvo!");
-  }
+  void saveNewReview(int score, int reason, String feedback) {
+  Review review = Review(
+    id: 0,
+    score: score,
+    reason: reason,
+    feedback: feedback,
+  ); 
+  print("Saved!");
+}
 
-openQuestionBox(int score){
-    showDialog(
-      context: context,
-      builder: (context) {
-        return QuestionBox(
-          onSave: saveNewReview,
-          onCancel: () {
-            Navigator.of(context).pop();
-            /*_controller.clear();*/
-            print("Cancelado!");
-          },
-        );
-      },
-    );
-  }
+openQuestionBox(int score) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return QuestionBox(
+        onSave: (int reason, String feedback) {
+          saveNewReview(score, reason, feedback); // Updated to include reason and feedback
+        },
+        onCancel: () {
+          Navigator.of(context).pop();
+          print("Canceled!");
+        },
+      );
+    },
+  );
+} 
 
   @override
   Widget build(BuildContext context) {

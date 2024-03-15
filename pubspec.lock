@@ -131,6 +131,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.11.0"
+  nps_plugin:
+    dependency: "direct main"
+    description:
+      name: nps_plugin
+      sha256: e185799e318c66df1f6e6091516e86431345b3a15a994b90d49d4497bfb3cd0d
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.0"
   path:
     dependency: "direct main"
     description:
