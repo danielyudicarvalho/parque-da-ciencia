@@ -1,7 +1,7 @@
 class Review {
   final int id;
   final int score;
-  final int reason;
+  final String reason;
   final String feedback;
 
   const Review({

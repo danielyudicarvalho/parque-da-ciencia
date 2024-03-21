@@ -54,7 +54,7 @@ Future<void> insertReview(Review review) async {
     for (final {
           'id': id as int,
           'score': score as int,
-          'reason': reason as int,
+          'reason': reason as String,
           'feedback': feedback as String,
         } in reviewMaps)
       Review(id: id, score: score, reason: reason, feedback: feedback),
@@ -99,7 +99,7 @@ Future<void> insertReview(Review review) async {
 class Review {
   final int id;
   final int score;
-  final int reason;
+  final String reason;
   final String feedback;
 
   const Review({

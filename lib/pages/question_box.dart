@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../util/my_button.dart';
 
 class QuestionBox extends StatefulWidget {
-  final VoidCallback onSave;
+  final void Function(String reason, String review) onSave;
   final VoidCallback onCancel;
 
   const QuestionBox({
@@ -17,6 +17,7 @@ class QuestionBox extends StatefulWidget {
 
 class _QuestionBoxState extends State<QuestionBox> {
   String selectedOption = '';
+  String review = '';
 
   @override
   Widget build(BuildContext context) {
@@ -80,9 +81,12 @@ class _QuestionBoxState extends State<QuestionBox> {
             const Spacer(),
 
             // Campo de explicaçao
-            const TextField(
+            TextField(
+              onChanged: (text){
+                review = text;
+              },
               //controller: controller,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 hintText: "Explique a sua escolha para nos ajudar a melhorar...",
                 hintStyle: TextStyle(color: Colors.white70, fontSize: 25),
@@ -94,10 +98,13 @@ class _QuestionBoxState extends State<QuestionBox> {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Spacer(),
+                const Spacer(),
                 MyButton(text: "Cancelar", onPressed: widget.onCancel),
                 const SizedBox(width: 75,),
-                MyButton(text: "Salvar", onPressed: widget.onSave,),
+                MyButton(text: "Salvar", onPressed: () {
+                    widget.onSave(selectedOption, review);
+                  },
+                ),
                 const Spacer()
               ]
             ),

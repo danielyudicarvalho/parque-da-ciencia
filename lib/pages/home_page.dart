@@ -5,11 +5,10 @@ import 'package:pc_app/pages/question_box.dart';
 
 import 'dart:async';
 
-import 'package:flutter/widgets.dart';
+import 'package:flutter/src/widgets/navigator.dart';
 import 'package:path/path.dart';
 import 'package:pc_app/review_model.dart';
 import 'package:sqflite/sqflite.dart';
-
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -20,32 +19,33 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   // Methods
-  void saveNewReview(int score, int reason, String feedback) {
-  Review review = Review(
-    id: 0,
-    score: score,
-    reason: reason,
-    feedback: feedback,
-  ); 
-  print("Saved!");
-}
+  void saveNewReview(int score, String reason, String feedback) {
+    Review review = Review(
+      id: 0,
+      score: score,
+      reason: reason,
+      feedback: feedback,
+    );
+    print("Saved!");
+  }
 
-openQuestionBox(int score) {
-  showDialog(
-    context: context,
-    builder: (context) {
-      return QuestionBox(
-        onSave: (int reason, String feedback) {
-          saveNewReview(score, reason, feedback); // Updated to include reason and feedback
-        },
-        onCancel: () {
-          Navigator.of(context).pop();
-          print("Canceled!");
-        },
-      );
-    },
-  );
-} 
+  openQuestionBox(int score, BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return QuestionBox(
+          onSave: (String reason, String feedback) {
+            saveNewReview(score, reason, feedback);   // Updated to include reason and feedback
+            Navigator.pop(context);
+          },
+          onCancel: () {
+            Navigator.pop(context);
+            print("Canceled!");
+          },
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +74,11 @@ openQuestionBox(int score) {
           children: [
             const Spacer(flex: 2,),
             IconButton(
-              onPressed: openQuestionBox(5),
+              onPressed: () {
+                Future.microtask(() {
+                  openQuestionBox(5, context);
+                  });
+              },
               icon: Image.asset('lib/images/feliz.jpeg'),
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
@@ -84,7 +88,11 @@ openQuestionBox(int score) {
 
             const Spacer(flex: 1,),
             IconButton(
-              onPressed: openQuestionBox(4),
+              onPressed: () {
+                Future.microtask(() {
+                  openQuestionBox(4, context);
+                  });
+              },
               icon: Image.asset('lib/images/meiofeliz.jpeg'),
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
@@ -94,7 +102,11 @@ openQuestionBox(int score) {
 
             const Spacer(flex: 1,),
             IconButton(
-              onPressed: openQuestionBox(3),
+              onPressed: () {
+                Future.microtask(() {
+                  openQuestionBox(3, context);
+                  });
+              },
               icon: Image.asset('lib/images/medio.jpeg'),
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
@@ -104,7 +116,11 @@ openQuestionBox(int score) {
 
             const Spacer(flex: 1,),
             IconButton(
-              onPressed: openQuestionBox(2),
+              onPressed: () {
+                Future.microtask(() {
+                  openQuestionBox(2, context);
+                  });
+              },
               icon: Image.asset('lib/images/meioruim.jpeg'),
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
@@ -114,7 +130,11 @@ openQuestionBox(int score) {
 
             const Spacer(flex: 1,),
             IconButton(
-              onPressed: openQuestionBox(1),
+              onPressed: () {
+                Future.microtask(() {
+                  openQuestionBox(1, context);
+                  });
+              },
               icon: Image.asset('lib/images/ruim.jpeg'),
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
