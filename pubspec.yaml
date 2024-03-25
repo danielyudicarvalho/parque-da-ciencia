@@ -61,6 +61,7 @@ flutter:
     - lib/images/medio.jpeg
     - lib/images/meioruim.jpeg
     - lib/images/meiofeliz.jpeg
+    - lib/images/parque_ciencia.jpeg
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

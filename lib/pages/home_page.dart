@@ -35,7 +35,8 @@ class _HomePageState extends State<HomePage> {
       builder: (context) {
         return QuestionBox(
           onSave: (String reason, String feedback) {
-            saveNewReview(score, reason, feedback);   // Updated to include reason and feedback
+            saveNewReview(score, reason,
+                feedback); // Updated to include reason and feedback
             Navigator.pop(context);
           },
           onCancel: () {
@@ -50,102 +51,164 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blueAccent,
-
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.blueAccent,
         centerTitle: true,
-
         title: const Text(
           "Parque Da Ciência",
           style: TextStyle(
             fontSize: 30,
-            color: Colors.blueAccent,
+            color: Colors.white,
             fontWeight: FontWeight.bold,
           ),
         ),
-
       ),
-
       body: Center(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-
           children: [
-            const Spacer(flex: 2,),
+            const Spacer(
+              flex: 2,
+            ),
             IconButton(
               onPressed: () {
                 Future.microtask(() {
                   openQuestionBox(5, context);
-                  });
+                });
               },
-              icon: Image.asset('lib/images/feliz.jpeg'),
+              icon: ClipOval(
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.blueAccent,
+                      width: 1.0,
+                    ),
+                  ),
+                  child: Image.asset('lib/images/feliz.jpeg'),
+                ),
+              ),
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.all(25)),
+                backgroundColor:
+                    MaterialStateProperty.all<Color>(Colors.blueAccent),
+                padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                    EdgeInsets.all(5)),
               ),
             ),
-
-            const Spacer(flex: 1,),
+            const Spacer(
+              flex: 1,
+            ),
             IconButton(
               onPressed: () {
                 Future.microtask(() {
                   openQuestionBox(4, context);
-                  });
+                });
               },
-              icon: Image.asset('lib/images/meiofeliz.jpeg'),
+              icon: ClipOval(
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.blueAccent,
+                      width: 1.0,
+                    ),
+                  ),
+                  child: Image.asset('lib/images/meiofeliz.jpeg'),
+                ),
+              ),
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.all(25)),
+                backgroundColor:
+                    MaterialStateProperty.all<Color>(Colors.blueAccent),
+                padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                    EdgeInsets.all(5)),
               ),
             ),
-
-            const Spacer(flex: 1,),
+            const Spacer(
+              flex: 1,
+            ),
             IconButton(
               onPressed: () {
                 Future.microtask(() {
                   openQuestionBox(3, context);
-                  });
+                });
               },
-              icon: Image.asset('lib/images/medio.jpeg'),
+              icon: ClipOval(
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.blueAccent,
+                      width: 1.0,
+                    ),
+                  ),
+                  child: Image.asset('lib/images/medio.jpeg'),
+                ),
+              ),
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.all(25)),
+                backgroundColor:
+                    MaterialStateProperty.all<Color>(Colors.blueAccent),
+                padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                    EdgeInsets.all(5)),
               ),
             ),
-
-            const Spacer(flex: 1,),
+            const Spacer(
+              flex: 1,
+            ),
             IconButton(
               onPressed: () {
                 Future.microtask(() {
                   openQuestionBox(2, context);
-                  });
+                });
               },
-              icon: Image.asset('lib/images/meioruim.jpeg'),
+              icon: ClipOval(
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.blueAccent,
+                      width: 1.0,
+                    ),
+                  ),
+                  child: Image.asset('lib/images/meioruim.jpeg'),
+                ),
+              ),
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.all(25)),
+                backgroundColor:
+                    MaterialStateProperty.all<Color>(Colors.blueAccent),
+                padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                    EdgeInsets.all(5)),
               ),
             ),
-
-            const Spacer(flex: 1,),
+            const Spacer(
+              flex: 1,
+            ),
             IconButton(
               onPressed: () {
                 Future.microtask(() {
                   openQuestionBox(1, context);
-                  });
+                });
               },
-              icon: Image.asset('lib/images/ruim.jpeg'),
+              icon: ClipOval(
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.blueAccent,
+                      width: 1.0,
+                    ),
+                  ),
+                  child: Image.asset('lib/images/ruim.jpeg'),
+                ),
+              ),
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.all(25)),
+                backgroundColor:
+                    MaterialStateProperty.all<Color>(Colors.blueAccent),
+                padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                    EdgeInsets.all(5)),
               ),
             ),
-            const Spacer(flex: 2,),
+            const Spacer(
+              flex: 2,
+            ),
           ],
         ),
       ),
-
     );
   }
 }
