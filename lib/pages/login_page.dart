@@ -11,8 +11,8 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   // Strings para armazenar nome e email
-  String nome = '';
   String email = '';
+  String senha = '';
 
   @override
   Widget build(BuildContext context) {
@@ -43,13 +43,13 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(
               height: 0.01,
             ),
-            // Campo do Nome
+            // Campo do Email
             TextField(
               onChanged: (text) {
-                nome = text;
+                email = text;
               },
               decoration: const InputDecoration(
-                labelText: "Nome",
+                labelText: "Email",
                 labelStyle: TextStyle(color: Colors.blueAccent),
                 border: OutlineInputBorder(),
               ),
@@ -59,14 +59,14 @@ class _LoginPageState extends State<LoginPage> {
               height: 30,
             ),
 
-            // Campo do Email
+            // Campo da Senha 
             TextField(
               onChanged: (text) {
-                email = text;
+                senha = text;
               },
               keyboardType: TextInputType.emailAddress,
               decoration: const InputDecoration(
-                labelText: "Email",
+                labelText: "Senha",
                 labelStyle: TextStyle(color: Colors.blueAccent),
                 border: OutlineInputBorder(),
               ),
