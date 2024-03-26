@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
+//import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:pc_app/pages/question_box.dart';
@@ -29,7 +29,9 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _initializeDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, "reviews.db");
+    String path = documentsDirectory.path + "/" + "reviews.db";
+
+    //String path = join(documentsDirectory.path, "reviews.db");
     _database = await openDatabase(path, version: 1,
         onCreate: (Database db, int version) async {
       await db.execute(
@@ -45,6 +47,8 @@ class _HomePageState extends State<HomePage> {
     });
     print("Salvo!");
   }
+
+  
 
   void openQuestionBox() {
     showDialog(
@@ -66,7 +70,9 @@ class _HomePageState extends State<HomePage> {
       context: context,
       builder: (context) {
         return QuestionBoxHappy(
-          onSave: saveNewReview(5, true),
+          onSave: () async{
+            await saveNewReview(5, true);
+          },//saveNewReview(5, true),
           onCancel: () {
             Navigator.of(context).pop();
             print("Cancelado!");
@@ -81,7 +87,9 @@ class _HomePageState extends State<HomePage> {
       context: context,
       builder: (context) {
         return QuestionBoxLessHappy(
-          onSave: saveNewReview(4, true),
+          onSave: () async{
+            await saveNewReview(5, true);
+          },
           onCancel: () {
             Navigator.of(context).pop();
             print("Cancelado!");
@@ -96,7 +104,9 @@ class _HomePageState extends State<HomePage> {
       context: context,
       builder: (context) {
         return QuestionBoxMedium(
-          onSave: saveNewReview(3, true),
+          onSave: () async{
+            await saveNewReview(5, true);
+          },
           onCancel: () {
             Navigator.of(context).pop();
             print("Cancelado!");
@@ -111,7 +121,9 @@ class _HomePageState extends State<HomePage> {
       context: context,
       builder: (context) {
         return QuestionBoxBad(
-          onSave: saveNewReview(2, true),
+          onSave: () async{
+            await saveNewReview(5, true);
+          },
           onCancel: () {
             Navigator.of(context).pop();
             print("Cancelado!");
@@ -126,7 +138,9 @@ class _HomePageState extends State<HomePage> {
       context: context,
       builder: (context) {
         return QuestionBoxMoreBad(
-          onSave: saveNewReview(1, true),
+          onSave: () async{
+            await saveNewReview(5, true);
+          },
           onCancel: () {
             Navigator.of(context).pop();
             print("Cancelado!");
