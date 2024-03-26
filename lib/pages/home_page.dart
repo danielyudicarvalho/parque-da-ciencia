@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 //import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:pc_app/pages/confirmation_page.dart';
+import 'package:pc_app/pages/login_page.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:pc_app/pages/question_box.dart';
 import 'package:pc_app/pages/question_box_happy.dart';
@@ -20,12 +22,15 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late Database _database;
+  List<Map<String, dynamic>> _reviews = [];
 
   @override
   void initState() {
     super.initState();
     _initializeDatabase();
   }
+
+
 
   Future<void> _initializeDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
@@ -39,14 +44,33 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  Future<List<Map<String, dynamic>>> _getReviews() async {
+    final List<Map<String, dynamic>> reviews =
+        await _database.rawQuery('SELECT * FROM reviews');
+    return reviews;
+  } 
+
+
+  Future<void> _retrieveReviews() async {
+    final List<Map<String, dynamic>> reviews =
+        await _database.rawQuery('SELECT * FROM reviews');
+    setState(() {
+      _reviews = reviews;
+    });
+  }
+
   saveNewReview(int review, bool isPositive) async {
     await _database.transaction((txn) async {
       await txn.rawInsert(
           'INSERT INTO reviews(review, isPositive) VALUES(?, ?)',
           [review, isPositive ? 1 : 0]);
     });
+
+
     print("Salvo!");
   }
+
+
 
   
 
@@ -72,6 +96,9 @@ class _HomePageState extends State<HomePage> {
         return QuestionBoxHappy(
           onSave: () async{
             await saveNewReview(5, true);
+            Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => ConfirmationPage()),
+          );
           },//saveNewReview(5, true),
           onCancel: () {
             Navigator.of(context).pop();
@@ -89,6 +116,9 @@ class _HomePageState extends State<HomePage> {
         return QuestionBoxLessHappy(
           onSave: () async{
             await saveNewReview(5, true);
+            Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => ConfirmationPage()),
+          );
           },
           onCancel: () {
             Navigator.of(context).pop();
@@ -106,6 +136,9 @@ class _HomePageState extends State<HomePage> {
         return QuestionBoxMedium(
           onSave: () async{
             await saveNewReview(5, true);
+            Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => ConfirmationPage()),
+          );
           },
           onCancel: () {
             Navigator.of(context).pop();
@@ -123,6 +156,9 @@ class _HomePageState extends State<HomePage> {
         return QuestionBoxBad(
           onSave: () async{
             await saveNewReview(5, true);
+            Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => ConfirmationPage()),
+          );
           },
           onCancel: () {
             Navigator.of(context).pop();
@@ -140,6 +176,9 @@ class _HomePageState extends State<HomePage> {
         return QuestionBoxMoreBad(
           onSave: () async{
             await saveNewReview(5, true);
+            Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => ConfirmationPage()),
+          );
           },
           onCancel: () {
             Navigator.of(context).pop();
@@ -148,7 +187,7 @@ class _HomePageState extends State<HomePage> {
         );
       },
     );
-  }
+  }  
 
   @override
   Widget build(BuildContext context) {
@@ -209,6 +248,7 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
+      
     );
   }
 }
