@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 //import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -49,7 +48,7 @@ class _HomePageState extends State<HomePage> {
     final List<Map<String, dynamic>> reviews =
         await _database.rawQuery('SELECT * FROM reviews');
     return reviews;
-  } 
+  }
 
 
   Future<void> _retrieveReviews() async {
@@ -184,68 +183,112 @@ class _HomePageState extends State<HomePage> {
         );
       },
     );
-  }  
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blueAccent,
+      backgroundColor: Colors.white,
+
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFF0088B7),
         centerTitle: true,
         title: const Text(
-          "Parque Da Ciência",
+          "Conta Pra Gente!",
           style: TextStyle(
             fontSize: 30,
-            color: Colors.blueAccent,
+            color: Colors.white,
             fontWeight: FontWeight.bold,
           ),
         ),
+        actions: [
+          Container(
+            padding: const EdgeInsets.only(right: 8, bottom: 4),
+            child: Image.asset(
+              'lib/images/logo_vem_p_ufms.png',
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.only(right: 10, bottom: 4),
+            child: Image.asset('lib/images/logo_ufms.png', width: 95, height: 95,),
+          )
+        ],
       ),
-      body: Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Spacer(flex: 2),
-            IconButton(
-              onPressed: () => openQuestionBoxHappy(),
-              icon: Image.asset('lib/images/feliz.jpeg'),
-              iconSize: 100,
-              padding: EdgeInsets.all(25),
+
+      body: Stack(
+        children: [
+          Positioned(
+            top: 235, // ajuste a posição vertical conforme necessário
+            right: 950, // ajuste a posição horizontal conforme necessário
+            width: 400, // largura da imagem
+            height: 400, // altura da imagem
+            child: Image.asset("lib/images/capi_movimento.gif")
+          ),
+          Positioned(
+            top: 10, // ajuste a posição vertical conforme necessário
+            right: 820, // ajuste a posição horizontal conforme necessário
+            width: 280, // largura da imagem
+            height: 280, // altura da imagem
+            child: Image.asset("lib/images/balao_mov.gif")
+          ),
+          Center(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Spacer(flex: 6),
+
+                IconButton(
+                  onPressed: () => openQuestionBoxHappy(),
+                  icon: Image.asset('lib/images/feliz.png'),
+                ),
+
+                const Spacer(flex: 1),
+
+                IconButton(
+                  onPressed: () => openQuestionBoxLessHappy(),
+                  icon: Image.asset('lib/images/meio_feliz.png'),
+                ),
+
+                const Spacer(flex: 1),
+
+                IconButton(
+                  onPressed: () => openQuestionBoxMedium(),
+                  icon: Image.asset('lib/images/medio.png'),
+                ),
+
+                const Spacer(flex: 1),
+
+                IconButton(
+                  onPressed: () => openQuestionBoxBad(),
+                  icon: Image.asset('lib/images/meio_infeliz.png'),
+                ),
+
+                const Spacer(flex: 1),
+
+                IconButton(
+                  onPressed: () => openQuestionBoxMoreBad(),
+                  icon: Image.asset('lib/images/infeliz.png'),
+                ),
+
+                const Spacer(flex: 2),
+              ],
             ),
-            const Spacer(flex: 1),
-            IconButton(
-              onPressed: () => openQuestionBoxLessHappy(),
-              icon: Image.asset('lib/images/meiofeliz.jpeg'),
-              iconSize: 100,
-              padding: EdgeInsets.all(25),
+          ),
+
+
+          /* Icones de logo */
+
+          Positioned(
+            top: 500, // ajuste a posição vertical conforme necessário
+            right: 16, // ajuste a posição horizontal conforme necessário
+            child: Image.asset(
+              'lib/images/logo_parque.png',
+              width: 210, // ajuste o tamanho da imagem conforme necessário
+              height: 210,
             ),
-            const Spacer(flex: 1),
-            IconButton(
-              onPressed: () => openQuestionBoxMedium(),
-              icon: Image.asset('lib/images/medio.jpeg'),
-              iconSize: 100,
-              padding: EdgeInsets.all(25),
-            ),
-            const Spacer(flex: 1),
-            IconButton(
-              onPressed: () => openQuestionBoxBad(),
-              icon: Image.asset('lib/images/meioruim.jpeg'),
-              iconSize: 100,
-              padding: EdgeInsets.all(25),
-            ),
-            const Spacer(flex: 1),
-            IconButton(
-              onPressed: () => openQuestionBoxMoreBad(),
-              icon: Image.asset('lib/images/ruim.jpeg'),
-              iconSize: 100,
-              padding: EdgeInsets.all(25),
-            ),
-            const Spacer(flex: 2),
-          ],
-        ),
+          ),
+        ]
       ),
-      
     );
   }
 }
