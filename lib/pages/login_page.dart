@@ -63,75 +63,104 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blueAccent,
+      resizeToAvoidBottomInset: true,
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFF0088B7),
         centerTitle: true,
         title: const Text(
           "Login",
           style: TextStyle(
             fontSize: 30,
-            color: Colors.blueAccent,
+            color: Colors.white,
             fontWeight: FontWeight.bold,
           ),
         ),
+        actions: [
+          Container(
+            padding: const EdgeInsets.only(right: 8, bottom: 4),
+            child: Image.asset(
+              'lib/images/logo_vem_p_ufms.png',
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.only(right: 8, bottom: 4),
+            child: Image.asset('lib/images/logo_ufms.png'),
+          )
+        ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+
+      body: SingleChildScrollView(
+        child: Stack(
           children: [
-            const Spacer(),
-            // Email field
-            TextField(
-              onChanged: (text) {
-                email = text;
-              },
-              keyboardType: TextInputType.emailAddress,
-              decoration: const InputDecoration(
-                labelText: "Email",
-                labelStyle: TextStyle(color: Colors.white70),
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 15),
-            // Password field
-            TextField(
-              onChanged: (text) {
-                password = text;
-              },
-              obscureText: true, // Hide password characters
-              decoration: const InputDecoration(
-                labelText: "Senha",
-                labelStyle: TextStyle(color: Colors.white70),
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const Spacer(),
-            MyButton(
-              text: "Entrar",
-              onPressed: () async {
-                // Validate email and password
-                if (validateEmailAndPassword(email, password)) {
-                  // Save email to database
-                  await _saveEmailToDatabase(email);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const OptionPage()),
-                  );
-                } else {
-                  // Show a SnackBar or Dialog with an error message
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: const Text('Email ou senha inválidos'),
-                      backgroundColor: Colors.red,
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // Imagem da logo do parque
+                    Image.asset("lib/images/logo_parque.png", width: 300, height: 300),
+
+                    // Email field
+                    TextField(
+                      onChanged: (text) {
+                        email = text;
+                      },
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: const InputDecoration(
+                        labelText: "Email",
+                        labelStyle: TextStyle(color: Color(0xFF0088B7)),
+                        border: OutlineInputBorder(),
+                      ),
                     ),
-                  );
-                }
-              },
+
+                    const SizedBox(height: 15),
+
+                    // Password field
+                    TextField(
+                      onChanged: (text) {
+                        password = text;
+                      },
+                      obscureText: true, // Hide password characters
+                      decoration: const InputDecoration(
+                        labelText: "Senha",
+                        labelStyle: TextStyle(color: Color(0xFF0088B7)),
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+
+                    const SizedBox(height: 50),
+
+                    MyButton(
+                      text: "Entrar",
+                      onPressed: () async {
+                        // Validate email and password
+                        if (validateEmailAndPassword(email, password)) {
+                          // Save email to database
+                          await _saveEmailToDatabase(email);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const OptionPage()),
+                          );
+                        } else {
+                          // Show a SnackBar or Dialog with an error message
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: const Text('Email ou senha inválidos'),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        }
+                      },
+                    ),
+
+                    //const Spacer(flex: 1),
+                  ],
+                ),
+              ),
             ),
-            const Spacer(flex: 1),
-          ],
+          ]
         ),
       ),
     );
