@@ -201,7 +201,7 @@ class _ReviewPageState extends State<ReviewPage> {
                         ElevatedButton(
                           onPressed: () async {
                             final reviews = await _getReviews();
-                            _submitForm([email], reviews, emailInfo)// Pass email as a list to _submitForm
+                            _submitForm([email], reviews, emailInfo);// Pass email as a list to _submitForm
                             Navigator.push(
                               context,
                               MaterialPageRoute(builder: (context) => const ReviewsSentPage()),
