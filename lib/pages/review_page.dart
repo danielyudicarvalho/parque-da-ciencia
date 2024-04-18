@@ -1,11 +1,16 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:pc_app/pages/end_page.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
+import 'package:pc_app/pages/options_page.dart';
+
+
 
 class ReviewPage extends StatefulWidget {
   const ReviewPage({Key? key}) : super(key: key);
@@ -16,8 +21,7 @@ class ReviewPage extends StatefulWidget {
 
 class _ReviewPageState extends State<ReviewPage> {
   late Future<int> _totalReviewsFuture;
-  late Future<List<String>> _emailsFuture;
-  final TextEditingController _passwordController = TextEditingController();
+  late Future<Map<String, dynamic>> _emailsFuture;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
@@ -27,79 +31,85 @@ class _ReviewPageState extends State<ReviewPage> {
     _emailsFuture = _getEmails();
   }
 
-  Future<void> sendEmail() async {
-    final Uri emailUri = Uri(
-        scheme: 'mailto',
-        path: 'danielyudicarvalho@gmail.com',
-        queryParameters: {'subject': 'Hello from flutter'}
-    );
+  Future<void> sendEmail(String csvPath, String recipient, String emailBody) async {
+    final smtpServer = gmail('danielyudicarvalho@gmail.com', 'rkww hvdl qrav fmel');
 
-    if (await canLaunch(emailUri.toString())){
-      await launch(emailUri.toString());
-    }else{
-      throw 'Could no launch';
+    final message = Message()
+      ..from = Address('danielyudicarvalho@gmail.com', 'Yudi')
+      ..recipients.add(recipient)
+      ..subject = 'Reviews and Information'
+      ..text = emailBody
+      ..attachments.add(FileAttachment(File(csvPath)));
+
+    try {
+      await send(message, smtpServer);
+      print('Email sent');
+    } catch (e) {
+      print('Error sending email: $e');
     }
   }
 
   Future<Database> _openDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = documentsDirectory.path + "/reviews.db";
+    String path = documentsDirectory.path + "/" + "reports.db";
     return await openDatabase(path, version: 1,
         onCreate: (Database db, int version) async {
           await db.execute(
-              "CREATE TABLE reviews(id INTEGER PRIMARY KEY, review TEXT, isPositive INTEGER)");
+              "CREATE TABLE reports(id INTEGER PRIMARY KEY, rating INTEGER)");
         });
   }
 
   Future<int> _getTotalReviews() async {
     final database = await _openDatabase();
     final count = Sqflite.firstIntValue(
-      await database.rawQuery('SELECT COUNT(*) FROM reviews'),
+      await database.rawQuery('SELECT COUNT(*) FROM reports'),
     );
+    print('Count: $count');
     return count ?? 0; // Return 0 if count is null
   }
 
-  Future<List<String>> _getEmails() async {
+
+
+  Future<Map<String, dynamic>> _getEmails() async {
     final Database database = await _openEmailsDatabase();
-    final List<Map<String, dynamic>> maps = await database.query('emails');
-    return List.generate(maps.length, (i) {
-      return maps[i]['email'];
-    });
+    final List<Map<String, dynamic>> maps = await database.query(
+      'login_info',
+      orderBy: 'id DESC', // Order by id in descending order
+      limit: 1, // Limit to fetch only one row
+    );
+    return maps.isNotEmpty ? maps.first : {}; // Return the first row or an empty map if no data found
   }
+
 
   Future<Database> _openEmailsDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = documentsDirectory.path + "/emails.db";
+    String path = documentsDirectory.path + "/app.db";
     return await openDatabase(path, version: 1,
         onCreate: (Database db, int version) async {
-          await db.execute("CREATE TABLE emails(id INTEGER PRIMARY KEY, email TEXT)");
+          await db.execute(
+            'CREATE TABLE login_info(id INTEGER PRIMARY KEY, server_name TEXT, server_email TEXT, student_count TEXT, school_name TEXT)',
+          );
         });
   }
 
   Future<List<Map<String, dynamic>>> _getReviews() async {
     final database = await _openDatabase();
-    return await database.query('reviews');
+    return await database.query('reports');
   }
+  Future<void> _submitForm(List<String> emails, List<Map<String, dynamic>> reviews, Map<String, dynamic> loginInfo) async {
+    // Prepare CSV content
+    final csvContent = _generateCSV(reviews);
 
-  Future<void> _submitForm(List<String> emails, List<Map<String, dynamic>> reviews) async {
-    // Prepare email content
-    String emailContent = '';
-    for (var review in reviews) {
-      emailContent += '${review['review']}\n';
-    }
+    // Prepare email body
+    final emailBody = _generateEmailBody(loginInfo);
+
+    // Save CSV to file
+    final csvPath = await _saveCSV(csvContent);
 
     // Send email to each recipient
     for (var email in emails) {
-      final smtpServer = gmail('danielyudicarvalho@gmail.com', 'rkww hvdl qrav fmel');
-      final message = Message()
-        ..from = Address('danielyudicarvalho@gmail.com', 'Yudi')
-        ..recipients.add(email)
-        ..subject = 'Reviews'
-        ..text = emailContent;
-
       try {
-        await send(message, smtpServer);
-        print('email sent');
+        await sendEmail(csvPath, email, emailBody);
       } catch (e) {
         print('Error sending email: $e');
       }
@@ -109,9 +119,44 @@ class _ReviewPageState extends State<ReviewPage> {
     await _deleteReviews();
   }
 
+  String _generateEmailBody(Map<String, dynamic> loginInfo) {
+    final StringBuffer buffer = StringBuffer();
+    buffer.writeln('School Name: ${loginInfo['school_name']}');
+    buffer.writeln('Server Name: ${loginInfo['server_name']}');
+    buffer.writeln('Study Count: ${loginInfo['study_count']}');
+    return buffer.toString();
+  }
+
+  String _generateCSV(List<Map<String, dynamic>> reviews) {
+    final csvBuffer = StringBuffer();
+
+    // Header row with column labels
+    csvBuffer.write('Rating, 1 Star, 2 Star, 3 Star, 4 Star, 5 Star\n');
+
+    // Count occurrences of each rating
+    final reviewCounts = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0};
+    for (var review in reviews) {
+      final rating = review['rating'];
+      reviewCounts[rating] = reviewCounts[rating]! + 1;
+    }
+
+    // Add data row with counts
+    csvBuffer.write('Total, ${reviewCounts[1]}, ${reviewCounts[2]}, ${reviewCounts[3]}, ${reviewCounts[4]}, ${reviewCounts[5]}\n');
+
+    return csvBuffer.toString();
+  }
+
+  Future<String> _saveCSV(String csvContent) async {
+    final Directory directory = await getApplicationDocumentsDirectory();
+    final String filePath = '${directory.path}/reviews.csv';
+    final File file = File(filePath);
+    await file.writeAsString(csvContent);
+    return filePath;
+  }
+
   Future<void> _deleteReviews() async {
     final database = await _openDatabase();
-    await database.delete('reviews');
+    await database.delete('reports');
   }
 
   @override
@@ -142,21 +187,25 @@ class _ReviewPageState extends State<ReviewPage> {
                 },
               ),
               SizedBox(height: 20),
-              FutureBuilder<List<String>>(
+              FutureBuilder<Map<String, dynamic>>(
                 future: _emailsFuture,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    final emails = snapshot.data!;
+                    final Map<String, dynamic> emailInfo = snapshot.data!;
+                    final String email = emailInfo['server_email'] ?? ''; // Access the email from the map
                     return Column(
                       children: [
-                        for (var email in emails)
-                          ListTile(
-                            title: Text(email),
-                          ),
+                        ListTile(
+                          title: Text(email),
+                        ),
                         ElevatedButton(
                           onPressed: () async {
                             final reviews = await _getReviews();
-                            _submitForm(emails, reviews);
+                            _submitForm([email], reviews, emailInfo);// Pass email as a list to _submitForm
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const ReviewsSentPage()),
+                            );
                           },
                           child: Text('Send Reviews'),
                         ),
@@ -169,6 +218,7 @@ class _ReviewPageState extends State<ReviewPage> {
                   return const Center(child: CircularProgressIndicator());
                 },
               ),
+
             ],
           ),
         ),

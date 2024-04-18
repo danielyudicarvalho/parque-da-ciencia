@@ -1,11 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:pc_app/pages/home_page.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:pc_app/pages/options_page.dart';
-import 'package:pc_app/pages/simple_nps_page.dart';
 import 'package:pc_app/util/my_button.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:path_provider/path_provider.dart';
-import 'dart:io';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -15,49 +14,71 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  // Strings to store email and password
-  String email = '';
-  String password = '';
+  // Define fields based on requirements
+  String serverName = '';
+  String serverEmail = '';
+  String studentCount = '';
+  String schoolName = '';
 
-  // Function to validate email and password
-  bool validateEmailAndPassword(String email, String password) {
-    // Basic email validation
-    final emailRegExp =
-    RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-    if (!emailRegExp.hasMatch(email)) {
-      return false;
-    }
-
-    // Password validation (for example, length check)
-    if (password.length < 6) {
-      return false;
-    }
-
-    // If both email and password are valid, return true
-    return true;
+  @override
+  void initState() {
+    super.initState();
+    _initDatabase();
   }
 
-  // Function to open the database
-  Future<Database> _openDatabase() async {
+  Future<void> _initDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = documentsDirectory.path + "/" + "emails.db";
-
-    return openDatabase(path, version: 1,
-        onCreate: (Database db, int version) async {
-          await db.execute(
-              "CREATE TABLE emails(id INTEGER PRIMARY KEY, email TEXT)");
-        });
+    String path = documentsDirectory.path + "/" + "app.db";
+    _database = await openDatabase(
+      path,
+      onCreate: (db, version) {
+        return db.execute(
+          'CREATE TABLE login_info(id INTEGER PRIMARY KEY, server_name TEXT, server_email TEXT, student_count TEXT, school_name TEXT)',
+        );
+      },
+      version: 1,
+    );
   }
 
-  // Function to save email to the database
-  Future<void> _saveEmailToDatabase(String email) async {
-    final Database database = await _openDatabase();
+  Database? _database; // Database instance
 
-    // Delete all existing emails
-    await database.delete('emails');
+  // Function to validate form fields (implement your logic here)
+  bool validateFields() {
+    // Add checks for each field (e.g., not empty, valid format)
+    return true; // Replace with your validation logic
+  }
 
-    // Insert the new email
-    await database.insert('emails', {'email': email});
+  Future<void> _saveFormData() async {
+    await _database!.transaction((txn) async {
+      await txn.delete('login_info');
+      final data = <String, dynamic>{
+        'server_name': serverName,
+        'server_email': serverEmail,
+        'student_count': studentCount,
+        'school_name': schoolName,
+      };
+      await txn.insert('login_info', data);
+    });
+  }
+
+  // Function to handle form submission
+  void submitForm() async {
+    if (validateFields()) {
+      // Process form data (e.g., save to database, navigate)
+      await _saveFormData();
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const OptionPage()),
+      );
+    } else {
+      // Show error message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Preencha todos os campos corretamente'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
   @override
@@ -69,7 +90,7 @@ class _LoginPageState extends State<LoginPage> {
         backgroundColor: const Color(0xFF0088B7),
         centerTitle: true,
         title: const Text(
-          "Login",
+          "Iniciando passeio",
           style: TextStyle(
             fontSize: 30,
             color: Colors.white,
@@ -93,6 +114,8 @@ class _LoginPageState extends State<LoginPage> {
       body: SingleChildScrollView(
         child: Stack(
           children: [
+
+
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Expanded(
@@ -159,6 +182,7 @@ class _LoginPageState extends State<LoginPage> {
                   ],
                 ),
               ),
+
             ),
           ]
         ),

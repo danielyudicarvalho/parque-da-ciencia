@@ -24,19 +24,22 @@ class _SimpleNpsPageState extends State<SimpleNpsPage> {
 
   Future<void> _initializeDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = documentsDirectory.path + "/" + "reviews.db";
+    String path = documentsDirectory.path + "/" + "reports.db";
 
     _database = await openDatabase(path, version: 1,
         onCreate: (Database db, int version) async {
-      await db.execute(
-          "CREATE TABLE reviews(id INTEGER PRIMARY KEY, rating INTEGER)");
-    });
+          await db.execute(
+              "CREATE TABLE reports(id INTEGER PRIMARY KEY, rating INTEGER)");
+        });
   }
+
 
   void saveNewReview(int rating) async {
     await _database.transaction((txn) async {
-      await txn.rawInsert('INSERT INTO reviews(rating) VALUES(?)', [rating]);
+      await txn.rawInsert('INSERT INTO reports(rating) VALUES(?)', [rating]);
     });
+
+    print('review saved');
   }
 
   void openConfirmationPage() {
