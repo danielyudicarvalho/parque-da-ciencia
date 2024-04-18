@@ -1,11 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:pc_app/pages/home_page.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:pc_app/pages/options_page.dart';
-import 'package:pc_app/pages/simple_nps_page.dart';
 import 'package:pc_app/util/my_button.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:path_provider/path_provider.dart';
-import 'dart:io';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -15,49 +14,71 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  // Strings to store email and password
-  String email = '';
-  String password = '';
+  // Define fields based on requirements
+  String serverName = '';
+  String serverEmail = '';
+  String studentCount = '';
+  String schoolName = '';
 
-  // Function to validate email and password
-  bool validateEmailAndPassword(String email, String password) {
-    // Basic email validation
-    final emailRegExp =
-    RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-    if (!emailRegExp.hasMatch(email)) {
-      return false;
-    }
-
-    // Password validation (for example, length check)
-    if (password.length < 6) {
-      return false;
-    }
-
-    // If both email and password are valid, return true
-    return true;
+  @override
+  void initState() {
+    super.initState();
+    _initDatabase();
   }
 
-  // Function to open the database
-  Future<Database> _openDatabase() async {
+  Future<void> _initDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = documentsDirectory.path + "/" + "emails.db";
-
-    return openDatabase(path, version: 1,
-        onCreate: (Database db, int version) async {
-          await db.execute(
-              "CREATE TABLE emails(id INTEGER PRIMARY KEY, email TEXT)");
-        });
+    String path = documentsDirectory.path + "/" + "app.db";
+    _database = await openDatabase(
+      path,
+      onCreate: (db, version) {
+        return db.execute(
+          'CREATE TABLE login_info(id INTEGER PRIMARY KEY, server_name TEXT, server_email TEXT, student_count TEXT, school_name TEXT)',
+        );
+      },
+      version: 1,
+    );
   }
 
-  // Function to save email to the database
-  Future<void> _saveEmailToDatabase(String email) async {
-    final Database database = await _openDatabase();
+  Database? _database; // Database instance
 
-    // Delete all existing emails
-    await database.delete('emails');
+  // Function to validate form fields (implement your logic here)
+  bool validateFields() {
+    // Add checks for each field (e.g., not empty, valid format)
+    return true; // Replace with your validation logic
+  }
 
-    // Insert the new email
-    await database.insert('emails', {'email': email});
+  Future<void> _saveFormData() async {
+    await _database!.transaction((txn) async {
+      await txn.delete('login_info');
+      final data = <String, dynamic>{
+        'server_name': serverName,
+        'server_email': serverEmail,
+        'student_count': studentCount,
+        'school_name': schoolName,
+      };
+      await txn.insert('login_info', data);
+    });
+  }
+
+  // Function to handle form submission
+  void submitForm() async {
+    if (validateFields()) {
+      // Process form data (e.g., save to database, navigate)
+      await _saveFormData();
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const OptionPage()),
+      );
+    } else {
+      // Show error message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Preencha todos os campos corretamente'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
   @override
@@ -68,7 +89,7 @@ class _LoginPageState extends State<LoginPage> {
         backgroundColor: Colors.white,
         centerTitle: true,
         title: const Text(
-          "Login",
+          "Iniciando passeio",
           style: TextStyle(
             fontSize: 30,
             color: Colors.blueAccent,
@@ -82,53 +103,59 @@ class _LoginPageState extends State<LoginPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Spacer(),
-            // Email field
+            // Server name field
             TextField(
               onChanged: (text) {
-                email = text;
+                serverName = text;
               },
-              keyboardType: TextInputType.emailAddress,
               decoration: const InputDecoration(
-                labelText: "Email",
+                labelText: "Nome do servidor UFMS",
                 labelStyle: TextStyle(color: Colors.white70),
                 border: OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 15),
-            // Password field
+            // Server email field
             TextField(
               onChanged: (text) {
-                password = text;
+                serverEmail = text;
               },
-              obscureText: true, // Hide password characters
+              keyboardType: TextInputType.emailAddress,
               decoration: const InputDecoration(
-                labelText: "Senha",
+                labelText: "Email do servidor",
+                labelStyle: TextStyle(color: Colors.white70),
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 15),
+            // Student count field
+            TextField(
+              onChanged: (text) {
+                studentCount = text;
+              },
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                labelText: "Quantidade de alunos",
+                labelStyle: TextStyle(color: Colors.white70),
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 15),
+            // School name field
+            TextField(
+              onChanged: (text) {
+                schoolName = text;
+              },
+              decoration: const InputDecoration(
+                labelText: "Nome da escola",
                 labelStyle: TextStyle(color: Colors.white70),
                 border: OutlineInputBorder(),
               ),
             ),
             const Spacer(),
             MyButton(
-              text: "Entrar",
-              onPressed: () async {
-                // Validate email and password
-                if (validateEmailAndPassword(email, password)) {
-                  // Save email to database
-                  await _saveEmailToDatabase(email);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const OptionPage()),
-                  );
-                } else {
-                  // Show a SnackBar or Dialog with an error message
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: const Text('Email ou senha inválidos'),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
-                }
-              },
+              text: "Enviar",
+              onPressed: submitForm,
             ),
             const Spacer(flex: 1),
           ],
