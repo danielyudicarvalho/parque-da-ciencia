@@ -128,7 +128,7 @@ class _LoginPageState extends State<LoginPage> {
                     // Email field
                     TextField(
                       onChanged: (text) {
-                        email = text;
+                        serverEmail = text;
                       },
                       keyboardType: TextInputType.emailAddress,
                       decoration: const InputDecoration(
@@ -143,11 +143,36 @@ class _LoginPageState extends State<LoginPage> {
                     // Password field
                     TextField(
                       onChanged: (text) {
-                        password = text;
+                        serverName = text;
                       },
-                      obscureText: true, // Hide password characters
+                        decoration: const InputDecoration(
+                        labelText: "Nome do servidor",
+                        labelStyle: TextStyle(color: Color(0xFF0088B7)),
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+
+                    const SizedBox(height: 50),
+
+                    TextField(
+                      onChanged: (text) {
+                        schoolName = text;
+                      },
                       decoration: const InputDecoration(
-                        labelText: "Senha",
+                        labelText: "nome da escola",
+                        labelStyle: TextStyle(color: Color(0xFF0088B7)),
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+
+                    const SizedBox(height: 50),
+
+                    TextField(
+                      onChanged: (text) {
+                        studentCount = text;
+                      },
+                      decoration: const InputDecoration(
+                        labelText: "Número de estudantes",
                         labelStyle: TextStyle(color: Color(0xFF0088B7)),
                         border: OutlineInputBorder(),
                       ),
@@ -157,25 +182,7 @@ class _LoginPageState extends State<LoginPage> {
 
                     MyButton(
                       text: "Entrar",
-                      onPressed: () async {
-                        // Validate email and password
-                        if (validateEmailAndPassword(email, password)) {
-                          // Save email to database
-                          await _saveEmailToDatabase(email);
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => const OptionPage()),
-                          );
-                        } else {
-                          // Show a SnackBar or Dialog with an error message
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: const Text('Email ou senha inválidos'),
-                              backgroundColor: Colors.red,
-                            ),
-                          );
-                        }
-                      },
+                      onPressed: submitForm,
                     ),
 
                     //const Spacer(flex: 1),
