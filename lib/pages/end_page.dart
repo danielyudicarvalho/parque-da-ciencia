@@ -7,7 +7,6 @@ class ReviewsSentPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Simulating fetching total reviews (replace this with actual logic)
-    int totalReviews = 10;
 
     // Delay for 3 seconds before redirecting to login page
     Future.delayed(Duration(seconds: 3), () {
@@ -19,14 +18,14 @@ class ReviewsSentPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Reviews Sent'),
+        title: Text('Feedback enviado'),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Total Reviews: $totalReviews',
+              'Passeio encerrado',
               style: TextStyle(fontSize: 20),
             ),
           ],
