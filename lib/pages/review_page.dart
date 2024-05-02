@@ -198,6 +198,10 @@ class _ReviewPageState extends State<ReviewPage> {
                           title: Text(email),
                         ),
                         ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blueAccent,
+                            foregroundColor: Colors.white,
+                          ),
                           onPressed: () async {
                             final reviews = await _getReviews();
                             _submitForm([email], reviews, emailInfo);// Pass email as a list to _submitForm
@@ -206,7 +210,7 @@ class _ReviewPageState extends State<ReviewPage> {
                               MaterialPageRoute(builder: (context) => const ReviewsSentPage()),
                             );
                           },
-                          child: Text('Send Reviews'),
+                          child: Text('Enviar Resultados'),
                         ),
                       ],
                     );
