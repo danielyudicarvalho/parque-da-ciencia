@@ -28,11 +28,10 @@ class _SimpleNpsPageState extends State<SimpleNpsPage> {
 
     _database = await openDatabase(path, version: 1,
         onCreate: (Database db, int version) async {
-          await db.execute(
-              "CREATE TABLE reports(id INTEGER PRIMARY KEY, rating INTEGER)");
-        });
+      await db.execute(
+          "CREATE TABLE reports(id INTEGER PRIMARY KEY, rating INTEGER)");
+    });
   }
-
 
   void saveNewReview(int rating) async {
     await _database.transaction((txn) async {
