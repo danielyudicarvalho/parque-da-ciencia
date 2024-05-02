@@ -12,6 +12,7 @@ class OptionPage extends StatelessWidget {
       backgroundColor: Colors.blueAccent,
       appBar: AppBar(
         backgroundColor: Colors.white,
+
         title: const Text('NPS Survey'),
         centerTitle: true,
       ),
@@ -23,6 +24,8 @@ class OptionPage extends StatelessWidget {
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blueAccent,
+                foregroundColor: Colors.white,
+
               ),
               onPressed: () {
                 // Navigate to Simple NPS Page
@@ -31,7 +34,7 @@ class OptionPage extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => const SimpleNpsPage()),
                 );
               },
-              child: const Text('Simple NPS'),
+              child: const Text('Feedback Simples'),
             ),
             const SizedBox(height: 20),
 
@@ -39,6 +42,7 @@ class OptionPage extends StatelessWidget {
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blueAccent,
+                foregroundColor: Colors.white,
               ),
               onPressed: () {
                 // Navigate to Home Page
@@ -47,7 +51,7 @@ class OptionPage extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => const HomePage()),
                 );
               },
-              child: const Text('Complex NPS'),
+              child: const Text('Feedback do Responsável'),
             ),
             const SizedBox(height: 20),
 
@@ -55,6 +59,8 @@ class OptionPage extends StatelessWidget {
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blueAccent,
+                foregroundColor: Colors.white,
+
               ),
               onPressed: () {
                 // Handle Submit Data action
@@ -63,7 +69,7 @@ class OptionPage extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => const ReviewPage()),
                 );
               },
-              child: const Text('Submit Data'),
+              child: const Text('Enviar Resultados'),
             ),
           ],
         ),

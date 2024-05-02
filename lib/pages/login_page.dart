@@ -42,10 +42,12 @@ class _LoginPageState extends State<LoginPage> {
 
   Database? _database; // Database instance
 
-  // Function to validate form fields (implement your logic here)
+  // Function to validate form fields
   bool validateFields() {
-    // Add checks for each field (e.g., not empty, valid format)
-    return true; // Replace with your validation logic
+    if (serverName.isEmpty || serverEmail.isEmpty || studentCount.isEmpty || schoolName.isEmpty) {
+      return false;
+    }
+    return true;
   }
 
   Future<void> _saveFormData() async {
@@ -112,86 +114,77 @@ class _LoginPageState extends State<LoginPage> {
       ),
 
       body: SingleChildScrollView(
-        child: Stack(
-          children: [
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Imagem da logo do parque
+              Image.asset("lib/images/logo_parque.png", width: 300, height: 300),
 
-
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // Imagem da logo do parque
-                    Image.asset("lib/images/logo_parque.png", width: 300, height: 300),
-
-                    // Email field
-                    TextField(
-                      onChanged: (text) {
-                        serverEmail = text;
-                      },
-                      keyboardType: TextInputType.emailAddress,
-                      decoration: const InputDecoration(
-                        labelText: "Email",
-                        labelStyle: TextStyle(color: Color(0xFF0088B7)),
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-
-                    const SizedBox(height: 15),
-
-                    // Password field
-                    TextField(
-                      onChanged: (text) {
-                        serverName = text;
-                      },
-                        decoration: const InputDecoration(
-                        labelText: "Nome do servidor",
-                        labelStyle: TextStyle(color: Color(0xFF0088B7)),
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-
-                    const SizedBox(height: 50),
-
-                    TextField(
-                      onChanged: (text) {
-                        schoolName = text;
-                      },
-                      decoration: const InputDecoration(
-                        labelText: "nome da escola",
-                        labelStyle: TextStyle(color: Color(0xFF0088B7)),
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-
-                    const SizedBox(height: 50),
-
-                    TextField(
-                      onChanged: (text) {
-                        studentCount = text;
-                      },
-                      decoration: const InputDecoration(
-                        labelText: "Número de estudantes",
-                        labelStyle: TextStyle(color: Color(0xFF0088B7)),
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-
-                    const SizedBox(height: 50),
-
-                    MyButton(
-                      text: "Entrar",
-                      onPressed: submitForm,
-                    ),
-
-                    //const Spacer(flex: 1),
-                  ],
+              // Email field
+              TextField(
+                onChanged: (text) {
+                  serverEmail = text;
+                },
+                keyboardType: TextInputType.emailAddress,
+                decoration: const InputDecoration(
+                  labelText: "Email",
+                  labelStyle: TextStyle(color: Color(0xFF0088B7)),
+                  border: OutlineInputBorder(),
                 ),
               ),
 
-            ),
-          ]
+              const SizedBox(height: 15),
+
+              // Password field
+              TextField(
+                onChanged: (text) {
+                  serverName = text;
+                },
+                decoration: const InputDecoration(
+                  labelText: "Nome do servidor",
+                  labelStyle: TextStyle(color: Color(0xFF0088B7)),
+                  border: OutlineInputBorder(),
+                ),
+              ),
+
+              const SizedBox(height: 15),
+
+              TextField(
+                onChanged: (text) {
+                  schoolName = text;
+                },
+                decoration: const InputDecoration(
+                  labelText: "Nome da escola",
+                  labelStyle: TextStyle(color: Color(0xFF0088B7)),
+                  border: OutlineInputBorder(),
+                ),
+              ),
+
+              const SizedBox(height: 15),
+
+              TextField(
+                onChanged: (text) {
+                  studentCount = text;
+                },
+                decoration: const InputDecoration(
+                  labelText: "Número de estudantes",
+                  labelStyle: TextStyle(color: Color(0xFF0088B7)),
+                  border: OutlineInputBorder(),
+                ),
+              ),
+
+              const SizedBox(height: 15),
+
+              MyButton(
+                text: "Entrar",
+                onPressed: submitForm,
+              ),
+
+              //const Spacer(flex: 1),
+            ],
+          ),
         ),
       ),
     );

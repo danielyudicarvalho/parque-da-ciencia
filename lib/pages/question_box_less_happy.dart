@@ -17,8 +17,13 @@ class QuestionBoxLessHappy extends StatefulWidget {
 
 class _QuestionBoxState extends State<QuestionBoxLessHappy> {
   String selectedOption = '';
-  List<String> options = [];  
+  List<String> options = [];
 
+  void handleSavePressed() {
+    if (selectedOption.isNotEmpty) {
+      widget.onSave();
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -130,7 +135,7 @@ class _QuestionBoxState extends State<QuestionBoxLessHappy> {
                 Spacer(),
                 MyButton(text: "Cancelar", onPressed: widget.onCancel),
                 const SizedBox(width: 75,),
-                MyButton(text: "Salvar", onPressed: widget.onSave,),
+                MyButton(text: "Salvar", onPressed: handleSavePressed,),
                 const Spacer()
               ]
             ),

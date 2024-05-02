@@ -14,7 +14,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 8), () {
+    Future.delayed(const Duration(seconds: 3), () {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => SimpleNpsPage()),
       );
