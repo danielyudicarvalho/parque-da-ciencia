@@ -42,10 +42,12 @@ class _LoginPageState extends State<LoginPage> {
 
   Database? _database; // Database instance
 
-  // Function to validate form fields (implement your logic here)
+  // Function to validate form fields
   bool validateFields() {
-    // Add checks for each field (e.g., not empty, valid format)
-    return true; // Replace with your validation logic
+    if (serverName.isEmpty || serverEmail.isEmpty || studentCount.isEmpty || schoolName.isEmpty) {
+      return false;
+    }
+    return true;
   }
 
   Future<void> _saveFormData() async {

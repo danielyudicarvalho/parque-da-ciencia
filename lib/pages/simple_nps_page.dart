@@ -37,8 +37,6 @@ class _SimpleNpsPageState extends State<SimpleNpsPage> {
     await _database.transaction((txn) async {
       await txn.rawInsert('INSERT INTO reports(rating) VALUES(?)', [rating]);
     });
-
-    print('review saved');
   }
 
   void openConfirmationPage() {
@@ -50,15 +48,15 @@ class _SimpleNpsPageState extends State<SimpleNpsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blueAccent,
+      backgroundColor: Colors.white, // Applied from HomePage
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.blueAccent, // Applied from HomePage
         centerTitle: true,
         title: const Text(
           "Parque Da Ciência",
           style: TextStyle(
             fontSize: 30,
-            color: Colors.blueAccent,
+            color: Colors.white, // Applied from HomePage
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -67,50 +65,40 @@ class _SimpleNpsPageState extends State<SimpleNpsPage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            IconButton(
+            TextButton( // Wrap with TextButton for optional text color change
               onPressed: () {
                 saveNewReview(5);
                 openConfirmationPage();
               },
-              icon: Image.asset('lib/images/feliz.jpeg'),
-              iconSize: 100,
-              padding: EdgeInsets.all(25),
+              child: Image.asset('lib/images/feliz.png'),
             ),
-            IconButton(
+            TextButton( // Wrap with TextButton for optional text color change
               onPressed: () {
                 saveNewReview(4);
                 openConfirmationPage();
               },
-              icon: Image.asset('lib/images/meiofeliz.jpeg'),
-              iconSize: 100,
-              padding: EdgeInsets.all(25),
+              child: Image.asset('lib/images/meio_feliz.png'),
             ),
-            IconButton(
+            TextButton( // Wrap with TextButton for optional text color change
               onPressed: () {
                 saveNewReview(3);
                 openConfirmationPage();
               },
-              icon: Image.asset('lib/images/medio.jpeg'),
-              iconSize: 100,
-              padding: EdgeInsets.all(25),
+              child: Image.asset('lib/images/medio.png'),
             ),
-            IconButton(
+            TextButton( // Wrap with TextButton for optional text color change
               onPressed: () {
                 saveNewReview(2);
                 openConfirmationPage();
               },
-              icon: Image.asset('lib/images/meioruim.jpeg'),
-              iconSize: 100,
-              padding: EdgeInsets.all(25),
+              child: Image.asset('lib/images/meio_infeliz.png'),
             ),
-            IconButton(
+            TextButton( // Wrap with TextButton for optional text color change
               onPressed: () {
                 saveNewReview(1);
                 openConfirmationPage();
               },
-              icon: Image.asset('lib/images/ruim.jpeg'),
-              iconSize: 100,
-              padding: EdgeInsets.all(25),
+              child: Image.asset('lib/images/infeliz.png'),
             ),
           ],
         ),

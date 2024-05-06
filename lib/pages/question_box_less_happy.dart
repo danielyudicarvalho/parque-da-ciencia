@@ -6,23 +6,33 @@ class QuestionBoxLessHappy extends StatefulWidget {
   final VoidCallback onCancel;
 
   const QuestionBoxLessHappy({
-    super.key,
+    Key? key,
     required this.onSave,
     required this.onCancel,
-  });
+  }) : super(key: key);
 
   @override
   State<QuestionBoxLessHappy> createState() => _QuestionBoxState();
 }
 
 class _QuestionBoxState extends State<QuestionBoxLessHappy> {
-  String selectedOption = '';
-  List<String> options = [];  
+  List<String> selectedOptions = []; // List to store chosen options
+
+  bool isSaveButtonEnabled() {
+    return selectedOptions.isNotEmpty;
+  }
+
+  void handleSavePressed() {
+    if (selectedOptions.isNotEmpty) { // Corrected from selectedOption to selectedOptions
+      widget.onSave();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text("Por que você escolheu essa opção?",
+      title: const Text(
+        "Por que você escolheu essa opção?",
         style: TextStyle(
           color: Colors.white,
           fontSize: 30,
@@ -35,91 +45,84 @@ class _QuestionBoxState extends State<QuestionBoxLessHappy> {
 
         child: Column(
           children: [
-            RadioListTile<String>(
-              title: const Text('Variedade de atrações', style: TextStyle(color: Colors.white, fontSize: 25),),
-              value: 'Opção 1',
-              groupValue: selectedOption,
+            CheckboxListTile(
+              title: const Text(
+                'Variedade de atrações',
+                style: TextStyle(color: Colors.white, fontSize: 25),
+              ),
+              value: selectedOptions.contains('Opção 1'), // Check if the option is selected
               onChanged: (value) {
-                setState((){
-                  selectedOption = value!;
-                  if(options.contains("variedade")){
-                    options.removeWhere((str){
-                      return str == 'variedade';
-                    });
-                  }else{
-                    options.add("variedade");  
-                  } 
-                  
+                setState(() {
+                  if (value != null && value) {
+                    selectedOptions.add('Opção 1');
+                  } else {
+                    selectedOptions.remove('Opção 1');
+                  }
                 });
               },
             ),
 
-            RadioListTile<String>(
-              title: const Text('Bom atendimento', style: TextStyle(color: Colors.white, fontSize: 25),),
-              value: 'Opção 2',
-              groupValue: selectedOption,
+            CheckboxListTile(
+              title: const Text(
+                'Bom atendimento',
+                style: TextStyle(color: Colors.white, fontSize: 25),
+              ),
+              value: selectedOptions.contains('Opção 2'),
               onChanged: (value) {
-                setState((){
-                  selectedOption = value!;
-                  if(options.contains("atendimento")){
-                    options.removeWhere((str){
-                      return str == 'atendimento';
-                    });
-                  }else{
-                    options.add("atendimento");  
-                  } 
-                  
+                setState(() {
+                  if (value != null && value) {
+                    selectedOptions.add('Opção 2');
+                  } else {
+                    selectedOptions.remove('Opção 2');
+                  }
                 });
               },
             ),
 
-            RadioListTile<String>(
-              title: const Text('Boa estrutura', style: TextStyle(color: Colors.white, fontSize: 25),),
-              value: 'Opção 3',
-              groupValue: selectedOption,
+            CheckboxListTile(
+              title: const Text(
+                'Boa estrutura',
+                style: TextStyle(color: Colors.white, fontSize: 25),
+              ),
+              value: selectedOptions.contains('Opção 3'),
               onChanged: (value) {
-                setState((){
-                  selectedOption = value!;
-                  if(options.contains("estrutura")){
-                    options.removeWhere((str){
-                      return str == 'estrutura';
-                    });
-                  }else{
-                    options.add("estrutura");  
-                  } 
-                  
+                setState(() {
+                  if (value != null && value) {
+                    selectedOptions.add('Opção 3');
+                  } else {
+                    selectedOptions.remove('Opção 3');
+                  }
                 });
               },
             ),
 
-            RadioListTile<String>(
-              title: const Text('Aprendizagem interessante', style: TextStyle(color: Colors.white, fontSize: 25),),
-              value: 'Opção 4',
-              groupValue: selectedOption,
+            CheckboxListTile(
+              title: const Text(
+                'Aprendizagem interessante',
+                style: TextStyle(color: Colors.white, fontSize: 25),
+              ),
+              value: selectedOptions.contains('Opção 4'),
               onChanged: (value) {
-                setState((){
-                  selectedOption = value!;
-                  if(options.contains("aprendizagem")){
-                    options.removeWhere((str){
-                      return str == 'aprendizagem';
-                    });
-                  }else{
-                    options.add("aprendizagem");  
-                  } 
-                  
+                setState(() {
+                  if (value != null && value) {
+                    selectedOptions.add('Opção 4');
+                  } else {
+                    selectedOptions.remove('Opção 4');
+                  }
                 });
               },
             ),
+
             const Spacer(),
 
             // Campo de explicaçao
             const TextField(
               //controller: controller,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: "Explique a sua escolha para nos ajudar a melhorar...",
-                hintStyle: TextStyle(color: Colors.white70, fontSize: 25),
-              )
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: "Explique a sua escolha para nos ajudar a melhorar...",
+                  hintStyle: TextStyle(color: Colors.white70, fontSize: 25),
+                )
             ),
             const Spacer(flex: 2,),
 
@@ -128,13 +131,19 @@ class _QuestionBoxState extends State<QuestionBoxLessHappy> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Spacer(),
-                MyButton(text: "Cancelar", onPressed: widget.onCancel),
-                const SizedBox(width: 75,),
-                MyButton(text: "Salvar", onPressed: widget.onSave,),
+                MyButton(
+                  text: "Cancelar",
+                  onPressed: widget.onCancel,
+                ),
+                const SizedBox(width: 75),
+                MyButton(
+                  text: "Salvar",
+                  onPressed: handleSavePressed,
+                ),
                 const Spacer()
-              ]
+              ],
             ),
-            const Spacer(flex: 1,)
+            const Spacer(flex: 1)
           ],
         ),
       ),

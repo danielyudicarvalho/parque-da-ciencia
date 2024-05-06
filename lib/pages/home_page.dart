@@ -31,17 +31,15 @@ class _HomePageState extends State<HomePage> {
   }
 
 
-
   Future<void> _initializeDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = documentsDirectory.path + "/" + "reviews.db";
+    String path = documentsDirectory.path + "/" + "reports.db";
 
-    //String path = join(documentsDirectory.path, "reviews.db");
     _database = await openDatabase(path, version: 1,
         onCreate: (Database db, int version) async {
-      await db.execute(
-          "CREATE TABLE reviews(id INTEGER PRIMARY KEY, review TEXT, isPositive INTEGER)");
-    });
+          await db.execute(
+              "CREATE TABLE reports(id INTEGER PRIMARY KEY, rating INTEGER)");
+        });
   }
 
   Future<List<Map<String, dynamic>>> _getReviews() async {
@@ -59,15 +57,10 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  saveNewReview(int review, bool isPositive) async {
+  saveNewReview(int rating) async {
     await _database.transaction((txn) async {
-      await txn.rawInsert(
-          'INSERT INTO reviews(review, isPositive) VALUES(?, ?)',
-          [review, isPositive ? 1 : 0]);
+      await txn.rawInsert('INSERT INTO reports(rating) VALUES(?)', [rating]);
     });
-
-
-    print("Salvo!");
   }
 
   void openQuestionBox() {
@@ -75,7 +68,7 @@ class _HomePageState extends State<HomePage> {
       context: context,
       builder: (context) {
         return QuestionBox(
-          onSave: saveNewReview(5, true),
+          onSave: saveNewReview(5),
           onCancel: () {
             Navigator.of(context).pop();
             print("Cancelado!");
@@ -91,7 +84,7 @@ class _HomePageState extends State<HomePage> {
       builder: (context) {
         return QuestionBoxHappy(
           onSave: () async{
-            await saveNewReview(5, true);
+            await saveNewReview(5);
             Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => ComplexConfirmationPage()),
           );
@@ -111,7 +104,7 @@ class _HomePageState extends State<HomePage> {
       builder: (context) {
         return QuestionBoxLessHappy(
           onSave: () async{
-            await saveNewReview(5, true);
+            await saveNewReview(5);
             Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => ComplexConfirmationPage()),
           );
@@ -131,7 +124,7 @@ class _HomePageState extends State<HomePage> {
       builder: (context) {
         return QuestionBoxMedium(
           onSave: () async{
-            await saveNewReview(5, true);
+            await saveNewReview(5);
             Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => ComplexConfirmationPage()),
           );
@@ -151,7 +144,7 @@ class _HomePageState extends State<HomePage> {
       builder: (context) {
         return QuestionBoxBad(
           onSave: () async{
-            await saveNewReview(5, true);
+            await saveNewReview(5);
             Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => ComplexConfirmationPage()),
           );
@@ -171,7 +164,7 @@ class _HomePageState extends State<HomePage> {
       builder: (context) {
         return QuestionBoxMoreBad(
           onSave: () async{
-            await saveNewReview(5, true);
+            await saveNewReview(5);
             Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => ComplexConfirmationPage()),
           );
