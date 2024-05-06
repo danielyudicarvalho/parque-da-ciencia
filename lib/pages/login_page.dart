@@ -112,80 +112,96 @@ class _LoginPageState extends State<LoginPage> {
           )
         ],
       ),
-
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Imagem da logo do parque
-              Image.asset("lib/images/logo_parque.png", width: 300, height: 300),
+        child: Stack(children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Imagem da logo do parque
+                  Image.asset("lib/images/logo_parque.png",
+                      width: 280, height: 280),
 
-              // Email field
-              TextField(
-                onChanged: (text) {
-                  serverEmail = text;
-                },
-                keyboardType: TextInputType.emailAddress,
-                decoration: const InputDecoration(
-                  labelText: "Email",
-                  labelStyle: TextStyle(color: Color(0xFF0088B7)),
-                  border: OutlineInputBorder(),
-                ),
+                  // Password field
+                  TextField(
+                    onChanged: (text) {
+                      serverName = text;
+                    },
+                    decoration: const InputDecoration(
+                      labelText: "Nome do Servidor Responsável",
+                      labelStyle: TextStyle(color: Color(0xFF0088B7)),
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+
+                  const SizedBox(height: 5),
+
+                  // Email field
+                  TextField(
+                    onChanged: (text) {
+                      serverEmail = text;
+                    },
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: const InputDecoration(
+                      labelText: "Email do Servidor Responsável",
+                      labelStyle: TextStyle(color: Color(0xFF0088B7)),
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+
+                  const SizedBox(height: 5),
+
+                  TextField(
+                    onChanged: (text) {
+                      schoolName = text;
+                    },
+                    decoration: const InputDecoration(
+                      labelText: "Nome da Escola Visitante",
+                      labelStyle: TextStyle(color: Color(0xFF0088B7)),
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+
+                  const SizedBox(height: 5),
+
+                  TextField(
+                    onChanged: (text) {
+                      studentCount = text;
+                    },
+                    decoration: const InputDecoration(
+                      labelText: "Número de Estudantes da Visita",
+                      labelStyle: TextStyle(color: Color(0xFF0088B7)),
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+
+                  const SizedBox(height: 25),
+
+                  ElevatedButton(
+                    onPressed: submitForm,
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      padding: EdgeInsets.all(16),
+                      backgroundColor: Color(0xFF0088B7),
+                    ),
+                    child: Text(
+                      'Iniciar',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  )
+                ],
               ),
-
-              const SizedBox(height: 15),
-
-              // Password field
-              TextField(
-                onChanged: (text) {
-                  serverName = text;
-                },
-                decoration: const InputDecoration(
-                  labelText: "Nome do servidor",
-                  labelStyle: TextStyle(color: Color(0xFF0088B7)),
-                  border: OutlineInputBorder(),
-                ),
-              ),
-
-              const SizedBox(height: 15),
-
-              TextField(
-                onChanged: (text) {
-                  schoolName = text;
-                },
-                decoration: const InputDecoration(
-                  labelText: "Nome da escola",
-                  labelStyle: TextStyle(color: Color(0xFF0088B7)),
-                  border: OutlineInputBorder(),
-                ),
-              ),
-
-              const SizedBox(height: 15),
-
-              TextField(
-                onChanged: (text) {
-                  studentCount = text;
-                },
-                decoration: const InputDecoration(
-                  labelText: "Número de estudantes",
-                  labelStyle: TextStyle(color: Color(0xFF0088B7)),
-                  border: OutlineInputBorder(),
-                ),
-              ),
-
-              const SizedBox(height: 15),
-
-              MyButton(
-                text: "Entrar",
-                onPressed: submitForm,
-              ),
-
-              //const Spacer(flex: 1),
-            ],
+            ),
           ),
-        ),
+        ]),
       ),
     );
   }

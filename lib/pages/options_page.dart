@@ -8,70 +8,105 @@ class OptionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.blueAccent,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-
-        title: const Text('NPS Survey'),
-        centerTitle: true,
+    // Definindo um tamanho padrão para todos os botões
+    final ButtonStyle buttonStyle = ElevatedButton.styleFrom(
+      backgroundColor: Color(0xFF0088B7),
+      minimumSize: Size(360, 60), // Define o tamanho mínimo dos botões
+      padding: EdgeInsets.symmetric(vertical: 10),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Simple NPS Button
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blueAccent,
-                foregroundColor: Colors.white,
+      textStyle: const TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
+      ),
+    );
 
-              ),
-              onPressed: () {
-                // Navigate to Simple NPS Page
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const SimpleNpsPage()),
-                );
-              },
-              child: const Text('Feedback Simples'),
+    return Scaffold(
+      resizeToAvoidBottomInset: true,
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF0088B7),
+        centerTitle: true,
+        title: const Text(
+          "Iniciando passeio",
+          style: TextStyle(
+            fontSize: 30,
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        iconTheme: IconThemeData(
+          color: Colors.white, // Define a cor da seta de volta para branco
+        ),
+        actions: [
+          Container(
+            padding: const EdgeInsets.only(right: 8, bottom: 4),
+            child: Image.asset(
+              'lib/images/logo_vem_p_ufms.png',
             ),
-            const SizedBox(height: 20),
-
-            // Complex NPS Button
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blueAccent,
-                foregroundColor: Colors.white,
-              ),
-              onPressed: () {
-                // Navigate to Home Page
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const HomePage()),
-                );
-              },
-              child: const Text('Feedback do Responsável'),
+          ),
+          Container(
+            padding: const EdgeInsets.only(right: 8, bottom: 4),
+            child: Image.asset('lib/images/logo_ufms.png'),
+          )
+        ],
+      ),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset("lib/images/logo_parque.png",
+                    width: 280, height: 280),
+                SizedBox(height: 30), // Espaçamento vertical
+                ElevatedButton(
+                    style: buttonStyle,
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const SimpleNpsPage()),
+                      );
+                    },
+                    child: const Text(
+                      'Opinião do Aluno',
+                      style: TextStyle(color: Colors.white),
+                    )),
+                SizedBox(height: 20),
+                ElevatedButton(
+                    style: buttonStyle,
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const HomePage()),
+                      );
+                    },
+                    child: const Text(
+                      'Opinião do Servidor Responsável',
+                      style: TextStyle(color: Colors.white),
+                    )),
+                SizedBox(height: 100),
+                ElevatedButton(
+                    style: buttonStyle,
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const ReviewPage()),
+                      );
+                    },
+                    child: const Text(
+                      'Enviar Opiniões',
+                      style: TextStyle(color: Colors.white),
+                    )),
+              ],
             ),
-            const SizedBox(height: 20),
-
-            // Submit Data Button
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blueAccent,
-                foregroundColor: Colors.white,
-
-              ),
-              onPressed: () {
-                // Handle Submit Data action
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const ReviewPage()),
-                );
-              },
-              child: const Text('Enviar Resultados'),
-            ),
-          ],
+          ),
         ),
       ),
     );
