@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../util/my_button.dart';
+import 'confirmation_page.dart';
 
 class QuestionBoxHappy extends StatefulWidget {
   final VoidCallback onSave;
@@ -25,6 +26,7 @@ class _QuestionBoxState extends State<QuestionBoxHappy> {
   void handleSavePressed() {
     if (selectedOptions.isNotEmpty) { // Corrected from selectedOption to selectedOptions
       widget.onSave();
+      Navigator.of(context).pop();
     }
   }
 

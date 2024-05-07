@@ -255,6 +255,7 @@ class _ReviewPageState extends State<ReviewPage> {
                           final reviews = await _getReviews();
                           _submitForm([email], reviews, emailInfo);// Pass email as a list to _submitForm
                           Navigator.of(context).pop();
+                          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => LoginPage()), (route) => false);
                         },
 
                         child: const Text('Enviar Resultados',

@@ -64,7 +64,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   void openConfirmationPage() {
-    Navigator.of(context).pop();
     showDialog(
         context: context,
         builder: (context) {
@@ -98,9 +97,7 @@ class _HomePageState extends State<HomePage> {
         return QuestionBoxLessHappy(
           onSave: () async{
             await saveNewReview(4);
-            Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => ComplexConfirmationPage()),
-          );
+            openConfirmationPage();
           },
           onCancel: () {
             Navigator.of(context).pop();
@@ -118,9 +115,7 @@ class _HomePageState extends State<HomePage> {
         return QuestionBoxMedium(
           onSave: () async{
             await saveNewReview(3);
-            Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => ComplexConfirmationPage()),
-          );
+            openConfirmationPage();
           },
           onCancel: () {
             Navigator.of(context).pop();
@@ -138,9 +133,7 @@ class _HomePageState extends State<HomePage> {
         return QuestionBoxBad(
           onSave: () async{
             await saveNewReview(2);
-            Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => ComplexConfirmationPage()),
-          );
+            openConfirmationPage();
           },
           onCancel: () {
             Navigator.of(context).pop();
@@ -158,9 +151,7 @@ class _HomePageState extends State<HomePage> {
         return QuestionBoxMoreBad(
           onSave: () async{
             await saveNewReview(1);
-            Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => ComplexConfirmationPage()),
-          );
+            openConfirmationPage();
           },
           onCancel: () {
             Navigator.of(context).pop();
