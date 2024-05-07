@@ -97,8 +97,10 @@ class _HomePageState extends State<HomePage> {
       builder: (context) {
         return QuestionBoxLessHappy(
           onSave: () async{
-            await saveNewReview(5);
-            openConfirmationPage();
+            await saveNewReview(4);
+            Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => ComplexConfirmationPage()),
+          );
           },
           onCancel: () {
             Navigator.of(context).pop();
@@ -115,8 +117,10 @@ class _HomePageState extends State<HomePage> {
       builder: (context) {
         return QuestionBoxMedium(
           onSave: () async{
-            await saveNewReview(5);
-            openConfirmationPage();
+            await saveNewReview(3);
+            Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => ComplexConfirmationPage()),
+          );
           },
           onCancel: () {
             Navigator.of(context).pop();
@@ -133,8 +137,10 @@ class _HomePageState extends State<HomePage> {
       builder: (context) {
         return QuestionBoxBad(
           onSave: () async{
-            await saveNewReview(5);
-            openConfirmationPage();
+            await saveNewReview(2);
+            Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => ComplexConfirmationPage()),
+          );
           },
           onCancel: () {
             Navigator.of(context).pop();
@@ -151,8 +157,10 @@ class _HomePageState extends State<HomePage> {
       builder: (context) {
         return QuestionBoxMoreBad(
           onSave: () async{
-            await saveNewReview(5);
-            openConfirmationPage();
+            await saveNewReview(1);
+            Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => ComplexConfirmationPage()),
+          );
           },
           onCancel: () {
             Navigator.of(context).pop();

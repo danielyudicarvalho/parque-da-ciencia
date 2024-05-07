@@ -33,13 +33,13 @@ class _ReviewPageState extends State<ReviewPage> {
     _emailsFuture = _getEmails();
   }
 
-  Future<void> sendEmail(String csvPath, String recipient, String emailBody) async {
+  Future<void> sendEmail(String csvPath, String recipient, String emailBody, String schoolName, String serverName) async {
     final smtpServer = gmail('danielyudicarvalho@gmail.com', 'rkww hvdl qrav fmel');
 
     final message = Message()
       ..from = Address('danielyudicarvalho@gmail.com', 'Yudi')
       ..recipients.add(recipient)
-      ..subject = 'Reviews and Information'
+      ..subject = 'Resultado $schoolName - $serverName ' // Subject with school name and server name
       ..text = emailBody
       ..attachments.add(FileAttachment(File(csvPath)));
 
@@ -100,10 +100,14 @@ class _ReviewPageState extends State<ReviewPage> {
   }
   Future<void> _submitForm(List<String> emails, List<Map<String, dynamic>> reviews, Map<String, dynamic> loginInfo) async {
     // Prepare CSV content
-    final csvContent = _generateCSV(reviews);
+    final csvContent = _generateCSV(reviews, loginInfo);
 
     // Prepare email body
     final emailBody = _generateEmailBody(loginInfo);
+
+    // Extract school name and server name
+    final schoolName = loginInfo['school_name'];
+    final serverName = loginInfo['server_name'];
 
     // Save CSV to file
     final csvPath = await _saveCSV(csvContent);
@@ -111,7 +115,7 @@ class _ReviewPageState extends State<ReviewPage> {
     // Send email to each recipient
     for (var email in emails) {
       try {
-        await sendEmail(csvPath, email, emailBody);
+        await sendEmail(csvPath, email, emailBody, schoolName, serverName); // Pass school name and server name to sendEmail
       } catch (e) {
         print('Error sending email: $e');
       }
@@ -125,15 +129,15 @@ class _ReviewPageState extends State<ReviewPage> {
     final StringBuffer buffer = StringBuffer();
     buffer.writeln('School Name: ${loginInfo['school_name']}');
     buffer.writeln('Server Name: ${loginInfo['server_name']}');
-    buffer.writeln('Study Count: ${loginInfo['study_count']}');
+    buffer.writeln('Study Count: ${loginInfo['student_count']}');
     return buffer.toString();
   }
 
-  String _generateCSV(List<Map<String, dynamic>> reviews) {
+  String _generateCSV(List<Map<String, dynamic>> reviews, Map<String, dynamic> loginInfo) {
     final csvBuffer = StringBuffer();
 
     // Header row with column labels
-    csvBuffer.write('Rating, 1 Star, 2 Star, 3 Star, 4 Star, 5 Star\n');
+    csvBuffer.write('Rating, 1 Star, 2 Star, 3 Star, 4 Star, 5 Star, Server Name, School Name, Student Count\n');
 
     // Count occurrences of each rating
     final reviewCounts = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0};
@@ -143,10 +147,15 @@ class _ReviewPageState extends State<ReviewPage> {
     }
 
     // Add data row with counts
-    csvBuffer.write('Total, ${reviewCounts[1]}, ${reviewCounts[2]}, ${reviewCounts[3]}, ${reviewCounts[4]}, ${reviewCounts[5]}\n');
+    csvBuffer.write('Total, ${reviewCounts[1]}, ${reviewCounts[2]}, ${reviewCounts[3]}, ${reviewCounts[4]}, ${reviewCounts[5]},');
+
+    // Add server name, school name, and student count to the CSV
+    csvBuffer.write('${loginInfo['server_name']}, ${loginInfo['school_name']}, ${loginInfo['student_count']}\n');
 
     return csvBuffer.toString();
   }
+
+
 
   Future<String> _saveCSV(String csvContent) async {
     final Directory directory = await getApplicationDocumentsDirectory();
