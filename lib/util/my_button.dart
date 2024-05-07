@@ -12,12 +12,25 @@ class MyButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialButton(
+    final ButtonStyle buttonStyle = ElevatedButton.styleFrom(
+      backgroundColor: Colors.white,
+      minimumSize: const Size(230, 50), // Define o tamanho mínimo dos botões
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ),
+
+      textStyle: const TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
+        color: Color(0xFF0088B7),
+      ),
+    );
+
+    return ElevatedButton(
+      style: buttonStyle,
       onPressed: onPressed,
-      color: Colors.blue,
-      height: 45,
-      elevation: 5,
-      child: Text(text, style: TextStyle(fontSize: 35, color: Colors.white),),
+      child: Text(text, style: TextStyle(fontSize: 35, color: Color(0xFF0088B7))),
     );
   }
 }

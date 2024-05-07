@@ -63,18 +63,13 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void openQuestionBox() {
+  void openConfirmationPage() {
+    Navigator.of(context).pop();
     showDialog(
-      context: context,
-      builder: (context) {
-        return QuestionBox(
-          onSave: saveNewReview(5),
-          onCancel: () {
-            Navigator.of(context).pop();
-            print("Cancelado!");
-          },
-        );
-      },
+        context: context,
+        builder: (context) {
+          return const ConfirmationPage();
+        }
     );
   }
 
@@ -83,12 +78,10 @@ class _HomePageState extends State<HomePage> {
       context: context,
       builder: (context) {
         return QuestionBoxHappy(
-          onSave: () async{
+          onSave: () async {
             await saveNewReview(5);
-            Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => ComplexConfirmationPage()),
-          );
-          },//saveNewReview(5, true),
+            openConfirmationPage();
+          }, //saveNewReview(5, true),
           onCancel: () {
             Navigator.of(context).pop();
             print("Cancelado!");
@@ -105,9 +98,7 @@ class _HomePageState extends State<HomePage> {
         return QuestionBoxLessHappy(
           onSave: () async{
             await saveNewReview(5);
-            Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => ComplexConfirmationPage()),
-          );
+            openConfirmationPage();
           },
           onCancel: () {
             Navigator.of(context).pop();
@@ -125,9 +116,7 @@ class _HomePageState extends State<HomePage> {
         return QuestionBoxMedium(
           onSave: () async{
             await saveNewReview(5);
-            Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => ComplexConfirmationPage()),
-          );
+            openConfirmationPage();
           },
           onCancel: () {
             Navigator.of(context).pop();
@@ -145,9 +134,7 @@ class _HomePageState extends State<HomePage> {
         return QuestionBoxBad(
           onSave: () async{
             await saveNewReview(5);
-            Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => ComplexConfirmationPage()),
-          );
+            openConfirmationPage();
           },
           onCancel: () {
             Navigator.of(context).pop();
@@ -165,9 +152,7 @@ class _HomePageState extends State<HomePage> {
         return QuestionBoxMoreBad(
           onSave: () async{
             await saveNewReview(5);
-            Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => ComplexConfirmationPage()),
-          );
+            openConfirmationPage();
           },
           onCancel: () {
             Navigator.of(context).pop();
@@ -210,74 +195,84 @@ class _HomePageState extends State<HomePage> {
 
       body: Stack(
         children: [
+          // Gif do capi
           Positioned(
-            top: 235, // ajuste a posição vertical conforme necessário
-            right: 950, // ajuste a posição horizontal conforme necessário
-            width: 400, // largura da imagem
-            height: 400, // altura da imagem
+            top: 258, // ajuste a posição vertical conforme necessário
+            right: 920, // ajuste a posição horizontal conforme necessário
+            width: 450, // largura da imagem
+            height: 450, // altura da imagem
             child: Image.asset("lib/images/capi_movimento.gif")
           ),
+
+          // Gif do balão
           Positioned(
-            top: 10, // ajuste a posição vertical conforme necessário
-            right: 820, // ajuste a posição horizontal conforme necessário
+            top: 25, // ajuste a posição vertical conforme necessário
+            right: 810, // ajuste a posição horizontal conforme necessário
             width: 280, // largura da imagem
             height: 280, // altura da imagem
             child: Image.asset("lib/images/balao_mov.gif")
           ),
+
           Center(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
+            child: Column(
               children: [
-                const Spacer(flex: 6),
+                const Spacer(flex: 2,),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    const Spacer(flex: 6),
 
-                IconButton(
-                  onPressed: () => openQuestionBoxHappy(),
-                  icon: Image.asset('lib/images/feliz.png'),
+                    IconButton(
+                      onPressed: () => openQuestionBoxHappy(),
+                      icon: Image.asset('lib/images/feliz.png'),
+                    ),
+
+                    const Spacer(flex: 1),
+
+                    IconButton(
+                      onPressed: () => openQuestionBoxLessHappy(),
+                      icon: Image.asset('lib/images/meio_feliz.png'),
+                    ),
+
+                    const Spacer(flex: 1),
+
+                    IconButton(
+                      onPressed: () => openQuestionBoxMedium(),
+                      icon: Image.asset('lib/images/medio.png'),
+                    ),
+
+                    const Spacer(flex: 1),
+
+                    IconButton(
+                      onPressed: () => openQuestionBoxBad(),
+                      icon: Image.asset('lib/images/meio_infeliz.png'),
+                    ),
+
+                    const Spacer(flex: 1),
+
+                    IconButton(
+                      onPressed: () => openQuestionBoxMoreBad(),
+                      icon: Image.asset('lib/images/infeliz.png'),
+                    ),
+
+                    const Spacer(flex: 2),
+                  ],
                 ),
-
-                const Spacer(flex: 1),
-
-                IconButton(
-                  onPressed: () => openQuestionBoxLessHappy(),
-                  icon: Image.asset('lib/images/meio_feliz.png'),
-                ),
-
-                const Spacer(flex: 1),
-
-                IconButton(
-                  onPressed: () => openQuestionBoxMedium(),
-                  icon: Image.asset('lib/images/medio.png'),
-                ),
-
-                const Spacer(flex: 1),
-
-                IconButton(
-                  onPressed: () => openQuestionBoxBad(),
-                  icon: Image.asset('lib/images/meio_infeliz.png'),
-                ),
-
-                const Spacer(flex: 1),
-
-                IconButton(
-                  onPressed: () => openQuestionBoxMoreBad(),
-                  icon: Image.asset('lib/images/infeliz.png'),
-                ),
-
-                const Spacer(flex: 2),
+                const SizedBox(height: 60,),
+                const Spacer()
               ],
             ),
           ),
 
-
           /* Icones de logo */
 
           Positioned(
-            top: 500, // ajuste a posição vertical conforme necessário
+            top: 490, // ajuste a posição vertical conforme necessário
             right: 16, // ajuste a posição horizontal conforme necessário
             child: Image.asset(
               'lib/images/logo_parque.png',
-              width: 210, // ajuste o tamanho da imagem conforme necessário
-              height: 210,
+              width: 230, // ajuste o tamanho da imagem conforme necessário
+              height: 230,
             ),
           ),
         ]

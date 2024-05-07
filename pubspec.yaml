@@ -68,6 +68,7 @@ flutter:
     - lib/images/balao_mov.gif
     - lib/images/logo_vem_p_ufms.png
     - lib/images/logo_ufms.png
+    - lib/images/logo_parque_transp.png
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

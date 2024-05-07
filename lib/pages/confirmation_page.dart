@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pc_app/pages/home_page.dart';
-import 'package:pc_app/pages/review_page.dart';
 import 'package:pc_app/pages/simple_nps_page.dart';
 
 class ConfirmationPage extends StatefulWidget {
@@ -15,34 +13,41 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
   void initState() {
     super.initState();
     Future.delayed(const Duration(seconds: 3), () {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => SimpleNpsPage()),
-      );
+      Navigator.of(context).pop();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Feedback submetido'),
-        centerTitle: true,
-      ),
-      body: Center(
+    return AlertDialog(
+      backgroundColor: Colors.white,
+
+      content: SizedBox(
+        width: 800,
+        height: 400,
+
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
-              'Obrigado pelo seu feedback!',
-              style: TextStyle(fontSize: 20),
+            Image.asset(
+              "lib/images/logo_parque_transp.png",
+              width: 350, // ajuste o tamanho da imagem conforme necessário
+              height: 350,
             ),
-            const Padding(padding: EdgeInsets.all(10)),
+
+            const SizedBox(),
+
             const Text(
-              'Redirecionando em 5 segundos...',
-              style: TextStyle(fontSize: 16, color: Colors.grey),
+              "Obrigado pelo seu feedback!",
+              style: TextStyle(
+                color: Color(0xFF0088B7),
+                fontSize: 30,
+                fontWeight: FontWeight.bold
+              ),
             ),
-          ],
-        ),
+
+            const SizedBox(),
+          ]
+        )
       ),
     );
   }

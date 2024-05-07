@@ -4,11 +4,14 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pc_app/pages/end_page.dart';
+import 'package:pc_app/pages/login_page.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
 import 'package:pc_app/pages/options_page.dart';
+
+import 'confirmation_page.dart';
 
 
 class ReviewPage extends StatefulWidget {
@@ -158,72 +161,112 @@ class _ReviewPageState extends State<ReviewPage> {
     await database.delete('reports');
   }
 
+  void openConfirmationPage() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return const ConfirmationPage();
+        }
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Reviews'),
+    final ButtonStyle buttonStyle = ElevatedButton.styleFrom(
+      backgroundColor: Colors.white,
+      minimumSize: const Size(360, 60), // Define o tamanho mínimo dos botões
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              FutureBuilder<int>(
-                future: _totalReviewsFuture,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    final totalReviews = snapshot.data!;
-                    return Center(
-                      child: Text('Total Reviews: $totalReviews'),
-                    );
-                  } else if (snapshot.hasError) {
-                    return Center(child: Text('Error: ${snapshot.error}'));
-                  }
-                  // Display a loading indicator while fetching data
-                  return const Center(child: CircularProgressIndicator());
-                },
-              ),
-              SizedBox(height: 20),
-              FutureBuilder<Map<String, dynamic>>(
-                future: _emailsFuture,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    final Map<String, dynamic> emailInfo = snapshot.data!;
-                    final String email = emailInfo['server_email'] ?? ''; // Access the email from the map
-                    return Column(
-                      children: [
-                        ListTile(
-                          title: Text(email),
-                        ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blueAccent,
-                            foregroundColor: Colors.white,
-                          ),
-                          onPressed: () async {
-                            final reviews = await _getReviews();
-                            _submitForm([email], reviews, emailInfo);// Pass email as a list to _submitForm
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => const ReviewsSentPage()),
-                            );
-                          },
-                          child: Text('Enviar Resultados'),
-                        ),
-                      ],
-                    );
-                  } else if (snapshot.hasError) {
-                    return Center(child: Text('Error: ${snapshot.error}'));
-                  }
-                  // Display a loading indicator while fetching data
-                  return const Center(child: CircularProgressIndicator());
-                },
-              ),
 
-            ],
-          ),
+      textStyle: const TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
+      ),
+    );
+
+    return AlertDialog(
+      backgroundColor: const Color(0xFF0088B7),
+
+      content: SizedBox(
+        width: 600,
+        height: 275,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            FutureBuilder<int>(
+              future: _totalReviewsFuture,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  final totalReviews = snapshot.data!;
+                  return Center(
+                    child: Text('Total de Participantes: $totalReviews',
+                        style: const TextStyle(
+                        fontSize: 30,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  );
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                }
+                // Display a loading indicator while fetching data
+                return const Center(child: CircularProgressIndicator());
+              },
+            ),
+
+            const SizedBox(height: 20),
+
+            FutureBuilder<Map<String, dynamic>>(
+              future: _emailsFuture,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  final Map<String, dynamic> emailInfo = snapshot.data!;
+                  final String email = emailInfo['server_email'] ?? ''; // Access the email from the map
+                  return Column(
+                    children: [
+                      ListTile(
+                        title: Text('E-mail para envio: $email',
+                            style: const TextStyle(
+                            fontSize: 30,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(height: 25,),
+
+                      ElevatedButton(
+                        style: buttonStyle,
+                        onPressed: () async {
+                          final reviews = await _getReviews();
+                          _submitForm([email], reviews, emailInfo);// Pass email as a list to _submitForm
+                          Navigator.of(context).pop();
+                        },
+
+                        child: const Text('Enviar Resultados',
+                            style: TextStyle(
+                            fontSize: 30,
+                            color: Color(0xFF0088B7),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                }
+                // Display a loading indicator while fetching data
+                return const Center(child: CircularProgressIndicator());
+              },
+            ),
+
+          ],
         ),
       ),
     );

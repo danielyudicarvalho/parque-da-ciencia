@@ -40,8 +40,11 @@ class _SimpleNpsPageState extends State<SimpleNpsPage> {
   }
 
   void openConfirmationPage() {
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => const ConfirmationPage()),
+    showDialog(
+        context: context,
+        builder: (context) {
+          return const ConfirmationPage();
+        }
     );
   }
 
@@ -49,59 +52,131 @@ class _SimpleNpsPageState extends State<SimpleNpsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white, // Applied from HomePage
+
       appBar: AppBar(
-        backgroundColor: Colors.blueAccent, // Applied from HomePage
+        backgroundColor: const Color(0xFF0088B7), // Applied from HomePage
         centerTitle: true,
         title: const Text(
-          "Parque Da Ciência",
+          "Conta Pra Gente!",
           style: TextStyle(
             fontSize: 30,
             color: Colors.white, // Applied from HomePage
             fontWeight: FontWeight.bold,
           ),
         ),
+
+        actions: [
+          Container(
+            padding: const EdgeInsets.only(right: 8, bottom: 4),
+            child: Image.asset(
+              'lib/images/logo_vem_p_ufms.png',
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.only(right: 10, bottom: 4),
+            child: Image.asset('lib/images/logo_ufms.png', width: 95, height: 95,),
+          )
+        ],
       ),
-      body: Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextButton( // Wrap with TextButton for optional text color change
-              onPressed: () {
-                saveNewReview(5);
-                openConfirmationPage();
-              },
-              child: Image.asset('lib/images/feliz.png'),
+
+      body: Stack(
+        children: [
+          // Gif do capi
+          Positioned(
+            top: 258, // ajuste a posição vertical conforme necessário
+            right: 920, // ajuste a posição horizontal conforme necessário
+            width: 450, // largura da imagem
+            height: 450, // altura da imagem
+            child: Image.asset("lib/images/capi_movimento.gif")
+          ),
+
+          // Gif do balão
+          Positioned(
+            top: 25, // ajuste a posição vertical conforme necessário
+            right: 810, // ajuste a posição horizontal conforme necessário
+            width: 280, // largura da imagem
+            height: 280, // altura da imagem
+            child: Image.asset("lib/images/balao_mov.gif")
+          ),
+
+          Center(
+            child: Column(
+              children: [
+                const Spacer(flex: 2,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                      const Spacer(flex: 6),
+
+                      TextButton( // Wrap with TextButton for optional text color change
+                        onPressed: () {
+                          saveNewReview(5);
+                          openConfirmationPage();
+                        },
+                        child: Image.asset('lib/images/feliz.png'),
+                      ),
+
+                      const Spacer(flex: 1),
+
+                      TextButton( // Wrap with TextButton for optional text color change
+                        onPressed: () {
+                          saveNewReview(4);
+                          openConfirmationPage();
+                        },
+                        child: Image.asset('lib/images/meio_feliz.png'),
+                      ),
+
+                      const Spacer(flex: 1),
+
+                      TextButton( // Wrap with TextButton for optional text color change
+                        onPressed: () {
+                          saveNewReview(3);
+                          openConfirmationPage();
+                        },
+                        child: Image.asset('lib/images/medio.png'),
+                      ),
+
+                      const Spacer(flex: 1),
+
+                      TextButton( // Wrap with TextButton for optional text color change
+                        onPressed: () {
+                          saveNewReview(2);
+                          openConfirmationPage();
+                        },
+                        child: Image.asset('lib/images/meio_infeliz.png'),
+                      ),
+
+                      const Spacer(flex: 1),
+
+                      TextButton( // Wrap with TextButton for optional text color change
+                        onPressed: () {
+                          saveNewReview(1);
+                          openConfirmationPage();
+                        },
+                        child: Image.asset('lib/images/infeliz.png'),
+                      ),
+
+                      const Spacer(flex: 2),
+                    ],
+                  ),
+                const SizedBox(height: 60,),
+                const Spacer()
+              ],
             ),
-            TextButton( // Wrap with TextButton for optional text color change
-              onPressed: () {
-                saveNewReview(4);
-                openConfirmationPage();
-              },
-              child: Image.asset('lib/images/meio_feliz.png'),
+          ),
+
+          /* Icones de logo */
+
+          Positioned(
+            top: 490, // ajuste a posição vertical conforme necessário
+            right: 16, // ajuste a posição horizontal conforme necessário
+            child: Image.asset(
+              'lib/images/logo_parque.png',
+              width: 230, // ajuste o tamanho da imagem conforme necessário
+              height: 230,
             ),
-            TextButton( // Wrap with TextButton for optional text color change
-              onPressed: () {
-                saveNewReview(3);
-                openConfirmationPage();
-              },
-              child: Image.asset('lib/images/medio.png'),
-            ),
-            TextButton( // Wrap with TextButton for optional text color change
-              onPressed: () {
-                saveNewReview(2);
-                openConfirmationPage();
-              },
-              child: Image.asset('lib/images/meio_infeliz.png'),
-            ),
-            TextButton( // Wrap with TextButton for optional text color change
-              onPressed: () {
-                saveNewReview(1);
-                openConfirmationPage();
-              },
-              child: Image.asset('lib/images/infeliz.png'),
-            ),
-          ],
-        ),
+          ),
+        ]
       ),
     );
   }

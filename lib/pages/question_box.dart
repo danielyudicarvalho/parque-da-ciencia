@@ -28,7 +28,7 @@ class _QuestionBoxState extends State<QuestionBox> {
         ),
       ),
 
-      content: Container(
+      content: SizedBox(
         width: 800,
         height: 500,
 

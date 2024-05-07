@@ -63,23 +63,31 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
+  void goToOptionsPage(){
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const OptionPage()),
+    );
+  }
+
+  void showErrorMessage(){
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Preencha todos os campos corretamente'),
+        backgroundColor: Colors.red,
+      ),
+    );
+  }
+
   // Function to handle form submission
   void submitForm() async {
     if (validateFields()) {
       // Process form data (e.g., save to database, navigate)
       await _saveFormData();
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const OptionPage()),
-      );
+      goToOptionsPage();
     } else {
       // Show error message
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Preencha todos os campos corretamente'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      showErrorMessage();
     }
   }
 
@@ -88,9 +96,11 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: Colors.white,
+
       appBar: AppBar(
         backgroundColor: const Color(0xFF0088B7),
         centerTitle: true,
+
         title: const Text(
           "Iniciando passeio",
           style: TextStyle(
@@ -99,6 +109,7 @@ class _LoginPageState extends State<LoginPage> {
             fontWeight: FontWeight.bold,
           ),
         ),
+
         actions: [
           Container(
             padding: const EdgeInsets.only(right: 8, bottom: 4),
@@ -112,19 +123,22 @@ class _LoginPageState extends State<LoginPage> {
           )
         ],
       ),
+
       body: SingleChildScrollView(
         child: Stack(children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
+
             child: Expanded(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
+
                 children: [
                   // Imagem da logo do parque
                   Image.asset("lib/images/logo_parque.png",
-                      width: 280, height: 280),
+                      width: 265, height: 265),
 
-                  // Password field
+                  // Campo do nome do servidor
                   TextField(
                     onChanged: (text) {
                       serverName = text;
@@ -136,9 +150,9 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
 
-                  const SizedBox(height: 5),
+                  const SizedBox(height: 10),
 
-                  // Email field
+                  // Campo do email do servidor
                   TextField(
                     onChanged: (text) {
                       serverEmail = text;
@@ -151,8 +165,9 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
 
-                  const SizedBox(height: 5),
+                  const SizedBox(height: 10),
 
+                  // Campo do nome da escola visitante
                   TextField(
                     onChanged: (text) {
                       schoolName = text;
@@ -164,8 +179,9 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
 
-                  const SizedBox(height: 5),
+                  const SizedBox(height: 10),
 
+                  // Campo para o numero de estudantes da escola
                   TextField(
                     onChanged: (text) {
                       studentCount = text;
@@ -179,19 +195,21 @@ class _LoginPageState extends State<LoginPage> {
 
                   const SizedBox(height: 25),
 
+                  // Botao de inicio
                   ElevatedButton(
                     onPressed: submitForm,
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
                       ),
-                      padding: EdgeInsets.all(16),
-                      backgroundColor: Color(0xFF0088B7),
+                      padding: const EdgeInsets.all(16),
+                      backgroundColor: const Color(0xFF0088B7),
                     ),
-                    child: Text(
+
+                    child: const Text(
                       'Iniciar',
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 30,
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                       ),
