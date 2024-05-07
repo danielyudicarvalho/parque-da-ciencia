@@ -170,6 +170,7 @@ class _LoginPageState extends State<LoginPage> {
                     onChanged: (text) {
                       studentCount = text;
                     },
+                    keyboardType: TextInputType.number,
                     decoration: const InputDecoration(
                       labelText: "Número de Estudantes da Visita",
                       labelStyle: TextStyle(color: Color(0xFF0088B7)),
