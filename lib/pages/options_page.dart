@@ -13,13 +13,12 @@ class OptionPage extends StatefulWidget {
 }
 
 class _OptionPageState extends State<OptionPage> {
-  void openReviewPage(){
+  void openReviewPage() {
     showDialog(
         context: context,
         builder: (context) {
           return const ReviewPage();
-        }
-    );
+        });
   }
 
   @override
@@ -27,7 +26,7 @@ class _OptionPageState extends State<OptionPage> {
     // Definindo um tamanho padrão para todos os botões
     final ButtonStyle buttonStyle = ElevatedButton.styleFrom(
       backgroundColor: const Color(0xFF0088B7),
-      minimumSize: const Size(360, 60), // Define o tamanho mínimo dos botões
+      minimumSize: const Size(520, 80), // Define o tamanho mínimo dos botões
       padding: const EdgeInsets.symmetric(vertical: 10),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
@@ -70,19 +69,16 @@ class _OptionPageState extends State<OptionPage> {
           )
         ],
       ),
-
       body: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset("lib/images/logo_parque.png",
-                    width: 280, height: 280),
-
-                const Spacer(),
-
-                ElevatedButton(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset("lib/images/logo_parque.png",
+                  width: 280, height: 280),
+              const Spacer(),
+              ElevatedButton(
                   style: buttonStyle,
                   onPressed: () {
                     Navigator.push(
@@ -94,42 +90,38 @@ class _OptionPageState extends State<OptionPage> {
                   child: const Text(
                     'Opinião do Aluno',
                     style: TextStyle(color: Colors.white, fontSize: 25),
-                  )
-                ),
-
-                const Spacer(),
-
-                ElevatedButton(
+                  )),
+              const Spacer(),
+              ElevatedButton(
                   style: buttonStyle,
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                          builder: (context) => const HomePage()),
+                      MaterialPageRoute(builder: (context) => const HomePage()),
                     );
                   },
                   child: const Text(
                     'Opinião do Responsável pela Escola',
-                    style: TextStyle(color: Colors.white, fontSize: 20),
-                  )
-                ),
-
-                const Spacer(),
-
-                ElevatedButton(
+                    style: TextStyle(color: Colors.white, fontSize: 25),
+                  )),
+              const Spacer(),
+              const Spacer(),
+              const Spacer(),
+              const Spacer(),
+              ElevatedButton(
                   style: buttonStyle,
                   onPressed: () => openReviewPage(),
                   child: const Text(
-                   'Enviar Opiniões',
+                    'Enviar Opiniões',
                     style: TextStyle(color: Colors.white, fontSize: 25),
-                  )
-                ),
-
-                const Spacer(flex: 2,),
-              ],
-            ),
+                  )),
+              const Spacer(
+                flex: 2,
+              ),
+            ],
           ),
         ),
+      ),
     );
   }
 }

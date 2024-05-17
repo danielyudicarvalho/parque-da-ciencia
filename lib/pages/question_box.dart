@@ -21,58 +21,69 @@ class _QuestionBoxState extends State<QuestionBox> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text("Por que você escolheu essa opção?",
+      title: const Text(
+        "Por que você escolheu essa opção?",
         style: TextStyle(
           color: Colors.white,
           fontSize: 30,
         ),
       ),
-
       content: SizedBox(
         width: 800,
         height: 500,
-
         child: Column(
           children: [
             RadioListTile<String>(
-              title: const Text('Gostei!', style: TextStyle(color: Colors.white, fontSize: 25),),
+              title: const Text(
+                'Gostei!',
+                style: TextStyle(color: Colors.white, fontSize: 25),
+              ),
               value: 'Opção 1',
               groupValue: selectedOption,
               onChanged: (value) {
-                setState((){
+                setState(() {
                   selectedOption = value!;
                 });
               },
             ),
 
             RadioListTile<String>(
-              title: const Text('Nao tenho opiniao..', style: TextStyle(color: Colors.white, fontSize: 25),),
+              title: const Text(
+                'Nao tenho opiniao..',
+                style: TextStyle(color: Colors.white, fontSize: 25),
+              ),
               value: 'Opção 2',
               groupValue: selectedOption,
               onChanged: (value) {
-                setState((){
+                setState(() {
                   selectedOption = value!;
                 });
               },
             ),
 
             RadioListTile<String>(
-              title: const Text('Meio confuso...', style: TextStyle(color: Colors.white, fontSize: 25),),
+              title: const Text(
+                'Meio confuso...',
+                style: TextStyle(color: Colors.white, fontSize: 25),
+              ),
               value: 'Opção 3',
               groupValue: selectedOption,
               onChanged: (value) {
-                setState((){
+                setState(() {
                   selectedOption = value!;
                 });
               },
             ),
 
             RadioListTile<String>(
-              title: const Text('Estou insatisfeito!', style: TextStyle(color: Colors.white, fontSize: 25),),
+              title: const Text(
+                'Estou insatisfeito!',
+                style: TextStyle(color: Colors.white, fontSize: 25),
+              ),
               value: 'Opção 4',
               groupValue: selectedOption,
               onChanged: (value) {
-                setState((){
+                setState(() {
                   selectedOption = value!;
                 });
               },
@@ -81,27 +92,32 @@ class _QuestionBoxState extends State<QuestionBox> {
 
             // Campo de explicaçao
             const TextField(
-              //controller: controller,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: "Explique a sua escolha para nos ajudar a melhorar...",
-                hintStyle: TextStyle(color: Colors.white70, fontSize: 25),
-              )
+                //controller: controller,
+                decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              hintText: "Explique a sua escolha para nos ajudar a melhorar...",
+              hintStyle: TextStyle(color: Colors.white70, fontSize: 25),
+            )),
+            const Spacer(
+              flex: 2,
             ),
-            const Spacer(flex: 2,),
 
             // Botoes cancelar e salvar
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Spacer(),
-                MyButton(text: "Cancelar", onPressed: widget.onCancel),
-                const SizedBox(width: 75,),
-                MyButton(text: "Salvar", onPressed: widget.onSave,),
-                const Spacer()
-              ]
-            ),
-            const Spacer(flex: 1,)
+            Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+              Spacer(),
+              MyButton(text: "Cancelar", onPressed: widget.onCancel),
+              const SizedBox(
+                width: 75,
+              ),
+              MyButton(
+                text: "Salvar",
+                onPressed: widget.onSave,
+              ),
+              const Spacer()
+            ]),
+            const Spacer(
+              flex: 1,
+            )
           ],
         ),
       ),
