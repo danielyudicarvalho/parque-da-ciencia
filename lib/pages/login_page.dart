@@ -1,9 +1,7 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pc_app/pages/options_page.dart';
-import 'package:pc_app/util/my_button.dart';
 import 'package:sqflite/sqflite.dart';
 
 class LoginPage extends StatefulWidget {
@@ -44,7 +42,10 @@ class _LoginPageState extends State<LoginPage> {
 
   // Function to validate form fields
   bool validateFields() {
-    if (serverName.isEmpty || serverEmail.isEmpty || studentCount.isEmpty || schoolName.isEmpty) {
+    if (serverName.isEmpty ||
+        serverEmail.isEmpty ||
+        studentCount.isEmpty ||
+        schoolName.isEmpty) {
       return false;
     }
     return true;
@@ -63,14 +64,14 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
-  void goToOptionsPage(){
+  void goToOptionsPage() {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const OptionPage()),
     );
   }
 
-  void showErrorMessage(){
+  void showErrorMessage() {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Preencha todos os campos corretamente'),
@@ -91,16 +92,57 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  void _showAboutDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: const Color(0xFF0088B7),
+          title: const Text(
+            'Desenvolvido pelos seguintes alunos da FACOM:',
+            style: TextStyle(color: Colors.white),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: const [
+              Text(
+                'Arthur Henrique - Desenvolvedor Full-Stack 👻',
+                style: TextStyle(color: Colors.white),
+              ),
+              SizedBox(height: 5),
+              Text(
+                '(arthur.h.a.farias@ufms.br)',
+                style: TextStyle(color: Colors.white, fontSize: 14),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              child:
+                  const Text('Fechar', style: TextStyle(color: Colors.white)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: Colors.white,
-
       appBar: AppBar(
         backgroundColor: const Color(0xFF0088B7),
+        leading: IconButton(
+          icon: const Icon(Icons.info_outline),
+          color: Colors.white,
+          onPressed: _showAboutDialog,
+        ),
         centerTitle: true,
-
         title: const Text(
           "Iniciando passeio",
           style: TextStyle(
@@ -109,7 +151,6 @@ class _LoginPageState extends State<LoginPage> {
             fontWeight: FontWeight.bold,
           ),
         ),
-
         actions: [
           Container(
             padding: const EdgeInsets.only(right: 8, bottom: 4),
@@ -120,25 +161,22 @@ class _LoginPageState extends State<LoginPage> {
           Container(
             padding: const EdgeInsets.only(right: 8, bottom: 4),
             child: Image.asset('lib/images/logo_ufms.png'),
-          )
+          ),
         ],
       ),
-
       body: SingleChildScrollView(
-        child: Stack(children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-
-            child: Expanded(
+        child: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-
                 children: [
-                  // Imagem da logo do parque
-                  Image.asset("lib/images/logo_parque.png",
-                      width: 265, height: 265),
-
-                  // Campo do nome do servidor
+                  Image.asset(
+                    "lib/images/logo_parque.png",
+                    width: 265,
+                    height: 265,
+                  ),
                   TextField(
                     onChanged: (text) {
                       serverName = text;
@@ -149,10 +187,7 @@ class _LoginPageState extends State<LoginPage> {
                       border: OutlineInputBorder(),
                     ),
                   ),
-
                   const SizedBox(height: 10),
-
-                  // Campo do email do servidor
                   TextField(
                     onChanged: (text) {
                       serverEmail = text;
@@ -164,10 +199,7 @@ class _LoginPageState extends State<LoginPage> {
                       border: OutlineInputBorder(),
                     ),
                   ),
-
                   const SizedBox(height: 10),
-
-                  // Campo do nome da escola visitante
                   TextField(
                     onChanged: (text) {
                       schoolName = text;
@@ -178,10 +210,7 @@ class _LoginPageState extends State<LoginPage> {
                       border: OutlineInputBorder(),
                     ),
                   ),
-
                   const SizedBox(height: 10),
-
-                  // Campo para o numero de estudantes da escola
                   TextField(
                     onChanged: (text) {
                       studentCount = text;
@@ -193,10 +222,7 @@ class _LoginPageState extends State<LoginPage> {
                       border: OutlineInputBorder(),
                     ),
                   ),
-
                   const SizedBox(height: 25),
-
-                  // Botao de inicio
                   ElevatedButton(
                     onPressed: submitForm,
                     style: ElevatedButton.styleFrom(
@@ -206,7 +232,6 @@ class _LoginPageState extends State<LoginPage> {
                       padding: const EdgeInsets.all(16),
                       backgroundColor: const Color(0xFF0088B7),
                     ),
-
                     child: const Text(
                       'Iniciar',
                       style: TextStyle(
@@ -215,12 +240,12 @@ class _LoginPageState extends State<LoginPage> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
-          ),
-        ]),
+          ],
+        ),
       ),
     );
   }

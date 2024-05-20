@@ -270,7 +270,7 @@ class _ReviewPageState extends State<ReviewPage> {
                         ),
                       ),
                       const SizedBox(
-                        height: 55,
+                        height: 35,
                       ),
                       ElevatedButton(
                         style: buttonStyle,
