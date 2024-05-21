@@ -97,34 +97,83 @@ class _LoginPageState extends State<LoginPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: const Color(0xFF0088B7),
-          title: const Text(
-            'Desenvolvido pelos seguintes alunos da FACOM:',
-            style: TextStyle(color: Colors.white),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
           ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: const [
-              Text(
-                'Arthur Henrique - Desenvolvedor Full-Stack 👻',
-                style: TextStyle(color: Colors.white),
+          titlePadding: EdgeInsets.zero,
+          contentPadding: EdgeInsets.zero,
+          title: Container(
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(16),
+                topRight: Radius.circular(16),
               ),
-              SizedBox(height: 5),
-              Text(
-                '(arthur.h.a.farias@ufms.br)',
-                style: TextStyle(color: Colors.white, fontSize: 14),
-              ),
-            ],
-          ),
-          actions: <Widget>[
-            TextButton(
-              child:
-                  const Text('Fechar', style: TextStyle(color: Colors.white)),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
             ),
-          ],
+            padding: const EdgeInsets.all(16.0),
+            child: const Text(
+              'Desenvolvido pelos seguintes alunos da FACOM:',
+              style: TextStyle(
+                color: Color(0xFF0088B7),
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          content: Container(
+            decoration: const BoxDecoration(
+              color: Color(0xFF0088B7),
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(16),
+                bottomRight: Radius.circular(16),
+              ),
+            ),
+            padding: const EdgeInsets.all(32),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  'Arthur Henrique - Desenvolvedor Full-Stack 👻',
+                  style: TextStyle(color: Colors.white),
+                ),
+                const SizedBox(height: 5),
+                const Text(
+                  '(arthur.h.a.farias@ufms.br)',
+                  style: TextStyle(color: Colors.white, fontSize: 14),
+                ),
+                const SizedBox(height: 20),
+                const Text(
+                  'João Pedro Rodrigues - Desenvolvedor Front-End',
+                  style: TextStyle(color: Colors.white, fontSize: 14),
+                ),
+                const SizedBox(height: 5),
+                const Text(
+                  '(joao_pedro_rodrigues@ufms.br)',
+                  style: TextStyle(color: Colors.white, fontSize: 14),
+                ),
+                const SizedBox(height: 20),
+                const Text(
+                  'Daniel Yudi de Carvalho - Desenvolvedor Back-End',
+                  style: TextStyle(color: Colors.white, fontSize: 14),
+                ),
+                const SizedBox(height: 5),
+                const Text(
+                  '(daniel@ufms.br)',
+                  style: TextStyle(color: Colors.white, fontSize: 14),
+                ),
+                const SizedBox(height: 20),
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: TextButton(
+                    child: const Text('Fechar',
+                        style: TextStyle(color: Colors.white)),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
         );
       },
     );

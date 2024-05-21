@@ -248,7 +248,7 @@ class _ReviewPageState extends State<ReviewPage> {
                 ),
               ),
             ),
-            const SizedBox(height: 50),
+            const SizedBox(height: 35),
             FutureBuilder<Map<String, dynamic>>(
               future: _emailsFuture,
               builder: (context, snapshot) {
@@ -263,14 +263,14 @@ class _ReviewPageState extends State<ReviewPage> {
                           'E-mail para envio: $email',
                           textAlign: TextAlign.center,
                           style: const TextStyle(
-                            fontSize: 30,
+                            fontSize: 28,
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
                       const SizedBox(
-                        height: 35,
+                        height: 25,
                       ),
                       ElevatedButton(
                         style: buttonStyle,
@@ -303,7 +303,7 @@ class _ReviewPageState extends State<ReviewPage> {
                 return const Center(child: CircularProgressIndicator());
               },
             ),
-            const SizedBox(height: 25), // Adicionei um espaço extra aqui
+            const SizedBox(height: 20), // Adicionei um espaço extra aqui
           ],
         ),
       ),
