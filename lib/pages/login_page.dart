@@ -112,11 +112,12 @@ class _LoginPageState extends State<LoginPage> {
             ),
             padding: const EdgeInsets.all(16.0),
             child: const Text(
-              'Desenvolvido pelos seguintes alunos da FACOM:',
+              '  Sobre esta Aplicação',
               style: TextStyle(
                 color: Color(0xFF0088B7),
                 fontWeight: FontWeight.bold,
               ),
+              textAlign: TextAlign.left,
             ),
           ),
           content: Container(
@@ -130,46 +131,90 @@ class _LoginPageState extends State<LoginPage> {
             padding: const EdgeInsets.all(32),
             child: Column(
               mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                const Text(
+                  'Desenvolvedores voluntários (Acadêmicos dos cursos da Faculdade de Computação):',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.left,
+                ),
+                const SizedBox(height: 20),
                 const Text(
                   'Arthur Henrique - Desenvolvedor Full-Stack 👻',
                   style: TextStyle(color: Colors.white),
+                  textAlign: TextAlign.left,
                 ),
                 const SizedBox(height: 5),
                 const Text(
                   '(arthur.h.a.farias@ufms.br)',
                   style: TextStyle(color: Colors.white, fontSize: 14),
-                ),
-                const SizedBox(height: 20),
-                const Text(
-                  'João Pedro Rodrigues - Desenvolvedor Front-End',
-                  style: TextStyle(color: Colors.white, fontSize: 14),
-                ),
-                const SizedBox(height: 5),
-                const Text(
-                  '(joao_pedro_rodrigues@ufms.br)',
-                  style: TextStyle(color: Colors.white, fontSize: 14),
+                  textAlign: TextAlign.left,
                 ),
                 const SizedBox(height: 20),
                 const Text(
                   'Daniel Yudi de Carvalho - Desenvolvedor Back-End',
                   style: TextStyle(color: Colors.white, fontSize: 14),
+                  textAlign: TextAlign.left,
                 ),
                 const SizedBox(height: 5),
                 const Text(
                   '(daniel@ufms.br)',
                   style: TextStyle(color: Colors.white, fontSize: 14),
+                  textAlign: TextAlign.left,
+                ),
+                const SizedBox(height: 5),
+                const SizedBox(height: 20),
+                const Text(
+                  'João Pedro Rodrigues - Desenvolvedor Front-End',
+                  style: TextStyle(color: Colors.white, fontSize: 14),
+                  textAlign: TextAlign.left,
+                ),
+                const SizedBox(height: 5),
+                const Text(
+                  '(joao_pedro_rodrigues@ufms.br)',
+                  style: TextStyle(color: Colors.white, fontSize: 14),
+                  textAlign: TextAlign.left,
                 ),
                 const SizedBox(height: 20),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: TextButton(
-                    child: const Text('Fechar',
-                        style: TextStyle(color: Colors.white)),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
+                const Text(
+                  'Orientação:',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
                   ),
+                  textAlign: TextAlign.left,
+                ),
+                const SizedBox(height: 20),
+                const Text(
+                  'Luciana Montera (Professora da Faculdade de Computação)',
+                  style: TextStyle(color: Colors.white),
+                  textAlign: TextAlign.left,
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Finalizado em 05/2024',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    TextButton(
+                      child: const Text(
+                        'Fechar',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),
