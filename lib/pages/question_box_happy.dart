@@ -3,7 +3,7 @@ import '../util/my_button.dart';
 import 'confirmation_page.dart';
 
 class QuestionBoxHappy extends StatefulWidget {
-  final VoidCallback onSave;
+  final Function(String, String) onSave;
   final VoidCallback onCancel;
 
   const QuestionBoxHappy({
@@ -17,15 +17,16 @@ class QuestionBoxHappy extends StatefulWidget {
 }
 
 class _QuestionBoxState extends State<QuestionBoxHappy> {
-  List<String> selectedOptions = []; // List to store chosen options
+  List<String> selectedOptions = [];
+  String feedbackText = '';
 
   bool isSaveButtonEnabled() {
     return selectedOptions.isNotEmpty;
   }
 
   void handleSavePressed() {
-    if (selectedOptions.isNotEmpty) { // Corrected from selectedOption to selectedOptions
-      widget.onSave();
+    if (selectedOptions.isNotEmpty) {
+      widget.onSave(selectedOptions.join(', '), feedbackText);
       Navigator.of(context).pop();
     }
   }
@@ -37,17 +38,15 @@ class _QuestionBoxState extends State<QuestionBoxHappy> {
       title: const Text(
         "Por que você escolheu essa opção?",
         style: TextStyle(
-          color: Colors.white,
-          fontSize: 30,
-          fontWeight: FontWeight.bold
+            color: Colors.white,
+            fontSize: 30,
+            fontWeight: FontWeight.bold
         ),
       ),
-
       content: SingleChildScrollView(
         child: SizedBox(
           width: 800,
           height: 450,
-        
           child: Column(
             children: [
               CheckboxListTile(
@@ -55,7 +54,7 @@ class _QuestionBoxState extends State<QuestionBoxHappy> {
                   'Variedade de atrações',
                   style: TextStyle(color: Colors.white, fontSize: 25, fontWeight: FontWeight.bold),
                 ),
-                value: selectedOptions.contains('Opção 1'), // Check if the option is selected
+                value: selectedOptions.contains('Opção 1'),
                 onChanged: (value) {
                   setState(() {
                     if (value != null && value) {
@@ -66,9 +65,7 @@ class _QuestionBoxState extends State<QuestionBoxHappy> {
                   });
                 },
               ),
-
               const SizedBox(height: 10),
-        
               CheckboxListTile(
                 title: const Text(
                   'Bom atendimento',
@@ -85,9 +82,7 @@ class _QuestionBoxState extends State<QuestionBoxHappy> {
                   });
                 },
               ),
-
               const SizedBox(height: 10),
-        
               CheckboxListTile(
                 title: const Text(
                   'Boa estrutura',
@@ -104,9 +99,7 @@ class _QuestionBoxState extends State<QuestionBoxHappy> {
                   });
                 },
               ),
-
               const SizedBox(height: 10),
-
               CheckboxListTile(
                 title: const Text(
                   'Aprendizagem interessante',
@@ -123,22 +116,18 @@ class _QuestionBoxState extends State<QuestionBoxHappy> {
                   });
                 },
               ),
-        
               const SizedBox(height: 10),
-        
-              // Campo de explicaçao
-              const TextField(
-                //controller: controller,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: "Explique a sua escolha para nos ajudar a melhorar...",
-                    hintStyle: TextStyle(color: Colors.white70, fontSize: 25),
-                  )
+              TextField(
+                onChanged: (text) {
+                  feedbackText = text;
+                },
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: "Explique a sua escolha para nos ajudar a melhorar...",
+                  hintStyle: TextStyle(color: Colors.white70, fontSize: 25),
+                ),
               ),
-        
               const SizedBox(height: 20),
-        
-              // Botoes cancelar e salvar
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -146,14 +135,11 @@ class _QuestionBoxState extends State<QuestionBoxHappy> {
                     text: "Cancelar",
                     onPressed: widget.onCancel,
                   ),
-        
                   const SizedBox(width: 75),
-        
                   MyButton(
                     text: "Salvar",
                     onPressed: handleSavePressed,
                   ),
-        
                   const SizedBox(width: 130,),
                 ],
               ),

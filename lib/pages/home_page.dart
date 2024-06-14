@@ -1,12 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-//import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:pc_app/pages/complex_confirmation_page.dart';
 import 'package:pc_app/pages/confirmation_page.dart';
-import 'package:pc_app/pages/login_page.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:pc_app/pages/question_box.dart';
 import 'package:pc_app/pages/question_box_happy.dart';
 import 'package:pc_app/pages/question_box_less_happy.dart';
 import 'package:pc_app/pages/question_box_medium.dart';
@@ -30,135 +26,139 @@ class _HomePageState extends State<HomePage> {
     _initializeDatabase();
   }
 
-
   Future<void> _initializeDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = documentsDirectory.path + "/" + "reports.db";
 
-    _database = await openDatabase(path, version: 1,
-        onCreate: (Database db, int version) async {
-          await db.execute(
-              "CREATE TABLE reports(id INTEGER PRIMARY KEY, rating INTEGER)");
-        });
+    _database = await openDatabase(
+      path,
+      version: 1,
+      onCreate: (Database db, int version) async {
+        await db.execute(
+          "CREATE TABLE reports(id INTEGER PRIMARY KEY, rating INTEGER, options TEXT, feedback TEXT)",
+        );
+      },
+    );
   }
+
 
   Future<List<Map<String, dynamic>>> _getReviews() async {
     final List<Map<String, dynamic>> reviews =
-        await _database.rawQuery('SELECT * FROM reviews');
+    await _database.rawQuery('SELECT * FROM reviews');
     return reviews;
   }
 
-
   Future<void> _retrieveReviews() async {
     final List<Map<String, dynamic>> reviews =
-        await _database.rawQuery('SELECT * FROM reviews');
+    await _database.rawQuery('SELECT * FROM reviews');
     setState(() {
       _reviews = reviews;
     });
   }
 
-  saveNewReview(int rating) async {
+  saveNewReview(int rating, String options, String feedback) async {
     await _database.transaction((txn) async {
-      await txn.rawInsert('INSERT INTO reports(rating) VALUES(?)', [rating]);
+      await txn.rawInsert(
+        'INSERT INTO reports(rating, options, feedback) VALUES(?, ?, ?)',
+        [rating, options, feedback],
+      );
     });
   }
 
+
   void openConfirmationPage() {
     showDialog(
-        context: context,
-        builder: (context) {
-          return const ConfirmationPage();
-        }
+      context: context,
+      builder: (context) {
+        return const ConfirmationPage();
+      },
+    );
+  }
+
+  void _openQuestionBox(int rating, Widget dialogWidget) {
+    showDialog(
+      context: context,
+      builder: (context) => dialogWidget,
     );
   }
 
   void openQuestionBoxHappy() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return QuestionBoxHappy(
-          onSave: () async {
-            await saveNewReview(5);
-            openConfirmationPage();
-          }, //saveNewReview(5, true),
-          onCancel: () {
-            Navigator.of(context).pop();
-            print("Cancelado!");
-          },
-        );
-      },
+    _openQuestionBox(
+      5,
+      QuestionBoxHappy(
+        onSave: (options, feedback) async {
+          await saveNewReview(5, options, feedback);
+          openConfirmationPage();
+        },
+        onCancel: () {
+          Navigator.of(context).pop();
+          print("Cancelado!");
+        },
+      ),
     );
   }
 
   void openQuestionBoxLessHappy() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return QuestionBoxLessHappy(
-          onSave: () async{
-            await saveNewReview(4);
-            openConfirmationPage();
-          },
-          onCancel: () {
-            Navigator.of(context).pop();
-            print("Cancelado!");
-          },
-        );
-      },
+    _openQuestionBox(
+      4,
+      QuestionBoxLessHappy(
+        onSave: (options, feedback) async {
+          await saveNewReview(4, options, feedback);
+          openConfirmationPage();
+        },
+        onCancel: () {
+          Navigator.of(context).pop();
+          print("Cancelado!");
+        },
+      ),
     );
   }
 
   void openQuestionBoxMedium() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return QuestionBoxMedium(
-          onSave: () async{
-            await saveNewReview(3);
-            openConfirmationPage();
-          },
-          onCancel: () {
-            Navigator.of(context).pop();
-            print("Cancelado!");
-          },
-        );
-      },
+    _openQuestionBox(
+      3,
+      QuestionBoxMedium(
+        onSave: (options, feedback) async {
+          await saveNewReview(3, options, feedback);
+          openConfirmationPage();
+        },
+        onCancel: () {
+          Navigator.of(context).pop();
+          print("Cancelado!");
+        },
+      ),
     );
   }
 
   void openQuestionBoxBad() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return QuestionBoxBad(
-          onSave: () async{
-            await saveNewReview(2);
-            openConfirmationPage();
-          },
-          onCancel: () {
-            Navigator.of(context).pop();
-            print("Cancelado!");
-          },
-        );
-      },
+    _openQuestionBox(
+      2,
+      QuestionBoxMoreBad(
+        onSave: (options, feedback) async {
+          await saveNewReview(2, options, feedback);
+          openConfirmationPage();
+        },
+        onCancel: () {
+          Navigator.of(context).pop();
+          print("Cancelado!");
+        },
+      ),
     );
   }
 
   void openQuestionBoxMoreBad() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return QuestionBoxMoreBad(
-          onSave: () async{
-            await saveNewReview(1);
-            openConfirmationPage();
-          },
-          onCancel: () {
-            Navigator.of(context).pop();
-            print("Cancelado!");
-          },
-        );
-      },
+    _openQuestionBox(
+      1,
+      QuestionBoxMoreBad(
+        onSave: (options, feedback) async {
+          await saveNewReview(1, options, feedback);
+          openConfirmationPage();
+        },
+        onCancel: () {
+          Navigator.of(context).pop();
+          print("Cancelado!");
+        },
+      ),
     );
   }
 
@@ -166,7 +166,6 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-
       appBar: AppBar(
         backgroundColor: const Color(0xFF0088B7),
         centerTitle: true,
@@ -187,11 +186,14 @@ class _HomePageState extends State<HomePage> {
           ),
           Container(
             padding: const EdgeInsets.only(right: 10, bottom: 4),
-            child: Image.asset('lib/images/logo_ufms.png', width: 95, height: 95,),
-          )
+            child: Image.asset(
+              'lib/images/logo_ufms.png',
+              width: 95,
+              height: 95,
+            ),
+          ),
         ],
       ),
-
       body: Stack(
         children: [
           // Gif do capi
@@ -200,7 +202,7 @@ class _HomePageState extends State<HomePage> {
             right: 920, // ajuste a posição horizontal conforme necessário
             width: 450, // largura da imagem
             height: 450, // altura da imagem
-            child: Image.asset("lib/images/capi_movimento.gif")
+            child: Image.asset("lib/images/capi_movimento.gif"),
           ),
 
           // Gif do balão
@@ -209,62 +211,51 @@ class _HomePageState extends State<HomePage> {
             right: 810, // ajuste a posição horizontal conforme necessário
             width: 280, // largura da imagem
             height: 280, // altura da imagem
-            child: Image.asset("lib/images/balao_mov.gif")
+            child: Image.asset("lib/images/balao_mov.gif"),
           ),
 
           Center(
             child: Column(
               children: [
-                const Spacer(flex: 2,),
+                const Spacer(flex: 2),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     const Spacer(flex: 6),
-
                     IconButton(
-                      onPressed: () => openQuestionBoxHappy(),
+                      onPressed: openQuestionBoxHappy,
                       icon: Image.asset('lib/images/feliz.png'),
                     ),
-
                     const Spacer(flex: 1),
-
                     IconButton(
-                      onPressed: () => openQuestionBoxLessHappy(),
+                      onPressed: openQuestionBoxLessHappy,
                       icon: Image.asset('lib/images/meio_feliz.png'),
                     ),
-
                     const Spacer(flex: 1),
-
                     IconButton(
-                      onPressed: () => openQuestionBoxMedium(),
+                      onPressed: openQuestionBoxMedium,
                       icon: Image.asset('lib/images/medio.png'),
                     ),
-
                     const Spacer(flex: 1),
-
                     IconButton(
-                      onPressed: () => openQuestionBoxBad(),
+                      onPressed: openQuestionBoxBad,
                       icon: Image.asset('lib/images/meio_infeliz.png'),
                     ),
-
                     const Spacer(flex: 1),
-
                     IconButton(
-                      onPressed: () => openQuestionBoxMoreBad(),
+                      onPressed: openQuestionBoxMoreBad,
                       icon: Image.asset('lib/images/infeliz.png'),
                     ),
-
                     const Spacer(flex: 2),
                   ],
                 ),
-                const SizedBox(height: 60,),
-                const Spacer()
+                const SizedBox(height: 60),
+                const Spacer(),
               ],
             ),
           ),
 
           /* Icones de logo */
-
           Positioned(
             top: 490, // ajuste a posição vertical conforme necessário
             right: 16, // ajuste a posição horizontal conforme necessário
@@ -274,7 +265,7 @@ class _HomePageState extends State<HomePage> {
               height: 230,
             ),
           ),
-        ]
+        ],
       ),
     );
   }
