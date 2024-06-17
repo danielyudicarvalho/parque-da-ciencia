@@ -54,13 +54,13 @@ class _QuestionBoxState extends State<QuestionBoxMedium> {
                   'Boa variedade, porém falta manutenção',
                   style: TextStyle(color: Colors.white, fontSize: 25, fontWeight: FontWeight.bold),
                 ),
-                value: selectedOptions.contains('Opção 1'),
+                value: selectedOptions.contains('Boa variedade, porém falta manutenção'),
                 onChanged: (value) {
                   setState(() {
                     if (value != null && value) {
-                      selectedOptions.add('Opção 1');
+                      selectedOptions.add('Boa variedade, porém falta manutenção');
                     } else {
-                      selectedOptions.remove('Opção 1');
+                      selectedOptions.remove('Boa variedade, porém falta manutenção');
                     }
                   });
                 },
@@ -71,13 +71,13 @@ class _QuestionBoxState extends State<QuestionBoxMedium> {
                   'Interessante, mas faltou interatividade e envolvimento',
                   style: TextStyle(color: Colors.white, fontSize: 25, fontWeight: FontWeight.bold),
                 ),
-                value: selectedOptions.contains('Opção 2'),
+                value: selectedOptions.contains('Interessante, mas faltou interatividade e envolvimento'),
                 onChanged: (value) {
                   setState(() {
                     if (value != null && value) {
-                      selectedOptions.add('Opção 2');
+                      selectedOptions.add('Interessante, mas faltou interatividade e envolvimento');
                     } else {
-                      selectedOptions.remove('Opção 2');
+                      selectedOptions.remove('Interessante, mas faltou interatividade e envolvimento');
                     }
                   });
                 },
@@ -88,13 +88,13 @@ class _QuestionBoxState extends State<QuestionBoxMedium> {
                   'Muito Bom, porém tem poucas atrações',
                   style: TextStyle(color: Colors.white, fontSize: 25, fontWeight: FontWeight.bold),
                 ),
-                value: selectedOptions.contains('Opção 3'),
+                value: selectedOptions.contains('Muito Bom, porém tem poucas atrações'),
                 onChanged: (value) {
                   setState(() {
                     if (value != null && value) {
-                      selectedOptions.add('Opção 3');
+                      selectedOptions.add('Muito Bom, porém tem poucas atrações');
                     } else {
-                      selectedOptions.remove('Opção 3');
+                      selectedOptions.remove('Muito Bom, porém tem poucas atrações');
                     }
                   });
                 },
@@ -105,13 +105,13 @@ class _QuestionBoxState extends State<QuestionBoxMedium> {
                   'Boas atrações, mas achei um pouco confuso',
                   style: TextStyle(color: Colors.white, fontSize: 25, fontWeight: FontWeight.bold),
                 ),
-                value: selectedOptions.contains('Opção 4'),
+                value: selectedOptions.contains('Boas atrações, mas achei um pouco confuso'),
                 onChanged: (value) {
                   setState(() {
                     if (value != null && value) {
-                      selectedOptions.add('Opção 4');
+                      selectedOptions.add('Boas atrações, mas achei um pouco confuso');
                     } else {
-                      selectedOptions.remove('Opção 4');
+                      selectedOptions.remove('Boas atrações, mas achei um pouco confuso');
                     }
                   });
                 },

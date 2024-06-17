@@ -55,21 +55,6 @@ class _HomePageState extends State<HomePage> {
   }
 
 
-
-  Future<List<Map<String, dynamic>>> _getReviews() async {
-    final List<Map<String, dynamic>> reviews =
-    await _database.rawQuery('SELECT * FROM reviews');
-    return reviews;
-  }
-
-  Future<void> _retrieveReviews() async {
-    final List<Map<String, dynamic>> reviews =
-    await _database.rawQuery('SELECT * FROM reviews');
-    setState(() {
-      _reviews = reviews;
-    });
-  }
-
   saveNewReview(int rating, String options, String feedback) async {
     await _database.transaction((txn) async {
       await txn.rawInsert(
@@ -78,8 +63,6 @@ class _HomePageState extends State<HomePage> {
       );
     });
   }
-
-
 
   void openConfirmationPage() {
     showDialog(

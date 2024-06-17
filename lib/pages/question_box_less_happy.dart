@@ -54,13 +54,13 @@ class _QuestionBoxState extends State<QuestionBoxLessHappy> {
                   'Variedade de atrações',
                   style: TextStyle(color: Colors.white, fontSize: 25, fontWeight: FontWeight.bold),
                 ),
-                value: selectedOptions.contains('Opção 1'),
+                value: selectedOptions.contains('Variedade de atrações'),
                 onChanged: (value) {
                   setState(() {
                     if (value != null && value) {
-                      selectedOptions.add('Opção 1');
+                      selectedOptions.add('Variedade de atrações');
                     } else {
-                      selectedOptions.remove('Opção 1');
+                      selectedOptions.remove('Variedade de atrações');
                     }
                   });
                 },
@@ -71,13 +71,13 @@ class _QuestionBoxState extends State<QuestionBoxLessHappy> {
                   'Bom atendimento',
                   style: TextStyle(color: Colors.white, fontSize: 25, fontWeight: FontWeight.bold),
                 ),
-                value: selectedOptions.contains('Opção 2'),
+                value: selectedOptions.contains('Bom atendimento'),
                 onChanged: (value) {
                   setState(() {
                     if (value != null && value) {
-                      selectedOptions.add('Opção 2');
+                      selectedOptions.add('Bom atendimento');
                     } else {
-                      selectedOptions.remove('Opção 2');
+                      selectedOptions.remove('Bom atendimento');
                     }
                   });
                 },
@@ -88,13 +88,13 @@ class _QuestionBoxState extends State<QuestionBoxLessHappy> {
                   'Boa estrutura',
                   style: TextStyle(color: Colors.white, fontSize: 25, fontWeight: FontWeight.bold),
                 ),
-                value: selectedOptions.contains('Opção 3'),
+                value: selectedOptions.contains('Boa estrutura'),
                 onChanged: (value) {
                   setState(() {
                     if (value != null && value) {
-                      selectedOptions.add('Opção 3');
+                      selectedOptions.add('Boa estrutura');
                     } else {
-                      selectedOptions.remove('Opção 3');
+                      selectedOptions.remove('Boa estrutura');
                     }
                   });
                 },
@@ -105,13 +105,13 @@ class _QuestionBoxState extends State<QuestionBoxLessHappy> {
                   'Aprendizagem interessante',
                   style: TextStyle(color: Colors.white, fontSize: 25, fontWeight: FontWeight.bold),
                 ),
-                value: selectedOptions.contains('Opção 4'),
+                value: selectedOptions.contains('Aprendizagem interessante'),
                 onChanged: (value) {
                   setState(() {
                     if (value != null && value) {
-                      selectedOptions.add('Opção 4');
+                      selectedOptions.add('Aprendizagem interessante');
                     } else {
-                      selectedOptions.remove('Opção 4');
+                      selectedOptions.remove('Aprendizagem interessante');
                     }
                   });
                 },

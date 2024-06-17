@@ -54,13 +54,13 @@ class _QuestionBoxState extends State<QuestionBoxMoreBad> {
                   'Acho que o parque está um pouco desatualizado e mal conservado',
                   style: TextStyle(color: Colors.white, fontSize: 25, fontWeight: FontWeight.bold),
                 ),
-                value: selectedOptions.contains('Opção 1'),
+                value: selectedOptions.contains('Acho que o parque está um pouco desatualizado e mal conservado'),
                 onChanged: (value) {
                   setState(() {
                     if (value != null && value) {
-                      selectedOptions.add('Opção 1');
+                      selectedOptions.add('Acho que o parque está um pouco desatualizado e mal conservado');
                     } else {
-                      selectedOptions.remove('Opção 1');
+                      selectedOptions.remove('Acho que o parque está um pouco desatualizado e mal conservado');
                     }
                   });
                 },
@@ -71,13 +71,13 @@ class _QuestionBoxState extends State<QuestionBoxMoreBad> {
                   'Acho que a falta de mais funcionários prejudicou o parque',
                   style: TextStyle(color: Colors.white, fontSize: 25, fontWeight: FontWeight.bold),
                 ),
-                value: selectedOptions.contains('Opção 2'),
+                value: selectedOptions.contains('Acho que a falta de mais funcionários prejudicou o parque'),
                 onChanged: (value) {
                   setState(() {
                     if (value != null && value) {
-                      selectedOptions.add('Opção 2');
+                      selectedOptions.add('Acho que a falta de mais funcionários prejudicou o parque');
                     } else {
-                      selectedOptions.remove('Opção 2');
+                      selectedOptions.remove('Acho que a falta de mais funcionários prejudicou o parque');
                     }
                   });
                 },
@@ -88,13 +88,13 @@ class _QuestionBoxState extends State<QuestionBoxMoreBad> {
                   'Acho que tem poucas atrações',
                   style: TextStyle(color: Colors.white, fontSize: 25, fontWeight: FontWeight.bold),
                 ),
-                value: selectedOptions.contains('Opção 3'),
+                value: selectedOptions.contains('Acho que tem poucas atrações'),
                 onChanged: (value) {
                   setState(() {
                     if (value != null && value) {
-                      selectedOptions.add('Opção 3');
+                      selectedOptions.add('Acho que tem poucas atrações');
                     } else {
-                      selectedOptions.remove('Opção 3');
+                      selectedOptions.remove('Acho que tem poucas atrações');
                     }
                   });
                 },
@@ -105,13 +105,13 @@ class _QuestionBoxState extends State<QuestionBoxMoreBad> {
                   'A falta de estrutura do parque prejudicou a minhas experiência',
                   style: TextStyle(color: Colors.white, fontSize: 25, fontWeight: FontWeight.bold),
                 ),
-                value: selectedOptions.contains('Opção 4'),
+                value: selectedOptions.contains('A falta de estrutura do parque prejudicou a minhas experiência'),
                 onChanged: (value) {
                   setState(() {
                     if (value != null && value) {
-                      selectedOptions.add('Opção 4');
+                      selectedOptions.add('A falta de estrutura do parque prejudicou a minhas experiência');
                     } else {
-                      selectedOptions.remove('Opção 4');
+                      selectedOptions.remove('A falta de estrutura do parque prejudicou a minhas experiência');
                     }
                   });
                 },
