@@ -6,7 +6,6 @@ import 'package:sqflite/sqflite.dart';
 import 'package:pc_app/pages/question_box_happy.dart';
 import 'package:pc_app/pages/question_box_less_happy.dart';
 import 'package:pc_app/pages/question_box_medium.dart';
-import 'package:pc_app/pages/question_box_bad.dart';
 import 'package:pc_app/pages/question_box_more_bad.dart';
 
 class HomePage extends StatefulWidget {
@@ -35,11 +34,26 @@ class _HomePageState extends State<HomePage> {
       version: 1,
       onCreate: (Database db, int version) async {
         await db.execute(
-          "CREATE TABLE reports(id INTEGER PRIMARY KEY, rating INTEGER, options TEXT, feedback TEXT)",
+            "CREATE TABLE IF NOT EXISTS monitor_reports("
+                "id INTEGER PRIMARY KEY, "
+                "rating INTEGER, "
+                "options TEXT, "
+                "feedback TEXT)"
+        );
+      },
+      onOpen: (Database db) async {
+        await db.execute("DROP TABLE IF EXISTS monitor_reports"); // Drop the table
+        await db.execute(
+            "CREATE TABLE monitor_reports("
+                "id INTEGER PRIMARY KEY, "
+                "rating INTEGER, "
+                "options TEXT, "
+                "feedback TEXT)"
         );
       },
     );
   }
+
 
 
   Future<List<Map<String, dynamic>>> _getReviews() async {
@@ -59,11 +73,12 @@ class _HomePageState extends State<HomePage> {
   saveNewReview(int rating, String options, String feedback) async {
     await _database.transaction((txn) async {
       await txn.rawInsert(
-        'INSERT INTO reports(rating, options, feedback) VALUES(?, ?, ?)',
+        'INSERT INTO monitor_reports(rating, options, feedback) VALUES(?, ?, ?)',
         [rating, options, feedback],
       );
     });
   }
+
 
 
   void openConfirmationPage() {

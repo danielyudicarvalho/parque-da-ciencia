@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:pc_app/pages/confirmation_page.dart';
-import 'package:pc_app/pages/login_page.dart';
-import 'package:pc_app/pages/simple_nps_page.dart';
 
 class SimpleNpsPage extends StatefulWidget {
   const SimpleNpsPage({Key? key});
