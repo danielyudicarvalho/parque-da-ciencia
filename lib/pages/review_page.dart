@@ -120,7 +120,7 @@ class _ReviewPageState extends State<ReviewPage> {
     if (tableName == 'reports') {
       csvBuffer.write('Rating\n');
     } else {
-      csvBuffer.write('Rating,Options,Feedback\n');
+      csvBuffer.write('Rating, - , - \n');
     }
 
     for (var row in data) {
