@@ -37,7 +37,10 @@ class _HomePageState extends State<HomePage> {
             "CREATE TABLE IF NOT EXISTS monitor_reports("
                 "id INTEGER PRIMARY KEY, "
                 "rating INTEGER, "
-                "options TEXT, "
+                "option1 TEXT, "
+                "option2 TEXT, "
+                "option3 TEXT, "
+                "option4 TEXT, "
                 "feedback TEXT)"
         );
       },
@@ -47,7 +50,10 @@ class _HomePageState extends State<HomePage> {
             "CREATE TABLE monitor_reports("
                 "id INTEGER PRIMARY KEY, "
                 "rating INTEGER, "
-                "options TEXT, "
+                "option1 TEXT, "
+                "option2 TEXT, "
+                "option3 TEXT, "
+                "option4 TEXT, "
                 "feedback TEXT)"
         );
       },
@@ -55,11 +61,11 @@ class _HomePageState extends State<HomePage> {
   }
 
 
-  saveNewReview(int rating, String options, String feedback) async {
+  saveNewReview(int rating, String option1,String option2,String option3,String option4, String feedback) async {
     await _database.transaction((txn) async {
       await txn.rawInsert(
-        'INSERT INTO monitor_reports(rating, options, feedback) VALUES(?, ?, ?)',
-        [rating, options, feedback],
+        'INSERT INTO monitor_reports(rating, option1, option2, option3, option4, feedback) VALUES(?, ?, ?, ?, ?, ?)',
+        [rating, option1,option2,option3,option4, feedback],
       );
     });
   }
@@ -84,8 +90,8 @@ class _HomePageState extends State<HomePage> {
     _openQuestionBox(
       5,
       QuestionBoxHappy(
-        onSave: (options, feedback) async {
-          await saveNewReview(5, options, feedback);
+        onSave: (option1, option2, option3, option4, feedback) async {
+          await saveNewReview(5, option1,option2, option3, option4, feedback);
           openConfirmationPage();
         },
         onCancel: () {
@@ -100,8 +106,8 @@ class _HomePageState extends State<HomePage> {
     _openQuestionBox(
       4,
       QuestionBoxLessHappy(
-        onSave: (options, feedback) async {
-          await saveNewReview(4, options, feedback);
+        onSave: (option1, option2, option3, option4, feedback) async {
+          await saveNewReview(4, option1,option2, option3, option4, feedback);
           openConfirmationPage();
         },
         onCancel: () {
@@ -116,8 +122,8 @@ class _HomePageState extends State<HomePage> {
     _openQuestionBox(
       3,
       QuestionBoxMedium(
-        onSave: (options, feedback) async {
-          await saveNewReview(3, options, feedback);
+        onSave: (option1, option2, option3, option4, feedback) async {
+          await saveNewReview(3, option1,option2, option3, option4, feedback);
           openConfirmationPage();
         },
         onCancel: () {
@@ -132,8 +138,8 @@ class _HomePageState extends State<HomePage> {
     _openQuestionBox(
       2,
       QuestionBoxMoreBad(
-        onSave: (options, feedback) async {
-          await saveNewReview(2, options, feedback);
+        onSave: (option1, option2, option3, option4, feedback) async {
+          await saveNewReview(2, option1,option2, option3, option4, feedback);
           openConfirmationPage();
         },
         onCancel: () {
@@ -148,8 +154,8 @@ class _HomePageState extends State<HomePage> {
     _openQuestionBox(
       1,
       QuestionBoxMoreBad(
-        onSave: (options, feedback) async {
-          await saveNewReview(1, options, feedback);
+        onSave: (option1,option2, option3, option4, feedback) async {
+          await saveNewReview(1, option1, option2,option3, option4, feedback);
           openConfirmationPage();
         },
         onCancel: () {

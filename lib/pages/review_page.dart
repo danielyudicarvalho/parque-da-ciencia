@@ -109,9 +109,9 @@ class _ReviewPageState extends State<ReviewPage> {
 
   String _generateEmailBody(Map<String, dynamic> loginInfo) {
     final StringBuffer buffer = StringBuffer();
-    buffer.writeln('School Name: ${loginInfo['school_name']}');
-    buffer.writeln('Server Name: ${loginInfo['server_name']}');
-    buffer.writeln('Study Count: ${loginInfo['student_count']}');
+    buffer.writeln('Nome da escola: ${loginInfo['school_name']}');
+    buffer.writeln('Servidor responsável: ${loginInfo['server_name']}');
+    buffer.writeln('Número de alunos durante a visita: ${loginInfo['student_count']}');
     return buffer.toString();
   }
 
@@ -120,14 +120,14 @@ class _ReviewPageState extends State<ReviewPage> {
     if (tableName == 'reports') {
       csvBuffer.write('Rating\n');
     } else {
-      csvBuffer.write('Rating, - , - \n');
+      csvBuffer.write('Rating, Feedback, Opção 1 , Opção 2, Opção 3, Opção 4 \n');
     }
 
     for (var row in data) {
       if (tableName == 'reports') {
         csvBuffer.write('${row['rating']}\n');
       } else {
-        csvBuffer.write('${row['rating']},${row['options']},${row['feedback']}\n');
+        csvBuffer.write('${row['rating']},${row['feedback']},${row['option1']},${row['option2']},${row['option3']},${row['option4']}\n');
       }
     }
 

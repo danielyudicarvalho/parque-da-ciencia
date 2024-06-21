@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../util/my_button.dart';
 
 class QuestionBoxMoreBad extends StatefulWidget {
-  final Function(String, String) onSave;
+  final Function(String, String, String, String, String) onSave;
   final VoidCallback onCancel;
 
   const QuestionBoxMoreBad({
@@ -17,6 +17,10 @@ class QuestionBoxMoreBad extends StatefulWidget {
 
 class _QuestionBoxState extends State<QuestionBoxMoreBad> {
   List<String> selectedOptions = [];
+  String option1 = '';
+  String option2 = '';
+  String option3 = '';
+  String option4 = '';
   String feedbackText = '';
 
   bool isSaveButtonEnabled() {
@@ -24,10 +28,28 @@ class _QuestionBoxState extends State<QuestionBoxMoreBad> {
   }
 
   void handleSavePressed() {
-    if (selectedOptions.isNotEmpty) {
-      widget.onSave(selectedOptions.join(', '), feedbackText);
+    if (isSaveButtonEnabled()) {
+      widget.onSave(option1, option2, option3, option4, feedbackText);
       Navigator.of(context).pop();
     }
+  }
+
+  void handleCheckboxChange(String option, bool? isChecked) {
+    setState(() {
+      if (isChecked != null && isChecked) {
+        selectedOptions.add(option);
+        if (option == 'Acho que o parque está um pouco desatualizado e mal conservado') option1 = option;
+        if (option == 'Acho que a falta de mais funcionários prejudicou o parque') option2 = option;
+        if (option == 'Acho que tem poucas atrações') option3 = option;
+        if (option == 'A falta de estrutura do parque prejudicou a minhas experiência') option4 = option;
+      } else {
+        selectedOptions.remove(option);
+        if (option == 'Acho que o parque está um pouco desatualizado e mal conservado') option1 = '';
+        if (option == 'Acho que a falta de mais funcionários prejudicou o parque') option2 = '';
+        if (option == 'Acho que tem poucas atrações') option3 = '';
+        if (option == 'A falta de estrutura do parque prejudicou a minhas experiência') option4 = '';
+      }
+    });
   }
 
   @override
@@ -37,9 +59,9 @@ class _QuestionBoxState extends State<QuestionBoxMoreBad> {
       title: const Text(
         "Por que você escolheu essa opção?",
         style: TextStyle(
-            color: Colors.white,
-            fontSize: 30,
-            fontWeight: FontWeight.bold
+          color: Colors.white,
+          fontSize: 30,
+          fontWeight: FontWeight.bold,
         ),
       ),
       content: SingleChildScrollView(
@@ -59,13 +81,7 @@ class _QuestionBoxState extends State<QuestionBoxMoreBad> {
                         ),
                         value: selectedOptions.contains('Acho que o parque está um pouco desatualizado e mal conservado'),
                         onChanged: (value) {
-                          setState(() {
-                            if (value != null && value) {
-                              selectedOptions.add('Acho que o parque está um pouco desatualizado e mal conservado');
-                            } else {
-                              selectedOptions.remove('Acho que o parque está um pouco desatualizado e mal conservado');
-                            }
-                          });
+                          handleCheckboxChange('Acho que o parque está um pouco desatualizado e mal conservado', value);
                         },
                       ),
                       const SizedBox(height: 10),
@@ -76,13 +92,7 @@ class _QuestionBoxState extends State<QuestionBoxMoreBad> {
                         ),
                         value: selectedOptions.contains('Acho que a falta de mais funcionários prejudicou o parque'),
                         onChanged: (value) {
-                          setState(() {
-                            if (value != null && value) {
-                              selectedOptions.add('Acho que a falta de mais funcionários prejudicou o parque');
-                            } else {
-                              selectedOptions.remove('Acho que a falta de mais funcionários prejudicou o parque');
-                            }
-                          });
+                          handleCheckboxChange('Acho que a falta de mais funcionários prejudicou o parque', value);
                         },
                       ),
                       const SizedBox(height: 10),
@@ -93,13 +103,7 @@ class _QuestionBoxState extends State<QuestionBoxMoreBad> {
                         ),
                         value: selectedOptions.contains('Acho que tem poucas atrações'),
                         onChanged: (value) {
-                          setState(() {
-                            if (value != null && value) {
-                              selectedOptions.add('Acho que tem poucas atrações');
-                            } else {
-                              selectedOptions.remove('Acho que tem poucas atrações');
-                            }
-                          });
+                          handleCheckboxChange('Acho que tem poucas atrações', value);
                         },
                       ),
                       const SizedBox(height: 10),
@@ -110,13 +114,7 @@ class _QuestionBoxState extends State<QuestionBoxMoreBad> {
                         ),
                         value: selectedOptions.contains('A falta de estrutura do parque prejudicou a minhas experiência'),
                         onChanged: (value) {
-                          setState(() {
-                            if (value != null && value) {
-                              selectedOptions.add('A falta de estrutura do parque prejudicou a minhas experiência');
-                            } else {
-                              selectedOptions.remove('A falta de estrutura do parque prejudicou a minhas experiência');
-                            }
-                          });
+                          handleCheckboxChange('A falta de estrutura do parque prejudicou a minhas experiência', value);
                         },
                       ),
                       const SizedBox(height: 10),
@@ -124,10 +122,11 @@ class _QuestionBoxState extends State<QuestionBoxMoreBad> {
                         onChanged: (text) {
                           feedbackText = text;
                         },
+                        style: const TextStyle(color: Colors.white, fontSize: 25),
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                           hintText: "Explique a sua escolha para nos ajudar a melhorar...",
-                          hintStyle: TextStyle(color: Colors.white70, fontSize: 25),
+                          hintStyle: const TextStyle(color: Colors.white70, fontSize: 25),
                         ),
                       ),
                     ],
@@ -145,7 +144,7 @@ class _QuestionBoxState extends State<QuestionBoxMoreBad> {
                   const SizedBox(width: 75),
                   MyButton(
                     text: "Salvar",
-                    onPressed: handleSavePressed,
+                    onPressed: isSaveButtonEnabled() ? handleSavePressed : () {},
                   ),
                   const SizedBox(width: 130),
                 ],
