@@ -55,6 +55,20 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  Future<List<Map<String, dynamic>>> _getReviews() async {
+    final List<Map<String, dynamic>> reviews =
+        await _database.rawQuery('SELECT * FROM reviews');
+    return reviews;
+  }
+
+  Future<void> _retrieveReviews() async {
+    final List<Map<String, dynamic>> reviews =
+        await _database.rawQuery('SELECT * FROM reviews');
+    setState(() {
+      _reviews = reviews;
+    });
+  }
+
   Future<void> saveNewReview(int rating, String option1, String option2,
       String option3, String option4, String feedback) async {
     await _database.transaction((txn) async {
@@ -168,6 +182,12 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         backgroundColor: const Color(0xFF0088B7),
         centerTitle: true,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
         title: const Text(
           "Conta Pra Gente!",
           style: TextStyle(
@@ -190,11 +210,12 @@ class _HomePageState extends State<HomePage> {
               width: 95,
               height: 95,
             ),
-          ),
+          )
         ],
       ),
       body: Stack(
         children: [
+          // Gif do capi
           Positioned(
             top: 258,
             right: 920,
@@ -202,6 +223,7 @@ class _HomePageState extends State<HomePage> {
             height: 450,
             child: Image.asset("lib/images/capi_movimento.gif"),
           ),
+          // Gif do balão
           Positioned(
             top: 25,
             right: 810,

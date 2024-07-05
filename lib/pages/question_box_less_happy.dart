@@ -12,10 +12,10 @@ class QuestionBoxLessHappy extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<QuestionBoxLessHappy> createState() => _QuestionBoxState();
+  State<QuestionBoxLessHappy> createState() => _QuestionBoxLessHappyState();
 }
 
-class _QuestionBoxState extends State<QuestionBoxLessHappy> {
+class _QuestionBoxLessHappyState extends State<QuestionBoxLessHappy> {
   List<String> selectedOptions = [];
   String option1 = '';
   String option2 = '';
@@ -62,12 +62,27 @@ class _QuestionBoxState extends State<QuestionBoxLessHappy> {
   Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor: const Color(0xFF0088B7),
-      title: const Text(
-        "Por que você escolheu essa opção?",
-        style: TextStyle(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(20.0)),
+      ),
+      titlePadding: EdgeInsets.zero,
+      title: ClipRRect(
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(20.0),
+          topRight: Radius.circular(20.0),
+        ),
+        child: Container(
           color: Colors.white,
-          fontSize: 30,
-          fontWeight: FontWeight.bold,
+          padding: const EdgeInsets.all(16.0),
+          child: const Text(
+            "Por que você escolheu essa opção?",
+            style: TextStyle(
+              color: Color(0xFF0088B7),
+              fontSize: 30,
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.center,
+          ),
         ),
       ),
       content: SingleChildScrollView(
@@ -76,76 +91,119 @@ class _QuestionBoxState extends State<QuestionBoxLessHappy> {
           height: 500,
           child: Column(
             children: [
-              CheckboxListTile(
-                title: const Text(
-                  'Variedade de atrações',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold,
+              Theme(
+                data: ThemeData(
+                  checkboxTheme: CheckboxThemeData(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(2.0),
+                    ),
+                    side: MaterialStateBorderSide.resolveWith(
+                      (states) => const BorderSide(
+                        color: Colors.white,
+                        width: 2.0,
+                      ),
+                    ),
+                    checkColor: MaterialStateProperty.all(
+                      const Color(0xFF0088B7),
+                    ),
+                    fillColor: MaterialStateProperty.resolveWith(
+                      (states) {
+                        if (states.contains(MaterialState.selected)) {
+                          return Colors.white;
+                        }
+                        return Colors.transparent;
+                      },
+                    ),
                   ),
                 ),
-                value: selectedOptions.contains('Variedade de atrações'),
-                onChanged: (value) {
-                  handleCheckboxChange('Variedade de atrações', value);
-                },
-              ),
-              const SizedBox(height: 20),
-              CheckboxListTile(
-                title: const Text(
-                  'Bom atendimento',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold,
-                  ),
+                child: Column(
+                  children: [
+                    CheckboxListTile(
+                      title: const Text(
+                        'Variedade de atrações',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      value: selectedOptions.contains('Variedade de atrações'),
+                      onChanged: (value) {
+                        handleCheckboxChange('Variedade de atrações', value);
+                      },
+                      controlAffinity: ListTileControlAffinity.leading,
+                    ),
+                    const SizedBox(height: 10),
+                    CheckboxListTile(
+                      title: const Text(
+                        'Bom atendimento',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      value: selectedOptions.contains('Bom atendimento'),
+                      onChanged: (value) {
+                        handleCheckboxChange('Bom atendimento', value);
+                      },
+                      controlAffinity: ListTileControlAffinity.leading,
+                    ),
+                    const SizedBox(height: 10),
+                    CheckboxListTile(
+                      title: const Text(
+                        'Boa estrutura',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      value: selectedOptions.contains('Boa estrutura'),
+                      onChanged: (value) {
+                        handleCheckboxChange('Boa estrutura', value);
+                      },
+                      controlAffinity: ListTileControlAffinity.leading,
+                    ),
+                    const SizedBox(height: 10),
+                    CheckboxListTile(
+                      title: const Text(
+                        'Aprendizagem interessante',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      value:
+                          selectedOptions.contains('Aprendizagem interessante'),
+                      onChanged: (value) {
+                        handleCheckboxChange(
+                            'Aprendizagem interessante', value);
+                      },
+                      controlAffinity: ListTileControlAffinity.leading,
+                    ),
+                  ],
                 ),
-                value: selectedOptions.contains('Bom atendimento'),
-                onChanged: (value) {
-                  handleCheckboxChange('Bom atendimento', value);
-                },
               ),
-              const SizedBox(height: 20),
-              CheckboxListTile(
-                title: const Text(
-                  'Boa estrutura',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                value: selectedOptions.contains('Boa estrutura'),
-                onChanged: (value) {
-                  handleCheckboxChange('Boa estrutura', value);
-                },
-              ),
-              const SizedBox(height: 20),
-              CheckboxListTile(
-                title: const Text(
-                  'Aprendizagem interessante',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                value: selectedOptions.contains('Aprendizagem interessante'),
-                onChanged: (value) {
-                  handleCheckboxChange('Aprendizagem interessante', value);
-                },
-              ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 30),
               TextField(
                 onChanged: (text) {
                   feedbackText = text;
                 },
-                style: const TextStyle(color: Colors.white, fontSize: 25),
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: "Explique a sua escolha para nos ajudar a melhorar...",
-                  hintStyle: const TextStyle(color: Colors.white70, fontSize: 25),
+                decoration: const InputDecoration(
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white), // Borda branca
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                        color: Colors.white), // Borda branca ao focar
+                  ),
+                  hintText:
+                      "Explique a sua escolha para nos ajudar a melhorar...",
+                  hintStyle: TextStyle(color: Colors.white70, fontSize: 25),
                 ),
+                style: const TextStyle(color: Colors.white), // Texto branco
               ),
               const SizedBox(height: 30),
               Row(
@@ -158,7 +216,7 @@ class _QuestionBoxState extends State<QuestionBoxLessHappy> {
                   const SizedBox(width: 75),
                   MyButton(
                     text: "Salvar",
-                    onPressed: isSaveButtonEnabled() ? handleSavePressed : () {},
+                    onPressed: isSaveButtonEnabled() ? handleSavePressed : null,
                   ),
                   const SizedBox(width: 130),
                 ],

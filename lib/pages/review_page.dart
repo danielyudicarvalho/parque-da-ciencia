@@ -5,7 +5,6 @@ import 'package:pc_app/pages/login_page.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
-import 'package:pc_app/pages/options_page.dart';
 import 'confirmation_page.dart';
 
 class ReviewPage extends StatefulWidget {
@@ -51,7 +50,7 @@ class _ReviewPageState extends State<ReviewPage> {
 
   Future<Database> _openDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = documentsDirectory.path + "/reports.db";
+    String path = '${documentsDirectory.path}/reports.db';
 
     return await openDatabase(
       path,
@@ -70,7 +69,6 @@ class _ReviewPageState extends State<ReviewPage> {
   Future<int> _getTotalReviews(String tableName) async {
     final database = await _openDatabase();
 
-    // Verifique se a tabela existe
     var result = await database.rawQuery(
         "SELECT name FROM sqlite_master WHERE type='table' AND name='$tableName'");
     if (result.isEmpty) {
@@ -79,8 +77,7 @@ class _ReviewPageState extends State<ReviewPage> {
     }
 
     final count = Sqflite.firstIntValue(
-      await database.rawQuery('SELECT COUNT(*) FROM $tableName'),
-    );
+        await database.rawQuery('SELECT COUNT(*) FROM $tableName'));
     print('Count for $tableName: $count');
     return count ?? 0;
   }
@@ -97,8 +94,13 @@ class _ReviewPageState extends State<ReviewPage> {
 
   Future<Database> _openEmailsDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = documentsDirectory.path + "/app.db";
-    return await openDatabase(path, version: 1);
+    String path = '${documentsDirectory.path}/app.db';
+    return await openDatabase(path, version: 1,
+        onCreate: (Database db, int version) async {
+      await db.execute(
+        'CREATE TABLE login_info(id INTEGER PRIMARY KEY, server_name TEXT, server_email TEXT, student_count TEXT, school_name TEXT)',
+      );
+    });
   }
 
   Future<List<Map<String, dynamic>>> _getReviews(String tableName) async {
@@ -152,8 +154,7 @@ class _ReviewPageState extends State<ReviewPage> {
     if (tableName == 'reports') {
       csvBuffer.write('Rating\n');
     } else {
-      csvBuffer
-          .write('Rating, Feedback, Opção 1 , Opção 2, Opção 3, Opção 4 \n');
+      csvBuffer.write('Rating, Feedback, Opção 1, Opção 2, Opção 3, Opção 4\n');
     }
 
     for (var row in data) {
@@ -183,16 +184,17 @@ class _ReviewPageState extends State<ReviewPage> {
 
   void openConfirmationPage() {
     showDialog(
-        context: context,
-        builder: (context) {
-          return const ConfirmationPage();
-        });
+      context: context,
+      builder: (context) {
+        return const ConfirmationPage();
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final ButtonStyle buttonStyle = ElevatedButton.styleFrom(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.white, // cor branca
       minimumSize: const Size(360, 60),
       padding: const EdgeInsets.symmetric(vertical: 10),
       shape: RoundedRectangleBorder(
@@ -201,120 +203,103 @@ class _ReviewPageState extends State<ReviewPage> {
       textStyle: const TextStyle(
         fontSize: 18,
         fontWeight: FontWeight.bold,
-        color: Colors.white,
+        color: Colors.black, // cor preta para o texto
       ),
     );
 
     return AlertDialog(
       backgroundColor: const Color(0xFF0088B7),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(20.0)),
+      ),
+      contentPadding: EdgeInsets.zero,
       content: SizedBox(
         width: 600,
-        height: 275,
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              FutureBuilder<int>(
-                future: _totalReviewsFuture,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    final totalReviews = snapshot.data!;
-                    return Center(
-                      child: Text(
-                        'Total de Participantes: $totalReviews',
-                        style: const TextStyle(
-                          fontSize: 30,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    );
-                  } else if (snapshot.hasError) {
-                    return Center(child: Text('Error: ${snapshot.error}'));
-                  }
-                  return const Center(child: CircularProgressIndicator());
-                },
+        height: 350,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ClipRRect(
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(20.0),
+                topRight: Radius.circular(20.0),
               ),
-              const SizedBox(height: 20),
-              FutureBuilder<int>(
-                future: _totalMonitorReportsFuture,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    final totalMonitorReports = snapshot.data!;
-                    return Center(
-                      child: Text(
-                        'Total de Monitor Reports: $totalMonitorReports',
-                        style: const TextStyle(
-                          fontSize: 30,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    );
-                  } else if (snapshot.hasError) {
-                    return Center(child: Text('Error: ${snapshot.error}'));
-                  }
-                  return const Center(child: CircularProgressIndicator());
-                },
-              ),
-              const SizedBox(height: 20),
-              FutureBuilder<Map<String, dynamic>>(
-                future: _emailsFuture,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    final Map<String, dynamic> emailInfo = snapshot.data!;
-                    final String email = emailInfo['server_email'] ?? '';
-                    return Column(
-                      children: [
-                        ListTile(
-                          title: Text(
-                            'E-mail para envio: $email',
-                            style: const TextStyle(
-                              fontSize: 30,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
+              child: Container(
+                color: Colors.white,
+                width: double.infinity,
+                padding: const EdgeInsets.all(16.0),
+                child: FutureBuilder<int>(
+                  future: _totalReviewsFuture,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      final totalReviews = snapshot.data!;
+                      return Center(
+                        child: Text(
+                          'Total de Participantes: $totalReviews',
+                          style: const TextStyle(
+                            fontSize: 30,
+                            color: Color(0xFF0088B7),
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                        const SizedBox(height: 25),
-                        ElevatedButton(
-                          style: buttonStyle,
-                          onPressed: () async {
-                            final reviews = await _getReviews('reports');
-                            final monitorReports =
-                                await _getReviews('monitor_reports');
-                            _submitForm(
-                                [email], reviews, monitorReports, emailInfo);
-                            Navigator.of(context).pop();
-                            Navigator.of(context).pushAndRemoveUntil(
-                                MaterialPageRoute(
-                                    builder: (context) => const LoginPage()),
-                                (Route<dynamic> route) => false);
-                            openConfirmationPage();
-                          },
-                          child: const Text('SIM'),
-                        ),
-                        const SizedBox(height: 25),
-                        ElevatedButton(
-                          style: buttonStyle,
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const OptionPage()));
-                          },
-                          child: const Text('NÃO'),
-                        ),
-                      ],
-                    );
-                  } else if (snapshot.hasError) {
-                    return Center(child: Text('Error: ${snapshot.error}'));
-                  }
-                  return const Center(child: CircularProgressIndicator());
-                },
+                      );
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text('Error: ${snapshot.error}'));
+                    }
+                    return const Center(child: CircularProgressIndicator());
+                  },
+                ),
               ),
-            ],
-          ),
+            ),
+            const SizedBox(height: 35),
+            FutureBuilder<Map<String, dynamic>>(
+              future: _emailsFuture,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  final Map<String, dynamic> emailInfo = snapshot.data!;
+                  final String email = emailInfo['server_email'] ?? '';
+                  return Column(
+                    children: [
+                      ListTile(
+                        title: Text(
+                          'E-mail para envio: $email',
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontSize: 28,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 25),
+                      ElevatedButton(
+                        style: buttonStyle,
+                        onPressed: () async {
+                          final reviews = await _getReviews('reports');
+                          final monitorReports =
+                              await _getReviews('monitor_reports');
+                          await _submitForm(
+                              [email], reviews, monitorReports, emailInfo);
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                                builder: (context) => const LoginPage()),
+                            (Route<dynamic> route) => false,
+                          );
+                        },
+                        child: const Text('SIM'),
+                      ),
+                    ],
+                  );
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                }
+                return const Center(child: CircularProgressIndicator());
+              },
+            ),
+            const SizedBox(height: 20),
+          ],
         ),
       ),
     );

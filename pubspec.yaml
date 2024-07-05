@@ -44,6 +44,11 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.13.1
+
+flutter_icons:
+  android: true
+  image_path: "lib/images/icon_logo_parque.png"
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -69,6 +74,7 @@ flutter:
     - lib/images/logo_vem_p_ufms.png
     - lib/images/logo_ufms.png
     - lib/images/logo_parque_transp.png
+    - lib/images/icon_logo_parque.png
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
