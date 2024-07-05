@@ -9,7 +9,7 @@ import 'package:pc_app/pages/question_box_medium.dart';
 import 'package:pc_app/pages/question_box_more_bad.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key});
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -33,39 +33,34 @@ class _HomePageState extends State<HomePage> {
       path,
       version: 1,
       onCreate: (Database db, int version) async {
-        await db.execute(
-            "CREATE TABLE IF NOT EXISTS monitor_reports("
-                "id INTEGER PRIMARY KEY, "
-                "rating INTEGER, "
-                "option1 TEXT, "
-                "option2 TEXT, "
-                "option3 TEXT, "
-                "option4 TEXT, "
-                "feedback TEXT)"
-        );
+        await db.execute("CREATE TABLE IF NOT EXISTS monitor_reports("
+            "id INTEGER PRIMARY KEY, "
+            "rating INTEGER, "
+            "option1 TEXT, "
+            "option2 TEXT, "
+            "option3 TEXT, "
+            "option4 TEXT, "
+            "feedback TEXT)");
       },
       onOpen: (Database db) async {
-        await db.execute("DROP TABLE IF EXISTS monitor_reports"); // Drop the table
-        await db.execute(
-            "CREATE TABLE monitor_reports("
-                "id INTEGER PRIMARY KEY, "
-                "rating INTEGER, "
-                "option1 TEXT, "
-                "option2 TEXT, "
-                "option3 TEXT, "
-                "option4 TEXT, "
-                "feedback TEXT)"
-        );
+        await db.execute("CREATE TABLE IF NOT EXISTS monitor_reports("
+            "id INTEGER PRIMARY KEY, "
+            "rating INTEGER, "
+            "option1 TEXT, "
+            "option2 TEXT, "
+            "option3 TEXT, "
+            "option4 TEXT, "
+            "feedback TEXT)");
       },
     );
   }
 
-
-  saveNewReview(int rating, String option1,String option2,String option3,String option4, String feedback) async {
+  Future<void> saveNewReview(int rating, String option1, String option2,
+      String option3, String option4, String feedback) async {
     await _database.transaction((txn) async {
       await txn.rawInsert(
         'INSERT INTO monitor_reports(rating, option1, option2, option3, option4, feedback) VALUES(?, ?, ?, ?, ?, ?)',
-        [rating, option1,option2,option3,option4, feedback],
+        [rating, option1, option2, option3, option4, feedback],
       );
     });
   }
@@ -91,7 +86,7 @@ class _HomePageState extends State<HomePage> {
       5,
       QuestionBoxHappy(
         onSave: (option1, option2, option3, option4, feedback) async {
-          await saveNewReview(5, option1,option2, option3, option4, feedback);
+          await saveNewReview(5, option1, option2, option3, option4, feedback);
           openConfirmationPage();
         },
         onCancel: () {
@@ -107,7 +102,7 @@ class _HomePageState extends State<HomePage> {
       4,
       QuestionBoxLessHappy(
         onSave: (option1, option2, option3, option4, feedback) async {
-          await saveNewReview(4, option1,option2, option3, option4, feedback);
+          await saveNewReview(4, option1, option2, option3, option4, feedback);
           openConfirmationPage();
         },
         onCancel: () {
@@ -123,7 +118,7 @@ class _HomePageState extends State<HomePage> {
       3,
       QuestionBoxMedium(
         onSave: (option1, option2, option3, option4, feedback) async {
-          await saveNewReview(3, option1,option2, option3, option4, feedback);
+          await saveNewReview(3, option1, option2, option3, option4, feedback);
           openConfirmationPage();
         },
         onCancel: () {
@@ -139,7 +134,7 @@ class _HomePageState extends State<HomePage> {
       2,
       QuestionBoxMoreBad(
         onSave: (option1, option2, option3, option4, feedback) async {
-          await saveNewReview(2, option1,option2, option3, option4, feedback);
+          await saveNewReview(2, option1, option2, option3, option4, feedback);
           openConfirmationPage();
         },
         onCancel: () {
@@ -154,8 +149,8 @@ class _HomePageState extends State<HomePage> {
     _openQuestionBox(
       1,
       QuestionBoxMoreBad(
-        onSave: (option1,option2, option3, option4, feedback) async {
-          await saveNewReview(1, option1, option2,option3, option4, feedback);
+        onSave: (option1, option2, option3, option4, feedback) async {
+          await saveNewReview(1, option1, option2, option3, option4, feedback);
           openConfirmationPage();
         },
         onCancel: () {
@@ -200,24 +195,20 @@ class _HomePageState extends State<HomePage> {
       ),
       body: Stack(
         children: [
-          // Gif do capi
           Positioned(
-            top: 258, // ajuste a posição vertical conforme necessário
-            right: 920, // ajuste a posição horizontal conforme necessário
-            width: 450, // largura da imagem
-            height: 450, // altura da imagem
+            top: 258,
+            right: 920,
+            width: 450,
+            height: 450,
             child: Image.asset("lib/images/capi_movimento.gif"),
           ),
-
-          // Gif do balão
           Positioned(
-            top: 25, // ajuste a posição vertical conforme necessário
-            right: 810, // ajuste a posição horizontal conforme necessário
-            width: 280, // largura da imagem
-            height: 280, // altura da imagem
+            top: 25,
+            right: 810,
+            width: 280,
+            height: 280,
             child: Image.asset("lib/images/balao_mov.gif"),
           ),
-
           Center(
             child: Column(
               children: [
@@ -258,14 +249,12 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
           ),
-
-          /* Icones de logo */
           Positioned(
-            top: 490, // ajuste a posição vertical conforme necessário
-            right: 16, // ajuste a posição horizontal conforme necessário
+            top: 490,
+            right: 16,
             child: Image.asset(
               'lib/images/logo_parque.png',
-              width: 230, // ajuste o tamanho da imagem conforme necessário
+              width: 230,
               height: 230,
             ),
           ),

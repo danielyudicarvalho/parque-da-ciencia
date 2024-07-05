@@ -29,8 +29,10 @@ class _ReviewPageState extends State<ReviewPage> {
     _emailsFuture = _getEmails();
   }
 
-  Future<void> sendEmail(List<String> csvPaths, String recipient, String emailBody, String schoolName, String serverName) async {
-    final smtpServer = gmail('danielyudicarvalho@gmail.com', 'rkww hvdl qrav fmel');
+  Future<void> sendEmail(List<String> csvPaths, String recipient,
+      String emailBody, String schoolName, String serverName) async {
+    final smtpServer =
+        gmail('danielyudicarvalho@gmail.com', 'rkww hvdl qrav fmel');
 
     final message = Message()
       ..from = Address('danielyudicarvalho@gmail.com', 'Yudi')
@@ -49,12 +51,33 @@ class _ReviewPageState extends State<ReviewPage> {
 
   Future<Database> _openDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = documentsDirectory.path + "/" + "reports.db";
-    return await openDatabase(path, version: 1);
+    String path = documentsDirectory.path + "/reports.db";
+
+    return await openDatabase(
+      path,
+      version: 1,
+      onCreate: (db, version) async {
+        await db.execute(
+          'CREATE TABLE IF NOT EXISTS reports (id INTEGER PRIMARY KEY, rating INTEGER)',
+        );
+        await db.execute(
+          'CREATE TABLE IF NOT EXISTS monitor_reports (id INTEGER PRIMARY KEY, rating INTEGER, feedback TEXT, option1 TEXT, option2 TEXT, option3 TEXT, option4 TEXT)',
+        );
+      },
+    );
   }
 
   Future<int> _getTotalReviews(String tableName) async {
     final database = await _openDatabase();
+
+    // Verifique se a tabela existe
+    var result = await database.rawQuery(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name='$tableName'");
+    if (result.isEmpty) {
+      print('Tabela $tableName não existe.');
+      return 0;
+    }
+
     final count = Sqflite.firstIntValue(
       await database.rawQuery('SELECT COUNT(*) FROM $tableName'),
     );
@@ -83,9 +106,14 @@ class _ReviewPageState extends State<ReviewPage> {
     return await database.query(tableName);
   }
 
-  Future<void> _submitForm(List<String> emails, List<Map<String, dynamic>> reviews, List<Map<String, dynamic>> monitorReports, Map<String, dynamic> loginInfo) async {
+  Future<void> _submitForm(
+      List<String> emails,
+      List<Map<String, dynamic>> reviews,
+      List<Map<String, dynamic>> monitorReports,
+      Map<String, dynamic> loginInfo) async {
     final csvContentReviews = _generateCSV(reviews, loginInfo, 'reports');
-    final csvContentMonitorReports = _generateCSV(monitorReports, loginInfo, 'monitor_reports');
+    final csvContentMonitorReports =
+        _generateCSV(monitorReports, loginInfo, 'monitor_reports');
 
     final emailBody = _generateEmailBody(loginInfo);
 
@@ -93,11 +121,13 @@ class _ReviewPageState extends State<ReviewPage> {
     final serverName = loginInfo['server_name'];
 
     final csvPathReviews = await _saveCSV(csvContentReviews, 'reviews.csv');
-    final csvPathMonitorReports = await _saveCSV(csvContentMonitorReports, 'monitor_reports.csv');
+    final csvPathMonitorReports =
+        await _saveCSV(csvContentMonitorReports, 'monitor_reports.csv');
 
     for (var email in emails) {
       try {
-        await sendEmail([csvPathReviews, csvPathMonitorReports], email, emailBody, schoolName, serverName);
+        await sendEmail([csvPathReviews, csvPathMonitorReports], email,
+            emailBody, schoolName, serverName);
       } catch (e) {
         print('Error sending email: $e');
       }
@@ -111,23 +141,27 @@ class _ReviewPageState extends State<ReviewPage> {
     final StringBuffer buffer = StringBuffer();
     buffer.writeln('Nome da escola: ${loginInfo['school_name']}');
     buffer.writeln('Servidor responsável: ${loginInfo['server_name']}');
-    buffer.writeln('Número de alunos durante a visita: ${loginInfo['student_count']}');
+    buffer.writeln(
+        'Número de alunos durante a visita: ${loginInfo['student_count']}');
     return buffer.toString();
   }
 
-  String _generateCSV(List<Map<String, dynamic>> data, Map<String, dynamic> loginInfo, String tableName) {
+  String _generateCSV(List<Map<String, dynamic>> data,
+      Map<String, dynamic> loginInfo, String tableName) {
     final csvBuffer = StringBuffer();
     if (tableName == 'reports') {
       csvBuffer.write('Rating\n');
     } else {
-      csvBuffer.write('Rating, Feedback, Opção 1 , Opção 2, Opção 3, Opção 4 \n');
+      csvBuffer
+          .write('Rating, Feedback, Opção 1 , Opção 2, Opção 3, Opção 4 \n');
     }
 
     for (var row in data) {
       if (tableName == 'reports') {
         csvBuffer.write('${row['rating']}\n');
       } else {
-        csvBuffer.write('${row['rating']},${row['feedback']},${row['option1']},${row['option2']},${row['option3']},${row['option4']}\n');
+        csvBuffer.write(
+            '${row['rating']},${row['feedback']},${row['option1']},${row['option2']},${row['option3']},${row['option4']}\n');
       }
     }
 
@@ -152,8 +186,7 @@ class _ReviewPageState extends State<ReviewPage> {
         context: context,
         builder: (context) {
           return const ConfirmationPage();
-        }
-    );
+        });
   }
 
   @override
@@ -187,7 +220,8 @@ class _ReviewPageState extends State<ReviewPage> {
                   if (snapshot.hasData) {
                     final totalReviews = snapshot.data!;
                     return Center(
-                      child: Text('Total de Participantes: $totalReviews',
+                      child: Text(
+                        'Total de Participantes: $totalReviews',
                         style: const TextStyle(
                           fontSize: 30,
                           color: Colors.white,
@@ -208,7 +242,8 @@ class _ReviewPageState extends State<ReviewPage> {
                   if (snapshot.hasData) {
                     final totalMonitorReports = snapshot.data!;
                     return Center(
-                      child: Text('Total de Monitor Reports: $totalMonitorReports',
+                      child: Text(
+                        'Total de Monitor Reports: $totalMonitorReports',
                         style: const TextStyle(
                           fontSize: 30,
                           color: Colors.white,
@@ -232,7 +267,8 @@ class _ReviewPageState extends State<ReviewPage> {
                     return Column(
                       children: [
                         ListTile(
-                          title: Text('E-mail para envio: $email',
+                          title: Text(
+                            'E-mail para envio: $email',
                             style: const TextStyle(
                               fontSize: 30,
                               color: Colors.white,
@@ -245,10 +281,15 @@ class _ReviewPageState extends State<ReviewPage> {
                           style: buttonStyle,
                           onPressed: () async {
                             final reviews = await _getReviews('reports');
-                            final monitorReports = await _getReviews('monitor_reports');
-                            _submitForm([email], reviews, monitorReports, emailInfo);
+                            final monitorReports =
+                                await _getReviews('monitor_reports');
+                            _submitForm(
+                                [email], reviews, monitorReports, emailInfo);
                             Navigator.of(context).pop();
-                            Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const LoginPage()), (Route<dynamic> route) => false);
+                            Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(
+                                    builder: (context) => const LoginPage()),
+                                (Route<dynamic> route) => false);
                             openConfirmationPage();
                           },
                           child: const Text('SIM'),
@@ -257,7 +298,10 @@ class _ReviewPageState extends State<ReviewPage> {
                         ElevatedButton(
                           style: buttonStyle,
                           onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => const OptionPage()));
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const OptionPage()));
                           },
                           child: const Text('NÃO'),
                         ),

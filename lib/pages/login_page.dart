@@ -1,9 +1,7 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pc_app/pages/options_page.dart';
-import 'package:pc_app/util/my_button.dart';
 import 'package:sqflite/sqflite.dart';
 
 class LoginPage extends StatefulWidget {
@@ -14,11 +12,11 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  // Define fields based on requirements
   String serverName = '';
   String serverEmail = '';
   String studentCount = '';
   String schoolName = '';
+  Database? _database;
 
   @override
   void initState() {
@@ -31,23 +29,31 @@ class _LoginPageState extends State<LoginPage> {
     String path = documentsDirectory.path + "/" + "app.db";
     _database = await openDatabase(
       path,
-      onCreate: (db, version) {
-        return db.execute(
-          'CREATE TABLE login_info(id INTEGER PRIMARY KEY, server_name TEXT, server_email TEXT, student_count TEXT, school_name TEXT)',
-        );
-      },
       version: 1,
+      onCreate: (db, version) async {
+        await db.execute('CREATE TABLE IF NOT EXISTS login_info('
+            'id INTEGER PRIMARY KEY, '
+            'server_name TEXT, '
+            'server_email TEXT, '
+            'student_count TEXT, '
+            'school_name TEXT)');
+        await db.execute("CREATE TABLE IF NOT EXISTS monitor_reports("
+            "id INTEGER PRIMARY KEY, "
+            "rating INTEGER, "
+            "option1 TEXT, "
+            "option2 TEXT, "
+            "option3 TEXT, "
+            "option4 TEXT, "
+            "feedback TEXT)");
+      },
     );
   }
 
-  Database? _database; // Database instance
-
-  // Function to validate form fields
   bool validateFields() {
-    if (serverName.isEmpty || serverEmail.isEmpty || studentCount.isEmpty || schoolName.isEmpty) {
-      return false;
-    }
-    return true;
+    return serverName.isNotEmpty &&
+        serverEmail.isNotEmpty &&
+        studentCount.isNotEmpty &&
+        schoolName.isNotEmpty;
   }
 
   Future<void> _saveFormData() async {
@@ -63,14 +69,14 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
-  void goToOptionsPage(){
+  void goToOptionsPage() {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const OptionPage()),
     );
   }
 
-  void showErrorMessage(){
+  void showErrorMessage() {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Preencha todos os campos corretamente'),
@@ -79,14 +85,11 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  // Function to handle form submission
   void submitForm() async {
     if (validateFields()) {
-      // Process form data (e.g., save to database, navigate)
       await _saveFormData();
       goToOptionsPage();
     } else {
-      // Show error message
       showErrorMessage();
     }
   }
@@ -96,11 +99,9 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: Colors.white,
-
       appBar: AppBar(
         backgroundColor: const Color(0xFF0088B7),
         centerTitle: true,
-
         title: const Text(
           "Iniciando passeio",
           style: TextStyle(
@@ -109,7 +110,6 @@ class _LoginPageState extends State<LoginPage> {
             fontWeight: FontWeight.bold,
           ),
         ),
-
         actions: [
           Container(
             padding: const EdgeInsets.only(right: 8, bottom: 4),
@@ -120,107 +120,84 @@ class _LoginPageState extends State<LoginPage> {
           Container(
             padding: const EdgeInsets.only(right: 8, bottom: 4),
             child: Image.asset('lib/images/logo_ufms.png'),
-          )
+          ),
         ],
       ),
-
       body: SingleChildScrollView(
-        child: Stack(children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-
-            child: Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-
-                children: [
-                  // Imagem da logo do parque
-                  Image.asset("lib/images/logo_parque.png",
-                      width: 265, height: 265),
-
-                  // Campo do nome do servidor
-                  TextField(
-                    onChanged: (text) {
-                      serverName = text;
-                    },
-                    decoration: const InputDecoration(
-                      labelText: "Nome do Servidor Responsável",
-                      labelStyle: TextStyle(color: Color(0xFF0088B7)),
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-
-                  const SizedBox(height: 10),
-
-                  // Campo do email do servidor
-                  TextField(
-                    onChanged: (text) {
-                      serverEmail = text;
-                    },
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: const InputDecoration(
-                      labelText: "Email do Servidor Responsável",
-                      labelStyle: TextStyle(color: Color(0xFF0088B7)),
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-
-                  const SizedBox(height: 10),
-
-                  // Campo do nome da escola visitante
-                  TextField(
-                    onChanged: (text) {
-                      schoolName = text;
-                    },
-                    decoration: const InputDecoration(
-                      labelText: "Nome da Escola Visitante",
-                      labelStyle: TextStyle(color: Color(0xFF0088B7)),
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-
-                  const SizedBox(height: 10),
-
-                  // Campo para o numero de estudantes da escola
-                  TextField(
-                    onChanged: (text) {
-                      studentCount = text;
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      labelText: "Número de Estudantes da Visita",
-                      labelStyle: TextStyle(color: Color(0xFF0088B7)),
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-
-                  const SizedBox(height: 25),
-
-                  // Botao de inicio
-                  ElevatedButton(
-                    onPressed: submitForm,
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      padding: const EdgeInsets.all(16),
-                      backgroundColor: const Color(0xFF0088B7),
-                    ),
-
-                    child: const Text(
-                      'Iniciar',
-                      style: TextStyle(
-                        fontSize: 30,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  )
-                ],
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset("lib/images/logo_parque.png",
+                  width: 265, height: 265),
+              TextField(
+                onChanged: (text) {
+                  serverName = text;
+                },
+                decoration: const InputDecoration(
+                  labelText: "Nome do Servidor Responsável",
+                  labelStyle: TextStyle(color: Color(0xFF0088B7)),
+                  border: OutlineInputBorder(),
+                ),
               ),
-            ),
+              const SizedBox(height: 10),
+              TextField(
+                onChanged: (text) {
+                  serverEmail = text;
+                },
+                keyboardType: TextInputType.emailAddress,
+                decoration: const InputDecoration(
+                  labelText: "Email do Servidor Responsável",
+                  labelStyle: TextStyle(color: Color(0xFF0088B7)),
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 10),
+              TextField(
+                onChanged: (text) {
+                  schoolName = text;
+                },
+                decoration: const InputDecoration(
+                  labelText: "Nome da Escola Visitante",
+                  labelStyle: TextStyle(color: Color(0xFF0088B7)),
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 10),
+              TextField(
+                onChanged: (text) {
+                  studentCount = text;
+                },
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  labelText: "Número de Estudantes da Visita",
+                  labelStyle: TextStyle(color: Color(0xFF0088B7)),
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 25),
+              ElevatedButton(
+                onPressed: submitForm,
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  padding: const EdgeInsets.all(16),
+                  backgroundColor: const Color(0xFF0088B7),
+                ),
+                child: const Text(
+                  'Iniciar',
+                  style: TextStyle(
+                    fontSize: 30,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
           ),
-        ]),
+        ),
       ),
     );
   }
