@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:pc_app/pages/home_page.dart';
 import 'package:pc_app/pages/review_page.dart';
 import 'package:pc_app/pages/simple_nps_page.dart';
+import 'package:sqflite/sqflite.dart';
 
 import 'confirmation_page.dart'; // Import SimpleNpsPage
 
@@ -13,11 +17,16 @@ class OptionPage extends StatefulWidget {
 }
 
 class _OptionPageState extends State<OptionPage> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   void openReviewPage(){
     showDialog(
         context: context,
         builder: (context) {
-          return const ReviewPage();
+          return ReviewPage();
         }
     );
   }
@@ -88,7 +97,7 @@ class _OptionPageState extends State<OptionPage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const SimpleNpsPage()),
+                          builder: (context) => SimpleNpsPage()),
                     );
                   },
                   child: const Text(
@@ -105,7 +114,7 @@ class _OptionPageState extends State<OptionPage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const HomePage()),
+                          builder: (context) => HomePage()),
                     );
                   },
                   child: const Text(

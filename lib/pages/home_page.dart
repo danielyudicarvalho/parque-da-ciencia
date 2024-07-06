@@ -7,62 +7,37 @@ import 'package:pc_app/pages/question_box_happy.dart';
 import 'package:pc_app/pages/question_box_less_happy.dart';
 import 'package:pc_app/pages/question_box_medium.dart';
 import 'package:pc_app/pages/question_box_more_bad.dart';
+import 'package:sqflite/sqlite_api.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key});
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  late Database _database;
+  late Future<Database> _database;
   List<Map<String, dynamic>> _reviews = [];
 
   @override
   void initState() {
     super.initState();
-    _initializeDatabase();
+    _openDB();
   }
 
-  Future<void> _initializeDatabase() async {
+  // Function to open de app database - contains reviews information
+  Future<void> _openDB() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = documentsDirectory.path + "/" + "reports.db";
 
-    _database = await openDatabase(
-      path,
-      version: 1,
-      onCreate: (Database db, int version) async {
-        await db.execute(
-            "CREATE TABLE IF NOT EXISTS monitor_reports("
-                "id INTEGER PRIMARY KEY, "
-                "rating INTEGER, "
-                "option1 TEXT, "
-                "option2 TEXT, "
-                "option3 TEXT, "
-                "option4 TEXT, "
-                "feedback TEXT)"
-        );
-      },
-      onOpen: (Database db) async {
-        await db.execute("DROP TABLE IF EXISTS monitor_reports"); // Drop the table
-        await db.execute(
-            "CREATE TABLE monitor_reports("
-                "id INTEGER PRIMARY KEY, "
-                "rating INTEGER, "
-                "option1 TEXT, "
-                "option2 TEXT, "
-                "option3 TEXT, "
-                "option4 TEXT, "
-                "feedback TEXT)"
-        );
-      },
-    );
+    _database = openDatabase(path);
   }
 
 
   saveNewReview(int rating, String option1,String option2,String option3,String option4, String feedback) async {
-    await _database.transaction((txn) async {
+    final db = await _database;
+    await db.transaction((txn) async {
       await txn.rawInsert(
         'INSERT INTO monitor_reports(rating, option1, option2, option3, option4, feedback) VALUES(?, ?, ?, ?, ?, ?)',
         [rating, option1,option2,option3,option4, feedback],

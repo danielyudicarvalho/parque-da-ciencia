@@ -5,9 +5,10 @@ import 'package:path_provider/path_provider.dart';
 import 'package:pc_app/pages/options_page.dart';
 import 'package:pc_app/util/my_button.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:sqflite/sqlite_api.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  const LoginPage({super.key});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -19,28 +20,21 @@ class _LoginPageState extends State<LoginPage> {
   String serverEmail = '';
   String studentCount = '';
   String schoolName = '';
+  late Future<Database> _database;
 
   @override
   void initState() {
     super.initState();
-    _initDatabase();
+    _openDB();
   }
 
-  Future<void> _initDatabase() async {
+  // Function to open de app database - contains login informations
+  Future<void> _openDB() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = documentsDirectory.path + "/" + "app.db";
-    _database = await openDatabase(
-      path,
-      onCreate: (db, version) {
-        return db.execute(
-          'CREATE TABLE login_info(id INTEGER PRIMARY KEY, server_name TEXT, server_email TEXT, student_count TEXT, school_name TEXT)',
-        );
-      },
-      version: 1,
-    );
-  }
 
-  Database? _database; // Database instance
+    _database = openDatabase(path);
+  }
 
   // Function to validate form fields
   bool validateFields() {
@@ -50,8 +44,10 @@ class _LoginPageState extends State<LoginPage> {
     return true;
   }
 
+  // Function to save form informations about server
   Future<void> _saveFormData() async {
-    await _database!.transaction((txn) async {
+    final db = await _database;
+    await db.transaction((txn) async {
       await txn.delete('login_info');
       final data = <String, dynamic>{
         'server_name': serverName,
@@ -63,10 +59,10 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
-  void goToOptionsPage(){
+  void goToOptionsPage() async {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const OptionPage()),
+      MaterialPageRoute(builder: (context) => OptionPage()),
     );
   }
 

@@ -5,34 +5,32 @@ import 'package:sqflite/sqflite.dart';
 import 'package:pc_app/pages/confirmation_page.dart';
 
 class SimpleNpsPage extends StatefulWidget {
-  const SimpleNpsPage({Key? key});
+  const SimpleNpsPage({super.key});
 
   @override
   State<SimpleNpsPage> createState() => _SimpleNpsPageState();
 }
 
 class _SimpleNpsPageState extends State<SimpleNpsPage> {
-  late Database _database;
+  late Future<Database> _database;
 
   @override
   void initState() {
     super.initState();
-    _initializeDatabase();
+    _openDB();
   }
 
-  Future<void> _initializeDatabase() async {
+  // Function to open de app database - contains login informations
+  Future<void> _openDB() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = documentsDirectory.path + "/" + "reports.db";
 
-    _database = await openDatabase(path, version: 1,
-        onCreate: (Database db, int version) async {
-      await db.execute(
-          "CREATE TABLE reports(id INTEGER PRIMARY KEY, rating INTEGER)");
-    });
+    _database = openDatabase(path);
   }
 
   void saveNewReview(int rating) async {
-    await _database.transaction((txn) async {
+    final db = await _database;
+    await db.transaction((txn) async {
       await txn.rawInsert('INSERT INTO reports(rating) VALUES(?)', [rating]);
     });
   }

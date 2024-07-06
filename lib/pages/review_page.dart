@@ -9,7 +9,7 @@ import 'package:pc_app/pages/options_page.dart';
 import 'confirmation_page.dart';
 
 class ReviewPage extends StatefulWidget {
-  const ReviewPage({Key? key}) : super(key: key);
+  const ReviewPage({super.key});
 
   @override
   _ReviewPageState createState() => _ReviewPageState();
@@ -257,7 +257,7 @@ class _ReviewPageState extends State<ReviewPage> {
                         ElevatedButton(
                           style: buttonStyle,
                           onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => const OptionPage()));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => OptionPage()));
                           },
                           child: const Text('NÃO'),
                         ),
