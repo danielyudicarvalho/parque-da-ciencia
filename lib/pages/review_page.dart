@@ -11,6 +11,7 @@ import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
 import 'package:pc_app/pages/options_page.dart';
 
+import '../util/my_button.dart';
 import 'confirmation_page.dart';
 
 
@@ -181,19 +182,22 @@ class _ReviewPageState extends State<ReviewPage> {
     return AlertDialog(
       backgroundColor: const Color(0xFF0088B7),
       content: SizedBox(
-        width: 600,
-        height: 275,
+        width: 800,
+        height: 410,
         child: SingleChildScrollView(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              const SizedBox(height: 25,),
+
               FutureBuilder<int>(
                 future: _totalReviewsFuture,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     final totalReviews = snapshot.data!;
                     return Center(
-                      child: Text('Total de Participantes: $totalReviews',
+                      child: Text('Total de Avaliações de Alunos: $totalReviews',
                         style: const TextStyle(
                           fontSize: 30,
                           color: Colors.white,
@@ -207,14 +211,16 @@ class _ReviewPageState extends State<ReviewPage> {
                   return const Center(child: CircularProgressIndicator());
                 },
               ),
+
               const SizedBox(height: 20),
+
               FutureBuilder<int>(
                 future: _totalMonitorReportsFuture,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     final totalMonitorReports = snapshot.data!;
                     return Center(
-                      child: Text('Total de Monitor Reports: $totalMonitorReports',
+                      child: Text('Total de Avaliações de Responsáveis pela Escola: $totalMonitorReports',
                         style: const TextStyle(
                           fontSize: 30,
                           color: Colors.white,
@@ -228,7 +234,9 @@ class _ReviewPageState extends State<ReviewPage> {
                   return const Center(child: CircularProgressIndicator());
                 },
               ),
+
               const SizedBox(height: 20),
+
               FutureBuilder<Map<String, dynamic>>(
                 future: _emailsFuture,
                 builder: (context, snapshot) {
@@ -247,26 +255,54 @@ class _ReviewPageState extends State<ReviewPage> {
                           ),
                         ),
                         const SizedBox(height: 25),
-                        ElevatedButton(
-                          style: buttonStyle,
-                          onPressed: () async {
-                            final reviews = await _getReviews('reports');
-                            final monitorReports = await _getReviews('monitor_reports');
-                            _submitForm([email], reviews, monitorReports, emailInfo);
-                            Navigator.of(context).pop();
-                            Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const LoginPage()), (Route<dynamic> route) => false);
-                            openConfirmationPage();
-                          },
-                          child: const Text('SIM'),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            MyButton(
+                              text: "Enviar",
+                              onPressed: () async {
+                                final reviews = await _getReviews('reports');
+                                final monitorReports = await _getReviews('monitor_reports');
+                                _submitForm([email], reviews, monitorReports, emailInfo);
+                                Navigator.of(context).pop();
+                                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const LoginPage()), (Route<dynamic> route) => false);
+                                openConfirmationPage();
+                              },
+                            ),
+
+                            const SizedBox(width: 75),
+
+                            MyButton(
+                              text: "Cancelar",
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+
+                            const SizedBox(width: 130),
+                          ],
                         ),
-                        const SizedBox(height: 25),
-                        ElevatedButton(
-                          style: buttonStyle,
-                          onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => OptionPage()));
-                          },
-                          child: const Text('NÃO'),
-                        ),
+                        const SizedBox(height: 25,)
+                        // ElevatedButton(
+                        //   style: buttonStyle,
+                        //   onPressed: () async {
+                        //     final reviews = await _getReviews('reports');
+                        //     final monitorReports = await _getReviews('monitor_reports');
+                        //     _submitForm([email], reviews, monitorReports, emailInfo);
+                        //     Navigator.of(context).pop();
+                        //     Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const LoginPage()), (Route<dynamic> route) => false);
+                        //     openConfirmationPage();
+                        //   },
+                        //   child: const Text('SIM'),
+                        // ),
+                        // const SizedBox(height: 25),
+                        // ElevatedButton(
+                        //   style: buttonStyle,
+                        //   onPressed: () {
+                        //     Navigator.push(context, MaterialPageRoute(builder: (context) => OptionPage()));
+                        //   },
+                        //   child: const Text('NÃO'),
+                        // ),
                       ],
                     );
                   } else if (snapshot.hasError) {
