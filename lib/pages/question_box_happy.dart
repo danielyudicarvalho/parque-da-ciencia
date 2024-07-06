@@ -3,7 +3,7 @@ import '../util/my_button.dart';
 import 'confirmation_page.dart';
 
 class QuestionBoxHappy extends StatefulWidget {
-  final VoidCallback onSave;
+  final Function(String, String, String, String, String) onSave;
   final VoidCallback onCancel;
 
   const QuestionBoxHappy({
@@ -13,11 +13,16 @@ class QuestionBoxHappy extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<QuestionBoxHappy> createState() => _QuestionBoxHappyState();
+  State<QuestionBoxHappy> createState() => _QuestionBoxState();
 }
 
-class _QuestionBoxHappyState extends State<QuestionBoxHappy> {
-  List<String> selectedOptions = []; // List to store chosen options
+class _QuestionBoxState extends State<QuestionBoxHappy> {
+  List<String> selectedOptions = [];
+  String option1 = '';
+  String option2 = '';
+  String option3 = '';
+  String option4 = '';
+  String feedbackText = '';
 
   bool isSaveButtonEnabled() {
     return selectedOptions.isNotEmpty;
@@ -25,9 +30,33 @@ class _QuestionBoxHappyState extends State<QuestionBoxHappy> {
 
   void handleSavePressed() {
     if (isSaveButtonEnabled()) {
-      widget.onSave();
+      widget.onSave(
+        option1,
+        option2,
+        option3,
+        option4,
+        feedbackText,
+      );
       Navigator.of(context).pop();
     }
+  }
+
+  void handleCheckboxChange(String option, bool? isChecked) {
+    setState(() {
+      if (isChecked != null && isChecked) {
+        selectedOptions.add(option);
+        if (option == 'Variedade de atrações') option1 = option;
+        if (option == 'Bom atendimento') option2 = option;
+        if (option == 'Boa estrutura') option3 = option;
+        if (option == 'Aprendizagem interessante') option4 = option;
+      } else {
+        selectedOptions.remove(option);
+        if (option == 'Variedade de atrações') option1 = '';
+        if (option == 'Bom atendimento') option2 = '';
+        if (option == 'Boa estrutura') option3 = '';
+        if (option == 'Aprendizagem interessante') option4 = '';
+      }
+    });
   }
 
   @override
@@ -57,6 +86,7 @@ class _QuestionBoxHappyState extends State<QuestionBoxHappy> {
           ),
         ),
       ),
+
       content: SingleChildScrollView(
         child: SizedBox(
           width: 800,
@@ -65,24 +95,24 @@ class _QuestionBoxHappyState extends State<QuestionBoxHappy> {
             children: [
               Theme(
                 data: ThemeData(
-                  checkboxTheme: CheckboxThemeData(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(2.0),
+                checkboxTheme: CheckboxThemeData(
+                  shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(2.0),
+                  ),
+                  side: MaterialStateBorderSide.resolveWith(
+                    (states) => const BorderSide(
+                      color: Colors.white,
+                      width: 2.0,
                     ),
-                    side: MaterialStateBorderSide.resolveWith(
-                      (states) => const BorderSide(
-                        color: Colors.white,
-                        width: 2.0,
-                      ),
-                    ),
-                    checkColor: MaterialStateProperty.all(
-                      const Color(0xFF0088B7),
-                    ),
-                    fillColor: MaterialStateProperty.resolveWith(
-                      (states) {
-                        if (states.contains(MaterialState.selected)) {
-                          return Colors.white;
-                        }
+                  ),
+                  checkColor: MaterialStateProperty.all(
+                    const Color(0xFF0088B7),
+                  ),
+                  fillColor: MaterialStateProperty.resolveWith(
+                    (states) {
+                      if (states.contains(MaterialState.selected)) {
+                        return Colors.white;
+                      }
                         return Colors.transparent;
                       },
                     ),
@@ -95,21 +125,14 @@ class _QuestionBoxHappyState extends State<QuestionBoxHappy> {
                         'Variedade de atrações',
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 22,
+                          fontSize: 25,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      value: selectedOptions.contains('Opção 1'),
+                      value: selectedOptions.contains('Variedade de atrações'),
                       onChanged: (value) {
-                        setState(() {
-                          if (value != null && value) {
-                            selectedOptions.add('Opção 1');
-                          } else {
-                            selectedOptions.remove('Opção 1');
-                          }
-                        });
+                        handleCheckboxChange('Variedade de atrações', value);
                       },
-                      controlAffinity: ListTileControlAffinity.leading,
                     ),
                     const SizedBox(height: 10),
                     CheckboxListTile(
@@ -117,21 +140,14 @@ class _QuestionBoxHappyState extends State<QuestionBoxHappy> {
                         'Bom atendimento',
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 22,
+                          fontSize: 25,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      value: selectedOptions.contains('Opção 2'),
+                      value: selectedOptions.contains('Bom atendimento'),
                       onChanged: (value) {
-                        setState(() {
-                          if (value != null && value) {
-                            selectedOptions.add('Opção 2');
-                          } else {
-                            selectedOptions.remove('Opção 2');
-                          }
-                        });
+                        handleCheckboxChange('Bom atendimento', value);
                       },
-                      controlAffinity: ListTileControlAffinity.leading,
                     ),
                     const SizedBox(height: 10),
                     CheckboxListTile(
@@ -139,21 +155,14 @@ class _QuestionBoxHappyState extends State<QuestionBoxHappy> {
                         'Boa estrutura',
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 22,
+                          fontSize: 25,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      value: selectedOptions.contains('Opção 3'),
+                      value: selectedOptions.contains('Boa estrutura'),
                       onChanged: (value) {
-                        setState(() {
-                          if (value != null && value) {
-                            selectedOptions.add('Opção 3');
-                          } else {
-                            selectedOptions.remove('Opção 3');
-                          }
-                        });
+                        handleCheckboxChange('Boa estrutura', value);
                       },
-                      controlAffinity: ListTileControlAffinity.leading,
                     ),
                     const SizedBox(height: 10),
                     CheckboxListTile(
@@ -161,42 +170,30 @@ class _QuestionBoxHappyState extends State<QuestionBoxHappy> {
                         'Aprendizagem interessante',
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 22,
+                          fontSize: 25,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      value: selectedOptions.contains('Opção 4'),
+                      value: selectedOptions.contains('Aprendizagem interessante'),
                       onChanged: (value) {
-                        setState(() {
-                          if (value != null && value) {
-                            selectedOptions.add('Opção 4');
-                          } else {
-                            selectedOptions.remove('Opção 4');
-                          }
-                        });
+                        handleCheckboxChange('Aprendizagem interessante', value);
                       },
-                      controlAffinity: ListTileControlAffinity.leading,
                     ),
                   ],
                 ),
               ),
               const SizedBox(height: 65), // Aumentei o espaçamento aqui
               // Campo de explicação
-              const TextField(
+              TextField(
+                onChanged: (text) {
+                  feedbackText = text;
+                },
+                style: const TextStyle(color: Colors.white, fontSize: 25),
                 decoration: InputDecoration(
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white), // Borda branca
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Colors.white, // Borda branca ao focar
-                    ),
-                  ),
-                  hintText:
-                      "Explique a sua escolha para nos ajudar a melhorar...",
-                  hintStyle: TextStyle(color: Colors.white70, fontSize: 25),
+                  border: OutlineInputBorder(),
+                  hintText: "Explique a sua escolha para nos ajudar a melhorar...",
+                  hintStyle: const TextStyle(color: Colors.white70, fontSize: 25),
                 ),
-                style: TextStyle(color: Colors.white), // Texto branco
               ),
               const SizedBox(height: 30),
               // Botões cancelar e salvar
@@ -207,10 +204,12 @@ class _QuestionBoxHappyState extends State<QuestionBoxHappy> {
                     text: "Cancelar",
                     onPressed: widget.onCancel,
                   ),
+
                   const SizedBox(width: 75),
+
                   MyButton(
                     text: "Salvar",
-                    onPressed: isSaveButtonEnabled() ? handleSavePressed : null,
+                    onPressed: isSaveButtonEnabled() ? handleSavePressed : () {},
                   ),
                   const SizedBox(width: 130),
                 ],

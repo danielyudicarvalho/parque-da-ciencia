@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:pc_app/pages/home_page.dart';
 import 'package:pc_app/pages/review_page.dart';
 import 'package:pc_app/pages/simple_nps_page.dart';
+import 'package:sqflite/sqflite.dart';
 
 import 'confirmation_page.dart'; // Import SimpleNpsPage
 
@@ -13,12 +17,18 @@ class OptionPage extends StatefulWidget {
 }
 
 class _OptionPageState extends State<OptionPage> {
-  void openReviewPage() {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  void openReviewPage(){
     showDialog(
         context: context,
         builder: (context) {
           return const ReviewPage();
-        });
+        }
+    );
   }
 
   @override
@@ -69,16 +79,19 @@ class _OptionPageState extends State<OptionPage> {
           )
         ],
       ),
+
       body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset("lib/images/logo_parque.png",
-                  width: 280, height: 280),
-              const Spacer(),
-              ElevatedButton(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset("lib/images/logo_parque.png",
+                    width: 280, height: 280),
+
+                const Spacer(),
+
+                ElevatedButton(
                   style: buttonStyle,
                   onPressed: () {
                     Navigator.push(
@@ -90,9 +103,12 @@ class _OptionPageState extends State<OptionPage> {
                   child: const Text(
                     'Opinião do Aluno',
                     style: TextStyle(color: Colors.white, fontSize: 25),
-                  )),
-              const Spacer(),
-              ElevatedButton(
+                  )
+                ),
+
+                const Spacer(),
+
+                ElevatedButton(
                   style: buttonStyle,
                   onPressed: () {
                     Navigator.push(
@@ -114,14 +130,14 @@ class _OptionPageState extends State<OptionPage> {
                   child: const Text(
                     'Enviar Opiniões',
                     style: TextStyle(color: Colors.white, fontSize: 25),
-                  )),
-              const Spacer(
-                flex: 2,
-              ),
-            ],
+                  )
+                ),
+
+                const Spacer(flex: 2,),
+              ],
+            ),
           ),
         ),
-      ),
     );
   }
 }

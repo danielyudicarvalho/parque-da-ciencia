@@ -3,7 +3,7 @@ import '../util/my_button.dart';
 import 'confirmation_page.dart';
 
 class QuestionBoxMoreBad extends StatefulWidget {
-  final VoidCallback onSave;
+  final Function(String, String, String, String, String) onSave;
   final VoidCallback onCancel;
 
   const QuestionBoxMoreBad({
@@ -13,11 +13,16 @@ class QuestionBoxMoreBad extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<QuestionBoxMoreBad> createState() => _QuestionBoxMoreBadState();
+  State<QuestionBoxMoreBad> createState() => _QuestionBoxState();
 }
 
-class _QuestionBoxMoreBadState extends State<QuestionBoxMoreBad> {
-  List<String> selectedOptions = []; // List to store chosen options
+class _QuestionBoxState extends State<QuestionBoxMoreBad> {
+  List<String> selectedOptions = [];
+  String option1 = '';
+  String option2 = '';
+  String option3 = '';
+  String option4 = '';
+  String feedbackText = '';
 
   bool isSaveButtonEnabled() {
     return selectedOptions.isNotEmpty;
@@ -25,9 +30,33 @@ class _QuestionBoxMoreBadState extends State<QuestionBoxMoreBad> {
 
   void handleSavePressed() {
     if (isSaveButtonEnabled()) {
-      widget.onSave();
+      widget.onSave(
+        option1,
+        option2,
+        option3,
+        option4,
+        feedbackText
+      );
       Navigator.of(context).pop();
     }
+  }
+
+  void handleCheckboxChange(String option, bool? isChecked) {
+    setState(() {
+      if (isChecked != null && isChecked) {
+        selectedOptions.add(option);
+        if (option == 'Acho que o parque está um pouco desatualizado e mal conservado') option1 = option;
+        if (option == 'Acho que a falta de mais funcionários prejudicou o parque') option2 = option;
+        if (option == 'Acho que tem poucas atrações') option3 = option;
+        if (option == 'A falta de estrutura do parque prejudicou a minhas experiência') option4 = option;
+      } else {
+        selectedOptions.remove(option);
+        if (option == 'Acho que o parque está um pouco desatualizado e mal conservado') option1 = '';
+        if (option == 'Acho que a falta de mais funcionários prejudicou o parque') option2 = '';
+        if (option == 'Acho que tem poucas atrações') option3 = '';
+        if (option == 'A falta de estrutura do parque prejudicou a minhas experiência') option4 = '';
+      }
+    });
   }
 
   @override
@@ -57,10 +86,12 @@ class _QuestionBoxMoreBadState extends State<QuestionBoxMoreBad> {
           ),
         ),
       ),
+
       content: SingleChildScrollView(
         child: SizedBox(
           width: 800,
           height: 500,
+
           child: Column(
             children: [
               Theme(
@@ -83,106 +114,76 @@ class _QuestionBoxMoreBadState extends State<QuestionBoxMoreBad> {
                         if (states.contains(MaterialState.selected)) {
                           return Colors.white;
                         }
-                        return Colors.transparent;
-                      },
+                          return Colors.transparent;
+                        },
+                      ),
                     ),
                   ),
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              CheckboxListTile(
+                                title: const Text(
+                                  'Acho que o parque está um pouco desatualizado e mal conservado',
+                                  style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
+                                ),
+                                value: selectedOptions.contains('Acho que o parque está um pouco desatualizado e mal conservado'),
+                                onChanged: (value) {
+                                  handleCheckboxChange('Acho que o parque está um pouco desatualizado e mal conservado', value);
+                                },
+                              ),
+                              const SizedBox(height: 10),
+                              CheckboxListTile(
+                                title: const Text(
+                                  'Acho que a falta de mais funcionários prejudicou o parque',
+                                  style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
+                                ),
+                                value: selectedOptions.contains('Acho que a falta de mais funcionários prejudicou o parque'),
+                                onChanged: (value) {
+                                  handleCheckboxChange('Acho que a falta de mais funcionários prejudicou o parque', value);
+                                },
+                              ),
+                              const SizedBox(height: 10),
+                              CheckboxListTile(
+                                title: const Text(
+                                  'Acho que tem poucas atrações',
+                                  style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
+                                ),
+                                value: selectedOptions.contains('Acho que tem poucas atrações'),
+                                onChanged: (value) {
+                                  handleCheckboxChange('Acho que tem poucas atrações', value);
+                                },
+                              ),
+                              const SizedBox(height: 10),
+                              CheckboxListTile(
+                                title: const Text(
+                                  'A falta de estrutura do parque prejudicou a minhas experiência',
+                                  style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
+                                ),
+                                value: selectedOptions.contains('A falta de estrutura do parque prejudicou a minhas experiência'),
+                                onChanged: (value) {
+                                  handleCheckboxChange('A falta de estrutura do parque prejudicou a minhas experiência', value);
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ]
+                  ),
                 ),
-                child: Column(
-                  children: [
-                    CheckboxListTile(
-                      title: const Text(
-                        'Acho que o parque está um pouco desatualizado e mal conservado',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      value: selectedOptions.contains('Opção 1'),
-                      onChanged: (value) {
-                        setState(() {
-                          if (value != null && value) {
-                            selectedOptions.add('Opção 1');
-                          } else {
-                            selectedOptions.remove('Opção 1');
-                          }
-                        });
-                      },
-                      controlAffinity: ListTileControlAffinity.leading,
-                    ),
-                    const SizedBox(height: 10),
-                    CheckboxListTile(
-                      title: const Text(
-                        'Acho que a falta de mais funcionários prejudicou o parque',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      value: selectedOptions.contains('Opção 2'),
-                      onChanged: (value) {
-                        setState(() {
-                          if (value != null && value) {
-                            selectedOptions.add('Opção 2');
-                          } else {
-                            selectedOptions.remove('Opção 2');
-                          }
-                        });
-                      },
-                      controlAffinity: ListTileControlAffinity.leading,
-                    ),
-                    const SizedBox(height: 10),
-                    CheckboxListTile(
-                      title: const Text(
-                        'Acho que tem poucas atrações',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      value: selectedOptions.contains('Opção 3'),
-                      onChanged: (value) {
-                        setState(() {
-                          if (value != null && value) {
-                            selectedOptions.add('Opção 3');
-                          } else {
-                            selectedOptions.remove('Opção 3');
-                          }
-                        });
-                      },
-                      controlAffinity: ListTileControlAffinity.leading,
-                    ),
-                    const SizedBox(height: 10),
-                    CheckboxListTile(
-                      title: const Text(
-                        'A falta de estrutura do parque prejudicou a minha experiência',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      value: selectedOptions.contains('Opção 4'),
-                      onChanged: (value) {
-                        setState(() {
-                          if (value != null && value) {
-                            selectedOptions.add('Opção 4');
-                          } else {
-                            selectedOptions.remove('Opção 4');
-                          }
-                        });
-                      },
-                      controlAffinity: ListTileControlAffinity.leading,
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 30), // Aumentei o espaçamento aqui
+
+              const SizedBox(height: 30),
+
               // Campo de explicação
-              const TextField(
+              const SizedBox(height: 10),
+              TextField(
+                onChanged: (text) {
+                  feedbackText = text;
+                },
                 decoration: InputDecoration(
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.white), // Borda branca
@@ -193,13 +194,15 @@ class _QuestionBoxMoreBadState extends State<QuestionBoxMoreBad> {
                     ),
                   ),
                   hintText:
-                      "Explique a sua escolha para nos ajudar a melhorar...",
+                  "Explique a sua escolha para nos ajudar a melhorar...",
                   hintStyle: TextStyle(color: Colors.white70, fontSize: 25),
                 ),
                 style: TextStyle(color: Colors.white), // Texto branco
               ),
+
               const SizedBox(height: 30),
-              // Botões cancelar e salvar
+
+              // Botoes cancelar e salvar
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -207,15 +210,17 @@ class _QuestionBoxMoreBadState extends State<QuestionBoxMoreBad> {
                     text: "Cancelar",
                     onPressed: widget.onCancel,
                   ),
+
                   const SizedBox(width: 75),
+
                   MyButton(
                     text: "Salvar",
-                    onPressed: isSaveButtonEnabled() ? handleSavePressed : null,
+                    onPressed: isSaveButtonEnabled() ? handleSavePressed : () {},
                   ),
+
                   const SizedBox(width: 130),
                 ],
               ),
-              const SizedBox(height: 5),
             ],
           ),
         ),

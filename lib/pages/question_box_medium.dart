@@ -5,7 +5,7 @@ import '../util/my_button.dart';
 import 'confirmation_page.dart';
 
 class QuestionBoxMedium extends StatefulWidget {
-  final VoidCallback onSave;
+  final Function(String, String, String, String, String) onSave;
   final VoidCallback onCancel;
 
   const QuestionBoxMedium({
@@ -15,11 +15,16 @@ class QuestionBoxMedium extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<QuestionBoxMedium> createState() => _QuestionBoxMediumState();
+  State<QuestionBoxMedium> createState() => _QuestionBoxState();
 }
 
-class _QuestionBoxMediumState extends State<QuestionBoxMedium> {
-  List<String> selectedOptions = []; // List to store chosen options
+class _QuestionBoxState extends State<QuestionBoxMedium> {
+  List<String> selectedOptions = [];
+  String option1 = '';
+  String option2 = '';
+  String option3 = '';
+  String option4 = '';
+  String feedbackText = '';
 
   bool isSaveButtonEnabled() {
     return selectedOptions.isNotEmpty;
@@ -27,9 +32,33 @@ class _QuestionBoxMediumState extends State<QuestionBoxMedium> {
 
   void handleSavePressed() {
     if (isSaveButtonEnabled()) {
-      widget.onSave();
+      widget.onSave(
+        option1,
+        option2,
+        option3,
+        option4,
+        feedbackText,
+      );
       Navigator.of(context).pop();
     }
+  }
+
+  void handleCheckboxChange(String option, bool? isChecked) {
+    setState(() {
+      if (isChecked != null && isChecked) {
+        selectedOptions.add(option);
+        if (option == 'Boa variedade, porém falta manutenção') option1 = option;
+        if (option == 'Interessante, mas faltou interatividade e envolvimento') option2 = option;
+        if (option == 'Muito Bom, porém tem poucas atrações') option3 = option;
+        if (option == 'Boas atrações, mas achei um pouco confuso') option4 = option;
+      } else {
+        selectedOptions.remove(option);
+        if (option == 'Boa variedade, porém falta manutenção') option1 = '';
+        if (option == 'Interessante, mas faltou interatividade e envolvimento') option2 = '';
+        if (option == 'Muito Bom, porém tem poucas atrações') option3 = '';
+        if (option == 'Boas atrações, mas achei um pouco confuso') option4 = '';
+      }
+    });
   }
 
   @override
@@ -59,6 +88,7 @@ class _QuestionBoxMediumState extends State<QuestionBoxMedium> {
           ),
         ),
       ),
+
       content: SingleChildScrollView(
         child: SizedBox(
           width: 800,
@@ -85,106 +115,81 @@ class _QuestionBoxMediumState extends State<QuestionBoxMedium> {
                         if (states.contains(MaterialState.selected)) {
                           return Colors.white;
                         }
-                        return Colors.transparent;
-                      },
+                          return Colors.transparent;
+                        },
+                      ),
                     ),
                   ),
+                  child: Column(
+                    children: [
+                      CheckboxListTile(
+                        title: const Text(
+                          'Boa variedade, porém falta manutenção',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        value: selectedOptions.contains('Boa variedade, porém falta manutenção'),
+                        onChanged: (value) {
+                          handleCheckboxChange('Boa variedade, porém falta manutenção', value);
+                        },
+                      ),
+                      const SizedBox(height: 10),
+                      CheckboxListTile(
+                        title: const Text(
+                          'Interessante, mas faltou interatividade e envolvimento',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        value: selectedOptions.contains('Interessante, mas faltou interatividade e envolvimento'),
+                        onChanged: (value) {
+                          handleCheckboxChange('Interessante, mas faltou interatividade e envolvimento', value);
+                        },
+                      ),
+                      const SizedBox(height: 10),
+                      CheckboxListTile(
+                        title: const Text(
+                          'Muito Bom, porém tem poucas atrações',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        value: selectedOptions.contains('Muito Bom, porém tem poucas atrações'),
+                        onChanged: (value) {
+                          handleCheckboxChange('Muito Bom, porém tem poucas atrações', value);
+                        },
+                      ),
+                      const SizedBox(height: 10),
+                      CheckboxListTile(
+                        title: const Text(
+                          'Boas atrações, mas achei um pouco confuso',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        value: selectedOptions.contains('Boas atrações, mas achei um pouco confuso'),
+                        onChanged: (value) {
+                          handleCheckboxChange('Boas atrações, mas achei um pouco confuso', value);
+                        },
+                      ),
+                    ],
+                  ),
                 ),
-                child: Column(
-                  children: [
-                    CheckboxListTile(
-                      title: const Text(
-                        'Boa variedade, porém falta manutenção',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      value: selectedOptions.contains('Opção 1'),
-                      onChanged: (value) {
-                        setState(() {
-                          if (value != null && value) {
-                            selectedOptions.add('Opção 1');
-                          } else {
-                            selectedOptions.remove('Opção 1');
-                          }
-                        });
-                      },
-                      controlAffinity: ListTileControlAffinity.leading,
-                    ),
-                    const SizedBox(height: 10),
-                    CheckboxListTile(
-                      title: const Text(
-                        'Interessante, mas faltou interatividade e envolvimento',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      value: selectedOptions.contains('Opção 2'),
-                      onChanged: (value) {
-                        setState(() {
-                          if (value != null && value) {
-                            selectedOptions.add('Opção 2');
-                          } else {
-                            selectedOptions.remove('Opção 2');
-                          }
-                        });
-                      },
-                      controlAffinity: ListTileControlAffinity.leading,
-                    ),
-                    const SizedBox(height: 10),
-                    CheckboxListTile(
-                      title: const Text(
-                        'Muito Bom, porém tem poucas atrações',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      value: selectedOptions.contains('Opção 3'),
-                      onChanged: (value) {
-                        setState(() {
-                          if (value != null && value) {
-                            selectedOptions.add('Opção 3');
-                          } else {
-                            selectedOptions.remove('Opção 3');
-                          }
-                        });
-                      },
-                      controlAffinity: ListTileControlAffinity.leading,
-                    ),
-                    const SizedBox(height: 10),
-                    CheckboxListTile(
-                      title: const Text(
-                        'Boas atrações, mas achei um pouco confuso',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      value: selectedOptions.contains('Opção 4'),
-                      onChanged: (value) {
-                        setState(() {
-                          if (value != null && value) {
-                            selectedOptions.add('Opção 4');
-                          } else {
-                            selectedOptions.remove('Opção 4');
-                          }
-                        });
-                      },
-                      controlAffinity: ListTileControlAffinity.leading,
-                    ),
-                  ],
-                ),
-              ),
               const SizedBox(height: 65), // Aumentei o espaçamento aqui
               // Campo de explicação
-              const TextField(
+              TextField(
+                onChanged: (text) {
+                feedbackText = text;
+                },
                 decoration: InputDecoration(
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.white), // Borda branca
@@ -201,7 +206,8 @@ class _QuestionBoxMediumState extends State<QuestionBoxMedium> {
                 style: TextStyle(color: Colors.white), // Texto branco
               ),
               const SizedBox(height: 30),
-              // Botões cancelar e salvar
+
+              // Botoes cancelar e salvar
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -209,12 +215,16 @@ class _QuestionBoxMediumState extends State<QuestionBoxMedium> {
                     text: "Cancelar",
                     onPressed: widget.onCancel,
                   ),
+
                   const SizedBox(width: 75),
+
                   MyButton(
                     text: "Salvar",
-                    onPressed: isSaveButtonEnabled() ? handleSavePressed : null,
+                    onPressed: isSaveButtonEnabled() ? handleSavePressed : () {},
                   ),
+
                   const SizedBox(width: 130),
+
                 ],
               ),
               const SizedBox(height: 5),

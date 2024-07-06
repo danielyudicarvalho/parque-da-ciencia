@@ -14,148 +14,134 @@ import 'package:pc_app/pages/question_box_bad.dart';
 import 'package:pc_app/pages/question_box_more_bad.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key});
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  late Database _database;
+  late Future<Database> _database;
   List<Map<String, dynamic>> _reviews = [];
 
   @override
   void initState() {
     super.initState();
-    _initializeDatabase();
+    _openDB();
   }
 
-  Future<void> _initializeDatabase() async {
+  // Function to open de app database - contains reviews information
+  Future<void> _openDB() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = documentsDirectory.path + "/" + "reports.db";
 
-    _database = await openDatabase(path, version: 1,
-        onCreate: (Database db, int version) async {
-      await db.execute(
-          "CREATE TABLE reports(id INTEGER PRIMARY KEY, rating INTEGER)");
-    });
+    _database = openDatabase(path);
   }
 
-  Future<List<Map<String, dynamic>>> _getReviews() async {
-    final List<Map<String, dynamic>> reviews =
-        await _database.rawQuery('SELECT * FROM reviews');
-    return reviews;
-  }
 
-  Future<void> _retrieveReviews() async {
-    final List<Map<String, dynamic>> reviews =
-        await _database.rawQuery('SELECT * FROM reviews');
-    setState(() {
-      _reviews = reviews;
-    });
-  }
-
-  saveNewReview(int rating) async {
-    await _database.transaction((txn) async {
-      await txn.rawInsert('INSERT INTO reports(rating) VALUES(?)', [rating]);
+  saveNewReview(int rating, String option1,String option2,String option3,String option4, String feedback) async {
+    final db = await _database;
+    await db.transaction((txn) async {
+      await txn.rawInsert(
+        'INSERT INTO monitor_reports(rating, option1, option2, option3, option4, feedback) VALUES(?, ?, ?, ?, ?, ?)',
+        [rating, option1,option2,option3,option4, feedback],
+      );
     });
   }
 
   void openConfirmationPage() {
     showDialog(
-        context: context,
-        builder: (context) {
-          return const ConfirmationPage();
-        });
+      context: context,
+      builder: (context) {
+        return const ConfirmationPage();
+      },
+    );
+  }
+
+  void _openQuestionBox(int rating, Widget dialogWidget) {
+    showDialog(
+      context: context,
+      builder: (context) => dialogWidget,
+    );
   }
 
   void openQuestionBoxHappy() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return QuestionBoxHappy(
-          onSave: () async {
-            await saveNewReview(5);
-            openConfirmationPage();
-          }, //saveNewReview(5, true),
-          onCancel: () {
-            Navigator.of(context).pop();
-            print("Cancelado!");
-          },
-        );
-      },
+    _openQuestionBox(
+      5,
+      QuestionBoxHappy(
+        onSave: (option1, option2, option3, option4, feedback) async {
+          await saveNewReview(5, option1,option2, option3, option4, feedback);
+          openConfirmationPage();
+        },
+        onCancel: () {
+          Navigator.of(context).pop();
+          print("Cancelado!");
+        },
+      ),
     );
   }
 
   void openQuestionBoxLessHappy() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return QuestionBoxLessHappy(
-          onSave: () async {
-            await saveNewReview(4);
-            openConfirmationPage();
-          },
-          onCancel: () {
-            Navigator.of(context).pop();
-            print("Cancelado!");
-          },
-        );
-      },
+    _openQuestionBox(
+      4,
+      QuestionBoxLessHappy(
+        onSave: (option1, option2, option3, option4, feedback) async {
+          await saveNewReview(4, option1,option2, option3, option4, feedback);
+          openConfirmationPage();
+        },
+        onCancel: () {
+          Navigator.of(context).pop();
+          print("Cancelado!");
+        },
+      ),
     );
   }
 
   void openQuestionBoxMedium() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return QuestionBoxMedium(
-          onSave: () async {
-            await saveNewReview(3);
-            openConfirmationPage();
-          },
-          onCancel: () {
-            Navigator.of(context).pop();
-            print("Cancelado!");
-          },
-        );
-      },
+    _openQuestionBox(
+      3,
+      QuestionBoxMedium(
+        onSave: (option1, option2, option3, option4, feedback) async {
+          await saveNewReview(3, option1,option2, option3, option4, feedback);
+          openConfirmationPage();
+        },
+        onCancel: () {
+          Navigator.of(context).pop();
+          print("Cancelado!");
+        },
+      ),
     );
   }
 
   void openQuestionBoxBad() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return QuestionBoxBad(
-          onSave: () async {
-            await saveNewReview(2);
-            openConfirmationPage();
-          },
-          onCancel: () {
-            Navigator.of(context).pop();
-            print("Cancelado!");
-          },
-        );
-      },
+    _openQuestionBox(
+      2,
+      QuestionBoxBad(
+        onSave: (option1, option2, option3, option4, feedback) async {
+          await saveNewReview(2, option1,option2, option3, option4, feedback);
+          openConfirmationPage();
+        },
+        onCancel: () {
+          Navigator.of(context).pop();
+          print("Cancelado!");
+        },
+      ),
     );
   }
 
   void openQuestionBoxMoreBad() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return QuestionBoxMoreBad(
-          onSave: () async {
-            await saveNewReview(1);
-            openConfirmationPage();
-          },
-          onCancel: () {
-            Navigator.of(context).pop();
-            print("Cancelado!");
-          },
-        );
-      },
+    _openQuestionBox(
+      1,
+      QuestionBoxMoreBad(
+        onSave: (option1,option2, option3, option4, feedback) async {
+          await saveNewReview(1, option1, option2,option3, option4, feedback);
+          openConfirmationPage();
+        },
+        onCancel: () {
+          Navigator.of(context).pop();
+          print("Cancelado!");
+        },
+      ),
     );
   }
 
@@ -163,6 +149,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+
       appBar: AppBar(
         backgroundColor: const Color(0xFF0088B7),
         centerTitle: true,
@@ -214,63 +201,59 @@ class _HomePageState extends State<HomePage> {
             height: 280, // altura da imagem
             child: Image.asset("lib/images/balao_mov.gif")),
 
-        Center(
-          child: Column(
-            children: [
-              const Spacer(
-                flex: 2,
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  const Spacer(flex: 6),
-                  IconButton(
-                    onPressed: () => openQuestionBoxHappy(),
-                    icon: Image.asset('lib/images/feliz.png'),
-                  ),
-                  const Spacer(flex: 1),
-                  IconButton(
-                    onPressed: () => openQuestionBoxLessHappy(),
-                    icon: Image.asset('lib/images/meio_feliz.png'),
-                  ),
-                  const Spacer(flex: 1),
-                  IconButton(
-                    onPressed: () => openQuestionBoxMedium(),
-                    icon: Image.asset('lib/images/medio.png'),
-                  ),
-                  const Spacer(flex: 1),
-                  IconButton(
-                    onPressed: () => openQuestionBoxBad(),
-                    icon: Image.asset('lib/images/meio_infeliz.png'),
-                  ),
-                  const Spacer(flex: 1),
-                  IconButton(
-                    onPressed: () => openQuestionBoxMoreBad(),
-                    icon: Image.asset('lib/images/infeliz.png'),
-                  ),
-                  const Spacer(flex: 2),
-                ],
-              ),
-              const SizedBox(
-                height: 60,
-              ),
-              const Spacer()
-            ],
+          Center(
+            child: Column(
+              children: [
+                const Spacer(flex: 2),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    const Spacer(flex: 6),
+                    IconButton(
+                      onPressed: openQuestionBoxHappy,
+                      icon: Image.asset('lib/images/feliz.png'),
+                    ),
+                    const Spacer(flex: 1),
+                    IconButton(
+                      onPressed: openQuestionBoxLessHappy,
+                      icon: Image.asset('lib/images/meio_feliz.png'),
+                    ),
+                    const Spacer(flex: 1),
+                    IconButton(
+                      onPressed: openQuestionBoxMedium,
+                      icon: Image.asset('lib/images/medio.png'),
+                    ),
+                    const Spacer(flex: 1),
+                    IconButton(
+                      onPressed: openQuestionBoxBad,
+                      icon: Image.asset('lib/images/meio_infeliz.png'),
+                    ),
+                    const Spacer(flex: 1),
+                    IconButton(
+                      onPressed: openQuestionBoxMoreBad,
+                      icon: Image.asset('lib/images/infeliz.png'),
+                    ),
+                    const Spacer(flex: 2),
+                  ],
+                ),
+                const SizedBox(height: 60),
+                const Spacer(),
+              ],
+            ),
           ),
-        ),
 
-        /* Icones de logo */
-
-        Positioned(
-          top: 490, // ajuste a posição vertical conforme necessário
-          right: 16, // ajuste a posição horizontal conforme necessário
-          child: Image.asset(
-            'lib/images/logo_parque.png',
-            width: 230, // ajuste o tamanho da imagem conforme necessário
-            height: 230,
+          /* Icones de logo */
+          Positioned(
+            top: 490, // ajuste a posição vertical conforme necessário
+            right: 16, // ajuste a posição horizontal conforme necessário
+            child: Image.asset(
+              'lib/images/logo_parque.png',
+              width: 230, // ajuste o tamanho da imagem conforme necessário
+              height: 230,
+            ),
           ),
-        ),
-      ]),
+        ],
+      ),
     );
   }
 }

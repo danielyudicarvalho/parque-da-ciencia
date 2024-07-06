@@ -1,11 +1,14 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pc_app/pages/options_page.dart';
+import 'package:pc_app/util/my_button.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:sqflite/sqlite_api.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  const LoginPage({super.key});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -17,42 +20,34 @@ class _LoginPageState extends State<LoginPage> {
   String serverEmail = '';
   String studentCount = '';
   String schoolName = '';
+  late Future<Database> _database;
 
   @override
   void initState() {
     super.initState();
-    _initDatabase();
+    _openDB();
   }
 
-  Future<void> _initDatabase() async {
+  // Function to open de app database - contains login informations
+  Future<void> _openDB() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = documentsDirectory.path + "/" + "app.db";
-    _database = await openDatabase(
-      path,
-      onCreate: (db, version) {
-        return db.execute(
-          'CREATE TABLE login_info(id INTEGER PRIMARY KEY, server_name TEXT, server_email TEXT, student_count TEXT, school_name TEXT)',
-        );
-      },
-      version: 1,
-    );
-  }
 
-  Database? _database; // Database instance
+    _database = openDatabase(path);
+  }
 
   // Function to validate form fields
   bool validateFields() {
-    if (serverName.isEmpty ||
-        serverEmail.isEmpty ||
-        studentCount.isEmpty ||
-        schoolName.isEmpty) {
+    if (serverName.isEmpty || serverEmail.isEmpty || studentCount.isEmpty || schoolName.isEmpty) {
       return false;
     }
     return true;
   }
 
+  // Function to save form informations about server
   Future<void> _saveFormData() async {
-    await _database!.transaction((txn) async {
+    final db = await _database;
+    await db.transaction((txn) async {
       await txn.delete('login_info');
       final data = <String, dynamic>{
         'server_name': serverName,
@@ -64,14 +59,14 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
-  void goToOptionsPage() {
+  void goToOptionsPage() async {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const OptionPage()),
+      MaterialPageRoute(builder: (context) => OptionPage()),
     );
   }
 
-  void showErrorMessage() {
+  void showErrorMessage(){
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Preencha todos os campos corretamente'),
@@ -229,6 +224,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: Colors.white,
+
       appBar: AppBar(
         backgroundColor: const Color(0xFF0088B7),
         leading: IconButton(
@@ -237,6 +233,7 @@ class _LoginPageState extends State<LoginPage> {
           onPressed: _showAboutDialog,
         ),
         centerTitle: true,
+
         title: const Text(
           "Iniciando passeio",
           style: TextStyle(
@@ -245,6 +242,7 @@ class _LoginPageState extends State<LoginPage> {
             fontWeight: FontWeight.bold,
           ),
         ),
+
         actions: [
           Container(
             padding: const EdgeInsets.only(right: 8, bottom: 4),
@@ -266,11 +264,14 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  // Logo image
                   Image.asset(
                     "lib/images/logo_parque.png",
                     width: 265,
                     height: 265,
                   ),
+
+                  // Server name field
                   TextField(
                     onChanged: (text) {
                       serverName = text;
@@ -281,7 +282,10 @@ class _LoginPageState extends State<LoginPage> {
                       border: OutlineInputBorder(),
                     ),
                   ),
+
                   const SizedBox(height: 10),
+
+                  // Campo do email do servidor
                   TextField(
                     onChanged: (text) {
                       serverEmail = text;
@@ -293,7 +297,10 @@ class _LoginPageState extends State<LoginPage> {
                       border: OutlineInputBorder(),
                     ),
                   ),
+
                   const SizedBox(height: 10),
+
+                  // Campo do nome da escola visitante
                   TextField(
                     onChanged: (text) {
                       schoolName = text;
@@ -304,7 +311,10 @@ class _LoginPageState extends State<LoginPage> {
                       border: OutlineInputBorder(),
                     ),
                   ),
+
                   const SizedBox(height: 10),
+
+                  // Campo para o numero de estudantes da escola
                   TextField(
                     onChanged: (text) {
                       studentCount = text;
@@ -316,7 +326,10 @@ class _LoginPageState extends State<LoginPage> {
                       border: OutlineInputBorder(),
                     ),
                   ),
+
                   const SizedBox(height: 25),
+
+                  // Botao de inicio
                   ElevatedButton(
                     onPressed: submitForm,
                     style: ElevatedButton.styleFrom(
@@ -326,6 +339,7 @@ class _LoginPageState extends State<LoginPage> {
                       padding: const EdgeInsets.all(16),
                       backgroundColor: const Color(0xFF0088B7),
                     ),
+
                     child: const Text(
                       'Iniciar',
                       style: TextStyle(
