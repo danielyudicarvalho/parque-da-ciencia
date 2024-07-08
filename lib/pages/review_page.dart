@@ -163,6 +163,15 @@ class _ReviewPageState extends State<ReviewPage> {
     );
   }
 
+  void showErrorMessage(){
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Não é possível enviar sem avaliações!'),
+        backgroundColor: Colors.red,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final ButtonStyle buttonStyle = ElevatedButton.styleFrom(
@@ -243,6 +252,8 @@ class _ReviewPageState extends State<ReviewPage> {
                   if (snapshot.hasData) {
                     final Map<String, dynamic> emailInfo = snapshot.data!;
                     final String email = emailInfo['server_email'] ?? '';
+                    final totalReviews = snapshot.data!;
+
                     return Column(
                       children: [
                         ListTile(
@@ -261,12 +272,25 @@ class _ReviewPageState extends State<ReviewPage> {
                             MyButton(
                               text: "Enviar",
                               onPressed: () async {
-                                final reviews = await _getReviews('reports');
-                                final monitorReports = await _getReviews('monitor_reports');
-                                _submitForm([email], reviews, monitorReports, emailInfo);
-                                Navigator.of(context).pop();
-                                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const LoginPage()), (Route<dynamic> route) => false);
-                                openConfirmationPage();
+                                // Variáveis para contagem de avaliações
+                                final reviews = await _totalReviewsFuture;
+                                final monit_reviews = await _totalMonitorReportsFuture;
+
+                                if ((reviews > 0) && (monit_reviews > 0)) { // Verifica se há avaliações tanto dos alunos quanto dos monitores
+                                  final reviews = await _getReviews('reports');
+                                  final monitorReports = await _getReviews(
+                                      'monitor_reports');
+                                  _submitForm([email], reviews, monitorReports,
+                                      emailInfo);
+                                  Navigator.of(context).pop();
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                      MaterialPageRoute(builder: (
+                                          context) => const LoginPage()), (
+                                      Route<dynamic> route) => false);
+                                  openConfirmationPage();
+                                } else {  // Caso não existam avaliações, mostra uma mensagem de erro
+                                  showErrorMessage();
+                                }
                               },
                             ),
 
