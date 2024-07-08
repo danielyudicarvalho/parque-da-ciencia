@@ -99,16 +99,16 @@ class _QuestionBoxState extends State<QuestionBoxHappy> {
                   shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(2.0),
                   ),
-                  side: MaterialStateBorderSide.resolveWith(
+                  side: WidgetStateBorderSide.resolveWith(
                     (states) => const BorderSide(
                       color: Colors.white,
                       width: 2.0,
                     ),
                   ),
-                  checkColor: MaterialStateProperty.all(
+                  checkColor: WidgetStateProperty.all(
                     const Color(0xFF0088B7),
                   ),
-                  fillColor: MaterialStateProperty.resolveWith(
+                  fillColor: WidgetStateProperty.resolveWith(
                     (states) {
                       if (states.contains(MaterialState.selected)) {
                         return Colors.white;

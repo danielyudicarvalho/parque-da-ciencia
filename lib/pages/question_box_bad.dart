@@ -81,18 +81,18 @@ class _QuestionBoxBadState extends State<QuestionBoxBad> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(2.0),
                     ),
-                    side: MaterialStateBorderSide.resolveWith(
+                    side: WidgetStateBorderSide.resolveWith(
                       (states) => const BorderSide(
                         color: Colors.white,
                         width: 2.0,
                       ),
                     ),
-                    checkColor: MaterialStateProperty.all(
+                    checkColor: WidgetStateProperty.all(
                       const Color(0xFF0088B7),
                     ),
-                    fillColor: MaterialStateProperty.resolveWith(
+                    fillColor: WidgetStateProperty.resolveWith(
                       (states) {
-                        if (states.contains(MaterialState.selected)) {
+                        if (states.contains(WidgetState.selected)) {
                           return Colors.white;
                         }
                         return Colors.transparent;

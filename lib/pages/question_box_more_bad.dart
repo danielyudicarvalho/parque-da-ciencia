@@ -90,7 +90,7 @@ class _QuestionBoxState extends State<QuestionBoxMoreBad> {
       content: SingleChildScrollView(
         child: SizedBox(
           width: 800,
-          height: 500,
+          height: 550,
 
           child: Column(
             children: [
@@ -100,7 +100,7 @@ class _QuestionBoxState extends State<QuestionBoxMoreBad> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(2.0),
                     ),
-                    side: MaterialStateBorderSide.resolveWith(
+                    side: WidgetStateBorderSide.resolveWith(
                       (states) => const BorderSide(
                         color: Colors.white,
                         width: 2.0,
@@ -121,8 +121,7 @@ class _QuestionBoxState extends State<QuestionBoxMoreBad> {
                   ),
                   child: Column(
                     children: [
-                      Expanded(
-                        child: SingleChildScrollView(
+                      SingleChildScrollView(
                           child: Column(
                             children: [
                               CheckboxListTile(
@@ -171,7 +170,6 @@ class _QuestionBoxState extends State<QuestionBoxMoreBad> {
                             ],
                           ),
                         ),
-                      ),
                     ]
                   ),
                 ),
