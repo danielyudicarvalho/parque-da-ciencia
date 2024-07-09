@@ -17,7 +17,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   // Define fields based on requirements
   String serverName = '';
-  String serverEmail = '';
+  String serverEmail = 'dipc.proece@ufms.br';
   String studentCount = '';
   String schoolName = '';
   late Future<Database> _database;
@@ -241,6 +241,10 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  // Inicialize o TextEditingController com o e-mail pré-preenchido
+  final TextEditingController _emailController =
+  TextEditingController(text: 'dipc.proece@ufms.br');
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -309,6 +313,7 @@ class _LoginPageState extends State<LoginPage> {
 
                   // Campo do email do servidor
                   TextFormField(
+                    controller: _emailController,
                     onChanged: (text) {
                       serverEmail = text;
                     },
