@@ -37,10 +37,10 @@ class _ReviewPageState extends State<ReviewPage> {
   }
 
   Future<void> sendEmail(List<String> csvPaths, String recipient, String emailBody, String schoolName, String serverName) async {
-    final smtpServer = gmail('danielyudicarvalho@gmail.com', 'rkww hvdl qrav fmel');
+    final smtpServer = gmail('dipc.proece@ufms.br', 'xadb txxv ljue dior');
 
     final message = Message()
-      ..from = Address('danielyudicarvalho@gmail.com', 'Yudi')
+      ..from = Address('dipc.proece@ufms.br', 'PC-App')
       ..recipients.add(recipient)
       ..subject = 'Resultado $schoolName - $serverName'
       ..text = emailBody
@@ -125,9 +125,9 @@ class _ReviewPageState extends State<ReviewPage> {
   String _generateCSV(List<Map<String, dynamic>> data, Map<String, dynamic> loginInfo, String tableName) {
     final csvBuffer = StringBuffer();
     if (tableName == 'reports') {
-      csvBuffer.write('Rating\n');
+      csvBuffer.write('Avaliação\n');
     } else {
-      csvBuffer.write('Rating, Feedback, Opção 1 , Opção 2, Opção 3, Opção 4 \n');
+      csvBuffer.write('Avaliação, Feedback, Opção 1 , Opção 2, Opção 3, Opção 4 \n');
     }
 
     for (var row in data) {
