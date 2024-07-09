@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pc_app/pages/end_page.dart';
 import 'package:pc_app/pages/login_page.dart';
@@ -99,8 +100,8 @@ class _ReviewPageState extends State<ReviewPage> {
     final schoolName = loginInfo['school_name'];
     final serverName = loginInfo['server_name'];
 
-    final csvPathReviews = await _saveCSV(csvContentReviews, 'aval_alunos.csv');
-    final csvPathMonitorReports = await _saveCSV(csvContentMonitorReports, 'aval_responsaveis.csv');
+    final csvPathReviews = await _saveCSV(csvContentReviews, 'aval_alunos_${schoolName}.csv');
+    final csvPathMonitorReports = await _saveCSV(csvContentMonitorReports, 'aval_responsaveis_${schoolName}.csv');
 
     for (var email in emails) {
       try {
@@ -114,19 +115,34 @@ class _ReviewPageState extends State<ReviewPage> {
     await _deleteReviews('monitor_reports');
   }
 
+  String getFormattedDateTime() {
+    DateTime now = DateTime.now();
+    DateFormat formatter = DateFormat('yyyy-MM-dd HH:mm');
+    return formatter.format(now);
+  }
+
   String _generateEmailBody(Map<String, dynamic> loginInfo) {
     final StringBuffer buffer = StringBuffer();
     buffer.writeln('Nome da escola: ${loginInfo['school_name']}');
     buffer.writeln('Servidor responsável: ${loginInfo['server_name']}');
     buffer.writeln('Número de alunos durante a visita: ${loginInfo['student_count']}');
+    buffer.writeln('Data e Hora: ${getFormattedDateTime()}');
     return buffer.toString();
   }
 
   String _generateCSV(List<Map<String, dynamic>> data, Map<String, dynamic> loginInfo, String tableName) {
     final csvBuffer = StringBuffer();
     if (tableName == 'reports') {
+      csvBuffer.write('Nome da escola: ${loginInfo['school_name']}\n');
+      csvBuffer.write('Servidor responsável: ${loginInfo['server_name']}\n');
+      csvBuffer.write('Número de alunos durante a visita: ${loginInfo['student_count']}\n');
+      csvBuffer.write('Data e Hora: ${getFormattedDateTime()}\n');
       csvBuffer.write('Avaliação\n');
     } else {
+      csvBuffer.write('Nome da escola: ${loginInfo['school_name']}\n');
+      csvBuffer.write('Servidor responsável: ${loginInfo['server_name']}\n');
+      csvBuffer.write('Número de alunos durante a visita: ${loginInfo['student_count']}\n');
+      csvBuffer.write('Data e Hora: ${getFormattedDateTime()}\n');
       csvBuffer.write('Avaliação, Feedback, Opção 1 , Opção 2, Opção 3, Opção 4 \n');
     }
 
@@ -276,7 +292,7 @@ class _ReviewPageState extends State<ReviewPage> {
                                 final reviews = await _totalReviewsFuture;
                                 final monit_reviews = await _totalMonitorReportsFuture;
 
-                                if ((reviews > 0) && (monit_reviews > 0)) { // Verifica se há avaliações tanto dos alunos quanto dos monitores
+                                if ((reviews > 0) || (monit_reviews > 0)) { // Verifica se há avaliações tanto dos alunos quanto dos monitores
                                   final reviews = await _getReviews('reports');
                                   final monitorReports = await _getReviews(
                                       'monitor_reports');

@@ -75,6 +75,15 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  void showEmailErrorMessage(){
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Digite um email válido'),
+        backgroundColor: Colors.red,
+      ),
+    );
+  }
+
   // Function to handle form submission
   void submitForm() async {
     if (validateFields()) {
@@ -286,7 +295,7 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(height: 10),
 
                   // Campo do email do servidor
-                  TextField(
+                  TextFormField(
                     onChanged: (text) {
                       serverEmail = text;
                     },
