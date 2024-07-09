@@ -44,6 +44,17 @@ class _LoginPageState extends State<LoginPage> {
     return true;
   }
 
+  // Function to validate form fields
+  bool validateEmailFields() {
+    // Verificação de email
+    String pattern = r'^[^@]+@[^@]+\.[^@]+';
+    RegExp regex = RegExp(pattern);
+    if (!regex.hasMatch(serverEmail)) {
+      return false;
+    } else
+      return true;
+  }
+
   // Function to save form informations about server
   Future<void> _saveFormData() async {
     final db = await _database;
@@ -86,10 +97,12 @@ class _LoginPageState extends State<LoginPage> {
 
   // Function to handle form submission
   void submitForm() async {
-    if (validateFields()) {
+    if (validateFields() && validateEmailFields()) {
       // Process form data (e.g., save to database, navigate)
       await _saveFormData();
       goToOptionsPage();
+    } else if (validateFields() && !validateEmailFields()) {
+      showEmailErrorMessage();
     } else {
       // Show error message
       showErrorMessage();
