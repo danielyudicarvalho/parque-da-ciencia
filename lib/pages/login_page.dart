@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pc_app/pages/options_page.dart';
-import 'package:pc_app/util/my_button.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/sqlite_api.dart';
 
@@ -17,7 +16,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   // Define fields based on requirements
   String serverName = '';
-  String serverEmail = 'dipc.proece@ufms.br';
+  String serverEmail = '';
   String studentCount = '';
   String schoolName = '';
   late Future<Database> _database;
@@ -38,7 +37,7 @@ class _LoginPageState extends State<LoginPage> {
 
   // Function to validate form fields
   bool validateFields() {
-    if (serverName.isEmpty || serverEmail.isEmpty || studentCount.isEmpty || schoolName.isEmpty) {
+    if (serverName.isEmpty || studentCount.isEmpty || schoolName.isEmpty) {
       return false;
     }
     return true;
@@ -49,7 +48,9 @@ class _LoginPageState extends State<LoginPage> {
     // Verificação de email
     String pattern = r'^[^@]+@[^@]+\.[^@]+';
     RegExp regex = RegExp(pattern);
-    if (!regex.hasMatch(serverEmail)) {
+    if (serverEmail.isEmpty) {
+      return true;
+    } else if (!regex.hasMatch(serverEmail)) {
       return false;
     } else
       return true;
@@ -100,9 +101,13 @@ class _LoginPageState extends State<LoginPage> {
     if (validateFields() && validateEmailFields()) {
       // Process form data (e.g., save to database, navigate)
       await _saveFormData();
+      if(serverEmail.isEmpty)
+        serverEmail = "dipc.proece@ufms.br";
       goToOptionsPage();
+      print("*** EMAIL: ${serverEmail} ***");
     } else if (validateFields() && !validateEmailFields()) {
       showEmailErrorMessage();
+      print("*** EMAIL: ${serverEmail} ***");
     } else {
       // Show error message
       showErrorMessage();
