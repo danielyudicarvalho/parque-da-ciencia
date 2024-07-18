@@ -48,13 +48,13 @@ class _QuestionBoxState extends State<QuestionBoxMoreBad> {
         if (option == 'Acho que o parque está um pouco desatualizado e mal conservado') option1 = option;
         if (option == 'Acho que a falta de mais funcionários prejudicou o parque') option2 = option;
         if (option == 'Acho que tem poucas atrações') option3 = option;
-        if (option == 'A falta de estrutura do parque prejudicou a minhas experiência') option4 = option;
+        if (option == 'A falta de estrutura do parque prejudicou a minha experiência') option4 = option;
       } else {
         selectedOptions.remove(option);
         if (option == 'Acho que o parque está um pouco desatualizado e mal conservado') option1 = '';
         if (option == 'Acho que a falta de mais funcionários prejudicou o parque') option2 = '';
         if (option == 'Acho que tem poucas atrações') option3 = '';
-        if (option == 'A falta de estrutura do parque prejudicou a minhas experiência') option4 = '';
+        if (option == 'A falta de estrutura do parque prejudicou a minha experiência') option4 = '';
       }
     });
   }
@@ -90,7 +90,7 @@ class _QuestionBoxState extends State<QuestionBoxMoreBad> {
       content: SingleChildScrollView(
         child: SizedBox(
           width: 800,
-          height: 550,
+          height: 510,
 
           child: Column(
             children: [
@@ -159,12 +159,12 @@ class _QuestionBoxState extends State<QuestionBoxMoreBad> {
                               const SizedBox(height: 10),
                               CheckboxListTile(
                                 title: const Text(
-                                  'A falta de estrutura do parque prejudicou a minhas experiência',
+                                  'A falta de estrutura do parque prejudicou a minha experiência',
                                   style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
                                 ),
-                                value: selectedOptions.contains('A falta de estrutura do parque prejudicou a minhas experiência'),
+                                value: selectedOptions.contains('A falta de estrutura do parque prejudicou a minha experiência'),
                                 onChanged: (value) {
-                                  handleCheckboxChange('A falta de estrutura do parque prejudicou a minhas experiência', value);
+                                  handleCheckboxChange('A falta de estrutura do parque prejudicou a minha experiência', value);
                                 },
                               ),
                             ],

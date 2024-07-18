@@ -13,10 +13,10 @@ class QuestionBoxBad extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<QuestionBoxBad> createState() => _QuestionBoxBadState();
+  State<QuestionBoxBad> createState() => _QuestionBoxState();
 }
 
-class _QuestionBoxBadState extends State<QuestionBoxBad> {
+class _QuestionBoxState extends State<QuestionBoxBad> {
   List<String> selectedOptions = [];
   String option1 = '';
   String option2 = '';
@@ -35,9 +35,28 @@ class _QuestionBoxBadState extends State<QuestionBoxBad> {
         option2,
         option3,
         option4,
-        feedbackText,);
+        feedbackText,
+      );
       Navigator.of(context).pop();
     }
+  }
+
+  void handleCheckboxChange(String option, bool? isChecked) {
+    setState(() {
+      if (isChecked != null && isChecked) {
+        selectedOptions.add(option);
+        if (option == 'Acho que o parque está um pouco desatualizado e mal conservado') option1 = option;
+        if (option == 'Acho que a falta de mais funcionários prejudicou o parque') option2 = option;
+        if (option == 'Acho que tem poucas atrações') option3 = option;
+        if (option == 'A falta de estrutura do parque prejudicou a minha experiência') option4 = option;
+      } else {
+        selectedOptions.remove(option);
+        if (option == 'Acho que o parque está um pouco desatualizado e mal conservado') option1 = '';
+        if (option == 'Acho que a falta de mais funcionários prejudicou o parque') option2 = '';
+        if (option == 'Acho que tem poucas atrações') option3 = '';
+        if (option == 'A falta de estrutura do parque prejudicou a minha experiência') option4 = '';
+      }
+    });
   }
 
   @override
@@ -109,13 +128,7 @@ class _QuestionBoxBadState extends State<QuestionBoxBad> {
                       ),
                       value: selectedOptions.contains('Acho que o parque está um pouco desatualizado e mal conservado'),
                       onChanged: (value) {
-                        setState(() {
-                          if (value != null && value) {
-                            selectedOptions.add('Acho que o parque está um pouco desatualizado e mal conservado');
-                          } else {
-                            selectedOptions.remove('Acho que o parque está um pouco desatualizado e mal conservado');
-                          }
-                        });
+                        handleCheckboxChange('Acho que o parque está um pouco desatualizado e mal conservado', value);
                       },
                     ),
 
@@ -128,13 +141,7 @@ class _QuestionBoxBadState extends State<QuestionBoxBad> {
                       ),
                       value: selectedOptions.contains('Acho que a falta de mais funcionários prejudicou o parque'),
                       onChanged: (value) {
-                        setState(() {
-                          if (value != null && value) {
-                            selectedOptions.add('Acho que a falta de mais funcionários prejudicou o parque');
-                          } else {
-                            selectedOptions.remove('Acho que a falta de mais funcionários prejudicou o parque');
-                          }
-                        });
+                        handleCheckboxChange('Acho que a falta de mais funcionários prejudicou o parque', value);
                       },
                     ),
 
@@ -147,13 +154,7 @@ class _QuestionBoxBadState extends State<QuestionBoxBad> {
                       ),
                       value: selectedOptions.contains('Acho que tem poucas atrações'),
                       onChanged: (value) {
-                        setState(() {
-                          if (value != null && value) {
-                            selectedOptions.add('Acho que tem poucas atrações');
-                          } else {
-                            selectedOptions.remove('Acho que tem poucas atrações');
-                          }
-                        });
+                        handleCheckboxChange('Acho que tem poucas atrações', value);
                       },
                     ),
 
@@ -166,13 +167,7 @@ class _QuestionBoxBadState extends State<QuestionBoxBad> {
                       ),
                       value: selectedOptions.contains('A falta de estrutura do parque prejudicou a minha experiência'),
                       onChanged: (value) {
-                        setState(() {
-                          if (value != null && value) {
-                            selectedOptions.add('A falta de estrutura do parque prejudicou a minha experiência');
-                          } else {
-                            selectedOptions.remove('A falta de estrutura do parque prejudicou a minha experiência');
-                          }
-                        });
+                        handleCheckboxChange('A falta de estrutura do parque prejudicou a minha experiência', value);
                       },
                     ),
                   ],
@@ -181,19 +176,31 @@ class _QuestionBoxBadState extends State<QuestionBoxBad> {
 
               const SizedBox(height: 10),
 
+              // Campo de explicação
+              const SizedBox(height: 10),
               TextField(
                 onChanged: (text) {
                   feedbackText = text;
                 },
                 decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: "Explique a sua escolha para nos ajudar a melhorar...",
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white), // Borda branca
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.white, // Borda branca ao focar
+                    ),
+                  ),
+                  hintText:
+                  "Explique a sua escolha para nos ajudar a melhorar...",
                   hintStyle: TextStyle(color: Colors.white70, fontSize: 25),
                 ),
+                style: TextStyle(color: Colors.white), // Texto branco
               ),
 
               const SizedBox(height: 30),
-              // Botões cancelar e salvar
+
+              // Botoes cancelar e salvar
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -206,12 +213,13 @@ class _QuestionBoxBadState extends State<QuestionBoxBad> {
 
                   MyButton(
                     text: "Salvar",
-                    onPressed: handleSavePressed,
+                    onPressed: isSaveButtonEnabled() ? handleSavePressed : () {},
                   ),
 
                   const SizedBox(width: 130),
                 ],
               ),
+
               const SizedBox(height: 5),
             ],
           ),

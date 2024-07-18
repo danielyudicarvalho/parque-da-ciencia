@@ -47,16 +47,16 @@ class _QuestionBoxState extends State<QuestionBoxMedium> {
     setState(() {
       if (isChecked != null && isChecked) {
         selectedOptions.add(option);
-        if (option == 'Boa variedade, porém falta manutenção') option1 = option;
-        if (option == 'Interessante, mas faltou interatividade e envolvimento') option2 = option;
-        if (option == 'Muito Bom, porém tem poucas atrações') option3 = option;
-        if (option == 'Boas atrações, mas achei um pouco confuso') option4 = option;
+        if (option == 'Boa variedade mas falta manutenção') option1 = option;
+        if (option == 'Interessante mas faltou interatividade e envolvimento') option2 = option;
+        if (option == 'Muito Bom mas tem poucas atrações') option3 = option;
+        if (option == 'Boas atrações mas achei um pouco confuso') option4 = option;
       } else {
         selectedOptions.remove(option);
-        if (option == 'Boa variedade, porém falta manutenção') option1 = '';
-        if (option == 'Interessante, mas faltou interatividade e envolvimento') option2 = '';
-        if (option == 'Muito Bom, porém tem poucas atrações') option3 = '';
-        if (option == 'Boas atrações, mas achei um pouco confuso') option4 = '';
+        if (option == 'Boa variedade mas falta manutenção') option1 = '';
+        if (option == 'Interessante mas faltou interatividade e envolvimento') option2 = '';
+        if (option == 'Muito Bom mas tem poucas atrações') option3 = '';
+        if (option == 'Boas atrações mas achei um pouco confuso') option4 = '';
       }
     });
   }
@@ -124,61 +124,61 @@ class _QuestionBoxState extends State<QuestionBoxMedium> {
                     children: [
                       CheckboxListTile(
                         title: const Text(
-                          'Boa variedade, porém falta manutenção',
+                          'Boa variedade mas falta manutenção',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        value: selectedOptions.contains('Boa variedade, porém falta manutenção'),
+                        value: selectedOptions.contains('Boa variedade mas falta manutenção'),
                         onChanged: (value) {
-                          handleCheckboxChange('Boa variedade, porém falta manutenção', value);
+                          handleCheckboxChange('Boa variedade mas falta manutenção', value);
                         },
                       ),
                       const SizedBox(height: 10),
                       CheckboxListTile(
                         title: const Text(
-                          'Interessante, mas faltou interatividade e envolvimento',
+                          'Interessante mas faltou interatividade e envolvimento',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        value: selectedOptions.contains('Interessante, mas faltou interatividade e envolvimento'),
+                        value: selectedOptions.contains('Interessante mas faltou interatividade e envolvimento'),
                         onChanged: (value) {
-                          handleCheckboxChange('Interessante, mas faltou interatividade e envolvimento', value);
+                          handleCheckboxChange('Interessante mas faltou interatividade e envolvimento', value);
                         },
                       ),
                       const SizedBox(height: 10),
                       CheckboxListTile(
                         title: const Text(
-                          'Muito Bom, porém tem poucas atrações',
+                          'Muito Bom mas tem poucas atrações',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        value: selectedOptions.contains('Muito Bom, porém tem poucas atrações'),
+                        value: selectedOptions.contains('Muito Bom mas tem poucas atrações'),
                         onChanged: (value) {
-                          handleCheckboxChange('Muito Bom, porém tem poucas atrações', value);
+                          handleCheckboxChange('Muito Bom mas tem poucas atrações', value);
                         },
                       ),
                       const SizedBox(height: 10),
                       CheckboxListTile(
                         title: const Text(
-                          'Boas atrações, mas achei um pouco confuso',
+                          'Boas atrações mas achei um pouco confuso',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        value: selectedOptions.contains('Boas atrações, mas achei um pouco confuso'),
+                        value: selectedOptions.contains('Boas atrações mas achei um pouco confuso'),
                         onChanged: (value) {
-                          handleCheckboxChange('Boas atrações, mas achei um pouco confuso', value);
+                          handleCheckboxChange('Boas atrações mas achei um pouco confuso', value);
                         },
                       ),
                     ],

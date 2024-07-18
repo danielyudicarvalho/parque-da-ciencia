@@ -1,16 +1,12 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:pc_app/pages/end_page.dart';
 import 'package:pc_app/pages/login_page.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
-import 'package:pc_app/pages/options_page.dart';
 
 import '../util/my_button.dart';
 import 'confirmation_page.dart';
@@ -38,7 +34,7 @@ class _ReviewPageState extends State<ReviewPage> {
   }
 
   Future<void> sendEmail(List<String> csvPaths, String recipient, String emailBody, String schoolName, String serverName) async {
-    final smtpServer = gmail('dipc.proece@ufms.br', 'xadb txxv ljue dior');
+    final smtpServer = gmail('dipc.proece@ufms.br', 'vpov fewv ytse rzqg');
 
     final message = Message()
       ..from = Address('dipc.proece@ufms.br', 'PC-App')

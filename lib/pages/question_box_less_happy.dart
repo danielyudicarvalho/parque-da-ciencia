@@ -12,10 +12,10 @@ class QuestionBoxLessHappy extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<QuestionBoxLessHappy> createState() => _QuestionBoxLessHappyState();
+  State<QuestionBoxLessHappy> createState() => _QuestionBoxState();
 }
 
-class _QuestionBoxLessHappyState extends State<QuestionBoxLessHappy> {
+class _QuestionBoxState extends State<QuestionBoxLessHappy> {
   List<String> selectedOptions = [];
   String option1 = '';
   String option2 = '';
