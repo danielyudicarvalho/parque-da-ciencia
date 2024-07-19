@@ -80,18 +80,16 @@ class _OptionPageState extends State<OptionPage> {
         ],
       ),
 
-      body: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset("lib/images/logo_parque.png",
-                    width: 280, height: 280),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            children: [
+              Image.asset("lib/images/logo_parque.png",
+                  width: 280, height: 280),
 
-                const Spacer(),
+              const SizedBox(height: 10),
 
-                ElevatedButton(
+              ElevatedButton(
                   style: buttonStyle,
                   onPressed: () {
                     Navigator.push(
@@ -104,11 +102,11 @@ class _OptionPageState extends State<OptionPage> {
                     'Opinião do Aluno',
                     style: TextStyle(color: Colors.white, fontSize: 25),
                   )
-                ),
+              ),
 
-                const Spacer(),
+              const SizedBox(height: 15),
 
-                ElevatedButton(
+              ElevatedButton(
                   style: buttonStyle,
                   onPressed: () {
                     Navigator.push(
@@ -119,11 +117,11 @@ class _OptionPageState extends State<OptionPage> {
                   child: const Text(
                     'Opinião do Responsável pela Escola',
                     style: TextStyle(color: Colors.white, fontSize: 25),
-                  )),
-              const Spacer(),
-              const Spacer(),
-              const Spacer(),
-              const Spacer(),
+                  )
+              ),
+
+              const SizedBox(height: 70),
+
               ElevatedButton(
                   style: buttonStyle,
                   onPressed: () => openReviewPage(),
@@ -131,13 +129,11 @@ class _OptionPageState extends State<OptionPage> {
                     'Enviar Opiniões',
                     style: TextStyle(color: Colors.white, fontSize: 25),
                   )
-                ),
-
-                const Spacer(flex: 2,),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
+      ),
     );
   }
 }
