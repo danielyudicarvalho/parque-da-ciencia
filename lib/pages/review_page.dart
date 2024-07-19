@@ -204,7 +204,7 @@ class _ReviewPageState extends State<ReviewPage> {
       backgroundColor: const Color(0xFF0088B7),
       content: SizedBox(
         width: 800,
-        height: 410,
+        height: 350,
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
