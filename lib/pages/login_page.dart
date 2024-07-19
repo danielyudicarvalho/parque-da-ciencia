@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:pc_app/pages/error_page.dart';
 import 'package:pc_app/pages/options_page.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/sqlite_api.dart';
@@ -106,11 +107,21 @@ class _LoginPageState extends State<LoginPage> {
       goToOptionsPage();
       print("*** EMAIL: ${serverEmail} ***");
     } else if (validateFields() && !validateEmailFields()) {
-      showEmailErrorMessage();
+      showDialog(
+          context: context,
+          builder: (context) {
+            return const ErrorPage(image: 'lib/images/warning.png', frase: 'Email Incorreto!');
+          }
+      );
       print("*** EMAIL: ${serverEmail} ***");
     } else {
       // Show error message
-      showErrorMessage();
+      showDialog(
+          context: context,
+          builder: (context) {
+            return const ErrorPage(image: 'lib/images/warning.png', frase: 'Campos Incorretos!');
+          }
+      );
     }
   }
 
