@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:pc_app/pages/error_page.dart';
 import 'package:pc_app/pages/home_page.dart';
 import 'package:pc_app/pages/review_page.dart';
 import 'package:pc_app/pages/simple_nps_page.dart';
@@ -22,13 +24,25 @@ class _OptionPageState extends State<OptionPage> {
     super.initState();
   }
 
-  void openReviewPage(){
-    showDialog(
-        context: context,
-        builder: (context) {
-          return const ReviewPage();
-        }
-    );
+  void openReviewPage() async {
+    final List<ConnectivityResult> connectivityResult = await (Connectivity().checkConnectivity());
+
+    // Verificando conexão com a internet
+    if(connectivityResult.contains(ConnectivityResult.none)) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return const ErrorPage(image: 'lib/images/no-wifi.png', frase: 'Sem conexão com a internet!');
+          }
+      );
+    } else {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return const ReviewPage();
+          }
+      );
+    }
   }
 
   @override
