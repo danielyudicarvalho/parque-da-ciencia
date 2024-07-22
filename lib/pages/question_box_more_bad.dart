@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../util/my_button.dart';
-import 'confirmation_page.dart';
 
 class QuestionBoxMoreBad extends StatefulWidget {
   final Function(String, String, String, String, String) onSave;

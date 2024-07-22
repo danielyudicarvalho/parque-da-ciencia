@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import '../util/my_button.dart'; // Adjust the import path as per your project structure
-import 'confirmation_page.dart'; // Adjust the import path as per your project structure
+import '../util/my_button.dart';
 
 class QuestionBoxBad extends StatefulWidget {
   final Function(String, String, String, String, String) onSave;

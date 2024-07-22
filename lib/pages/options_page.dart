@@ -3,13 +3,11 @@ import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:pc_app/pages/error_page.dart';
+import 'package:pc_app/pages/generic_pop_up.dart';
 import 'package:pc_app/pages/home_page.dart';
 import 'package:pc_app/pages/review_page.dart';
 import 'package:pc_app/pages/simple_nps_page.dart';
 import 'package:sqflite/sqflite.dart';
-
-import 'confirmation_page.dart'; // Import SimpleNpsPage
 
 class OptionPage extends StatefulWidget {
   const OptionPage({super.key});
@@ -32,7 +30,7 @@ class _OptionPageState extends State<OptionPage> {
       showDialog(
           context: context,
           builder: (context) {
-            return const ErrorPage(image: 'lib/images/no-wifi.png', frase: 'Sem conexão com a internet!');
+            return const GenericPopUp(image: 'lib/images/no-wifi.png', frase: 'Sem conexão com a internet!');
           }
       );
     } else {

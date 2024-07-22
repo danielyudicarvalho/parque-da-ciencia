@@ -80,6 +80,7 @@ flutter:
     - lib/images/icon_logo_pc.png
     - lib/images/no-wifi.png
     - lib/images/warning.png
+    - lib/images/mail_sent.png
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

@@ -9,7 +9,7 @@ import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
 
 import '../util/my_button.dart';
-import 'confirmation_page.dart';
+import 'generic_pop_up.dart';
 
 
 class ReviewPage extends StatefulWidget {
@@ -166,15 +166,6 @@ class _ReviewPageState extends State<ReviewPage> {
     await database.delete(tableName);
   }
 
-  void openConfirmationPage() {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return const ConfirmationPage();
-        }
-    );
-  }
-
   void showErrorMessage(){
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
@@ -299,9 +290,19 @@ class _ReviewPageState extends State<ReviewPage> {
                                       MaterialPageRoute(builder: (
                                           context) => const LoginPage()), (
                                       Route<dynamic> route) => false);
-                                  openConfirmationPage();
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return const GenericPopUp(image: 'lib/images/mail_sent.png', frase: 'Email enviado!');
+                                      }
+                                  );
                                 } else {  // Caso não existam avaliações, mostra uma mensagem de erro
-                                  showErrorMessage();
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return const GenericPopUp(image: 'lib/images/warning.png', frase: 'Nenhuma avaliação!');
+                                      }
+                                  );
                                 }
                               },
                             ),

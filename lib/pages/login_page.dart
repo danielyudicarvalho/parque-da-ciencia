@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:pc_app/pages/error_page.dart';
+import 'package:pc_app/pages/generic_pop_up.dart';
 import 'package:pc_app/pages/options_page.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/sqlite_api.dart';
@@ -81,24 +81,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void showErrorMessage(){
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Preencha todos os campos corretamente'),
-        backgroundColor: Colors.red,
-      ),
-    );
-  }
-
-  void showEmailErrorMessage(){
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Digite um email válido'),
-        backgroundColor: Colors.red,
-      ),
-    );
-  }
-
   // Function to handle form submission
   void submitForm() async {
     if (validateFields() && validateEmailFields()) {
@@ -112,7 +94,7 @@ class _LoginPageState extends State<LoginPage> {
       showDialog(
           context: context,
           builder: (context) {
-            return const ErrorPage(image: 'lib/images/warning.png', frase: 'Email Incorreto!');
+            return const GenericPopUp(image: 'lib/images/warning.png', frase: 'Email Incorreto!');
           }
       );
       print("*** EMAIL: ${serverEmail} ***");
@@ -121,7 +103,7 @@ class _LoginPageState extends State<LoginPage> {
       showDialog(
           context: context,
           builder: (context) {
-            return const ErrorPage(image: 'lib/images/warning.png', frase: 'Campos Incorretos!');
+            return const GenericPopUp(image: 'lib/images/warning.png', frase: 'Campos Incorretos!');
           }
       );
     }
@@ -132,8 +114,7 @@ class _LoginPageState extends State<LoginPage> {
       context: context,
       builder: (BuildContext context) {
         return Center(
-          child: SingleChildScrollView(
-            child: AlertDialog(
+          child: AlertDialog(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
@@ -157,115 +138,116 @@ class _LoginPageState extends State<LoginPage> {
                   textAlign: TextAlign.left,
                 ),
               ),
-              content: Container(
-                decoration: const BoxDecoration(
-                  color: Color(0xFF0088B7),
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(16),
-                    bottomRight: Radius.circular(16),
+              content: SingleChildScrollView(
+                child: Container(
+                  decoration: const BoxDecoration(
+                    color: Color(0xFF0088B7),
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(16),
+                      bottomRight: Radius.circular(16),
+                    ),
                   ),
-                ),
-                padding: const EdgeInsets.all(32),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Desenvolvedores voluntários (Acadêmicos dos cursos da Faculdade de Computação):',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.left,
-                    ),
-
-                    const SizedBox(height: 20),
-
-                    const Text(
-                      'Arthur Henrique - Desenvolvedor Full-Stack 👻',
-                      style: TextStyle(color: Colors.white),
-                      textAlign: TextAlign.left,
-                    ),
-
-                    const SizedBox(height: 5),
-
-                    const Text(
-                      '(arthur.h.a.farias@ufms.br)',
-                      style: TextStyle(color: Colors.white, fontSize: 14),
-                      textAlign: TextAlign.left,
-                    ),
-
-                    const SizedBox(height: 20),
-
-                    const Text(
-                      'Daniel Yudi de Carvalho - Desenvolvedor Back-End',
-                      style: TextStyle(color: Colors.white, fontSize: 14),
-                      textAlign: TextAlign.left,
-                    ),
-
-                    const SizedBox(height: 5),
-
-                    const Text(
-                      '(daniel@ufms.br)',
-                      style: TextStyle(color: Colors.white, fontSize: 14),
-                      textAlign: TextAlign.left,
-                    ),
-
-                    const SizedBox(height: 5),
-                    const SizedBox(height: 20),
-
-                    const Text(
-                      'João Pedro Rodrigues - Desenvolvedor Front-End',
-                      style: TextStyle(color: Colors.white, fontSize: 14),
-                      textAlign: TextAlign.left,
-                    ),
-
-                    const SizedBox(height: 5),
-
-                    const Text(
-                      '(joao_pedro_rodrigues@ufms.br)',
-                      style: TextStyle(color: Colors.white, fontSize: 14),
-                      textAlign: TextAlign.left,
-                    ),
-
-                    const SizedBox(height: 20),
-
-                    const Text(
-                      'Orientação:',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.left,
-                    ),
-
-                    const SizedBox(height: 20),
-
-                    const Text(
-                      'Luciana Montera (Professora da Faculdade de Computação)',
-                      style: TextStyle(color: Colors.white),
-                      textAlign: TextAlign.left,
-                    ),
-                    const SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        TextButton(
-                          child: const Text(
-                            'Fechar',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
+                  padding: const EdgeInsets.all(32),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Desenvolvedores voluntários (Acadêmicos dos cursos da Faculdade de Computação):',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
                         ),
-                      ],
-                    ),
-                  ],
+                        textAlign: TextAlign.left,
+                      ),
+                
+                      const SizedBox(height: 20),
+                
+                      const Text(
+                        'Arthur Henrique - Desenvolvedor Full-Stack 👻',
+                        style: TextStyle(color: Colors.white),
+                        textAlign: TextAlign.left,
+                      ),
+                
+                      const SizedBox(height: 5),
+                
+                      const Text(
+                        '(arthur.h.a.farias@ufms.br)',
+                        style: TextStyle(color: Colors.white, fontSize: 14),
+                        textAlign: TextAlign.left,
+                      ),
+                
+                      const SizedBox(height: 20),
+                
+                      const Text(
+                        'Daniel Yudi de Carvalho - Desenvolvedor Back-End',
+                        style: TextStyle(color: Colors.white, fontSize: 14),
+                        textAlign: TextAlign.left,
+                      ),
+                
+                      const SizedBox(height: 5),
+                
+                      const Text(
+                        '(daniel@ufms.br)',
+                        style: TextStyle(color: Colors.white, fontSize: 14),
+                        textAlign: TextAlign.left,
+                      ),
+                
+                      const SizedBox(height: 5),
+                      const SizedBox(height: 20),
+                
+                      const Text(
+                        'João Pedro Rodrigues - Desenvolvedor Front-End',
+                        style: TextStyle(color: Colors.white, fontSize: 14),
+                        textAlign: TextAlign.left,
+                      ),
+                
+                      const SizedBox(height: 5),
+                
+                      const Text(
+                        '(joao_pedro_rodrigues@ufms.br)',
+                        style: TextStyle(color: Colors.white, fontSize: 14),
+                        textAlign: TextAlign.left,
+                      ),
+                
+                      const SizedBox(height: 20),
+                
+                      const Text(
+                        'Orientação:',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.left,
+                      ),
+                
+                      const SizedBox(height: 20),
+                
+                      const Text(
+                        'Luciana Montera (Professora da Faculdade de Computação)',
+                        style: TextStyle(color: Colors.white),
+                        textAlign: TextAlign.left,
+                      ),
+                      const SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          TextButton(
+                            child: const Text(
+                              'Fechar',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
         );
       },
     );

@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:pc_app/pages/generic_pop_up.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:pc_app/pages/confirmation_page.dart';
 
 class SimpleNpsPage extends StatefulWidget {
   const SimpleNpsPage({super.key});
@@ -37,10 +37,11 @@ class _SimpleNpsPageState extends State<SimpleNpsPage> {
 
   void openConfirmationPage() {
     showDialog(
-        context: context,
-        builder: (context) {
-          return const ConfirmationPage();
-        });
+      context: context,
+      builder: (context) {
+        return const GenericPopUp(image: "lib/images/logo_parque_transp.png", frase: "Obrigado pelo seu feedback!");
+      }
+    );
   }
 
   @override

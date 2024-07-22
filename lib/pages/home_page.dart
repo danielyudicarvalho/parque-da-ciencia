@@ -2,8 +2,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 //import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:pc_app/pages/complex_confirmation_page.dart';
-import 'package:pc_app/pages/confirmation_page.dart';
 import 'package:pc_app/pages/login_page.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:pc_app/pages/question_box.dart';
@@ -12,6 +10,8 @@ import 'package:pc_app/pages/question_box_less_happy.dart';
 import 'package:pc_app/pages/question_box_medium.dart';
 import 'package:pc_app/pages/question_box_bad.dart';
 import 'package:pc_app/pages/question_box_more_bad.dart';
+
+import 'generic_pop_up.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -53,8 +53,8 @@ class _HomePageState extends State<HomePage> {
     showDialog(
       context: context,
       builder: (context) {
-        return const ConfirmationPage();
-      },
+        return const GenericPopUp(image: "lib/images/logo_parque_transp.png", frase: "Obrigado pelo seu feedback!");
+      }
     );
   }
 
