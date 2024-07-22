@@ -4,7 +4,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pc_app/pages/generic_pop_up.dart';
-import 'package:pc_app/pages/home_page.dart';
+import 'package:pc_app/pages/complex_nps_page.dart';
 import 'package:pc_app/pages/review_page.dart';
 import 'package:pc_app/pages/simple_nps_page.dart';
 import 'package:sqflite/sqflite.dart';
@@ -123,7 +123,7 @@ class _OptionPageState extends State<OptionPage> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const HomePage()),
+                      MaterialPageRoute(builder: (context) => const ComplexNpsPage()),
                     );
                   },
                   child: const Text(

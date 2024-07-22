@@ -2,25 +2,22 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 //import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:pc_app/pages/login_page.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:pc_app/pages/question_box.dart';
 import 'package:pc_app/pages/question_box_happy.dart';
 import 'package:pc_app/pages/question_box_less_happy.dart';
 import 'package:pc_app/pages/question_box_medium.dart';
 import 'package:pc_app/pages/question_box_bad.dart';
 import 'package:pc_app/pages/question_box_more_bad.dart';
-
 import 'generic_pop_up.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class ComplexNpsPage extends StatefulWidget {
+  const ComplexNpsPage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<ComplexNpsPage> createState() => _ComplexNpsPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _ComplexNpsPageState extends State<ComplexNpsPage> {
   late Future<Database> _database;
   List<Map<String, dynamic>> _reviews = [];
 

@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:pc_app/pages/home_page.dart';
+import 'package:pc_app/pages/complex_nps_page.dart';
 import 'package:pc_app/pages/login_page.dart';
 import 'package:sqflite/sqflite.dart';
 
