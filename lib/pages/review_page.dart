@@ -254,7 +254,11 @@ class _ReviewPageState extends State<ReviewPage> {
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     final Map<String, dynamic> emailInfo = snapshot.data!;
-                    final String email = emailInfo['server_email'] ?? '';
+                    final String email;
+                    if(emailInfo['server_email'] == '')
+                      email = 'dipc.proece@ufms.br';
+                    else
+                      email = emailInfo['server_email'] ?? '';
                     final totalReviews = snapshot.data!;
 
                     return Column(
