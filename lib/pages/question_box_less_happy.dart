@@ -97,22 +97,22 @@ class _QuestionBoxState extends State<QuestionBoxLessHappy> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(2.0),
                     ),
-                    side: WidgetStateBorderSide.resolveWith(
-                      (states) => const BorderSide(
+                    side: MaterialStateBorderSide.resolveWith(
+                          (states) => const BorderSide(
                         color: Colors.white,
                         width: 2.0,
                       ),
                     ),
-                    checkColor: WidgetStateProperty.all(
+                    checkColor: MaterialStateProperty.all(
                       const Color(0xFF0088B7),
                     ),
-                    fillColor: WidgetStateProperty.resolveWith(
-                      (states) {
-                        if (states.contains(WidgetState.selected)) {
+                    fillColor: MaterialStateProperty.resolveWith(
+                          (states) {
+                        if (states.contains(MaterialState.selected)) {
                           return Colors.white;
                         }
-                          return Colors.transparent;
-                        },
+                        return Colors.transparent;
+                      },
                     ),
                   ),
                 ),
@@ -177,18 +177,15 @@ class _QuestionBoxState extends State<QuestionBoxLessHappy> {
                         handleCheckboxChange('Aprendizagem interessante', value);
                       },
                     ),
-                  ]
+                  ],
                 ),
               ),
-
               const SizedBox(height: 65),
-
-              // Campo de explicaçao
+              // Campo de explicação
               TextField(
                 onChanged: (text) {
                   feedbackText = text;
                 },
-                //controller: controller,
                 decoration: InputDecoration(
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.white), // Borda branca
@@ -197,17 +194,15 @@ class _QuestionBoxState extends State<QuestionBoxLessHappy> {
                     borderSide: BorderSide(
                       color: Colors.white, // Borda branca ao focar
                     ),
-                 ),
+                  ),
                   hintText:
-                    "Explique a sua escolha para nos ajudar a melhorar...",
+                  "Explique a sua escolha para nos ajudar a melhorar...",
                   hintStyle: TextStyle(color: Colors.white70, fontSize: 25),
                 ),
                 style: TextStyle(color: Colors.white),
               ),
-
               const SizedBox(height: 30),
-
-              // Botoes cancelar e salvar
+              // Botões cancelar e salvar
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -215,16 +210,12 @@ class _QuestionBoxState extends State<QuestionBoxLessHappy> {
                     text: "Cancelar",
                     onPressed: widget.onCancel,
                   ),
-
                   const SizedBox(width: 75),
-
                   MyButton(
                     text: "Salvar",
                     onPressed: isSaveButtonEnabled() ? handleSavePressed : () {},
                   ),
-
                   const SizedBox(width: 130),
-
                 ],
               ),
               const SizedBox(height: 5),
