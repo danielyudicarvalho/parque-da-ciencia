@@ -85,12 +85,10 @@ class _QuestionBoxState extends State<QuestionBoxBad> {
           ),
         ),
       ),
-
       content: SingleChildScrollView(
         child: SizedBox(
           width: 800,
           height: 500,
-
           child: Column(
             children: [
               Theme(
@@ -99,18 +97,18 @@ class _QuestionBoxState extends State<QuestionBoxBad> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(2.0),
                     ),
-                    side: WidgetStateBorderSide.resolveWith(
-                      (states) => const BorderSide(
+                    side: MaterialStateBorderSide.resolveWith(
+                          (states) => const BorderSide(
                         color: Colors.white,
                         width: 2.0,
                       ),
                     ),
-                    checkColor: WidgetStateProperty.all(
+                    checkColor: MaterialStateProperty.all(
                       const Color(0xFF0088B7),
                     ),
-                    fillColor: WidgetStateProperty.resolveWith(
-                      (states) {
-                        if (states.contains(WidgetState.selected)) {
+                    fillColor: MaterialStateProperty.resolveWith(
+                          (states) {
+                        if (states.contains(MaterialState.selected)) {
                           return Colors.white;
                         }
                         return Colors.transparent;
@@ -130,9 +128,7 @@ class _QuestionBoxState extends State<QuestionBoxBad> {
                         handleCheckboxChange('Acho que o parque está um pouco desatualizado e mal conservado', value);
                       },
                     ),
-
                     const SizedBox(height: 10),
-
                     CheckboxListTile(
                       title: const Text(
                         'Acho que a falta de mais funcionários prejudicou o parque',
@@ -143,9 +139,7 @@ class _QuestionBoxState extends State<QuestionBoxBad> {
                         handleCheckboxChange('Acho que a falta de mais funcionários prejudicou o parque', value);
                       },
                     ),
-
                     const SizedBox(height: 10),
-
                     CheckboxListTile(
                       title: const Text(
                         'Acho que tem poucas atrações',
@@ -156,9 +150,7 @@ class _QuestionBoxState extends State<QuestionBoxBad> {
                         handleCheckboxChange('Acho que tem poucas atrações', value);
                       },
                     ),
-
                     const SizedBox(height: 10),
-
                     CheckboxListTile(
                       title: const Text(
                         'A falta de estrutura do parque prejudicou a minha experiência',
@@ -172,34 +164,27 @@ class _QuestionBoxState extends State<QuestionBoxBad> {
                   ],
                 ),
               ),
-
               const SizedBox(height: 10),
-
-              // Campo de explicação
               const SizedBox(height: 10),
               TextField(
                 onChanged: (text) {
                   feedbackText = text;
                 },
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white), // Borda branca
+                    borderSide: BorderSide(color: Colors.white),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(
-                      color: Colors.white, // Borda branca ao focar
+                      color: Colors.white,
                     ),
                   ),
-                  hintText:
-                  "Explique a sua escolha para nos ajudar a melhorar...",
+                  hintText: "Explique a sua escolha para nos ajudar a melhorar...",
                   hintStyle: TextStyle(color: Colors.white70, fontSize: 25),
                 ),
-                style: TextStyle(color: Colors.white), // Texto branco
+                style: const TextStyle(color: Colors.white),
               ),
-
               const SizedBox(height: 30),
-
-              // Botoes cancelar e salvar
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -207,18 +192,14 @@ class _QuestionBoxState extends State<QuestionBoxBad> {
                     text: "Cancelar",
                     onPressed: widget.onCancel,
                   ),
-
                   const SizedBox(width: 75),
-
                   MyButton(
                     text: "Salvar",
                     onPressed: isSaveButtonEnabled() ? handleSavePressed : () {},
                   ),
-
                   const SizedBox(width: 130),
                 ],
               ),
-
               const SizedBox(height: 5),
             ],
           ),

@@ -122,6 +122,9 @@ class _ReviewPageState extends State<ReviewPage> {
     buffer.writeln('Nome da escola: ${loginInfo['school_name']}');
     buffer.writeln('Servidor responsável: ${loginInfo['server_name']}');
     buffer.writeln('Número de alunos durante a visita: ${loginInfo['student_count']}');
+    buffer.writeln('Idade Mínima: ${loginInfo['min_age']}');
+    buffer.writeln('Idade Máxima: ${loginInfo['max_age']}');
+    buffer.writeln('Cidade: ${loginInfo['city_district']}');
     buffer.writeln('Data e Hora: ${getFormattedDateTime()}');
     return buffer.toString();
   }

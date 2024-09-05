@@ -21,6 +21,9 @@ class _LoginPageState extends State<LoginPage> {
   String serverEmail = '';
   String studentCount = '';
   String schoolName = '';
+  String minAge = '';
+  String maxAge = '';
+  String cityDistrict = '';  // Cidade/Bairro da escola visitante
   late Future<Database> _database;
 
   @override
@@ -30,7 +33,7 @@ class _LoginPageState extends State<LoginPage> {
     _openDB();
   }
 
-  // Function to open de app database - contains login informations
+  // Function to open the app database - contains login information
   Future<void> _openDB() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = documentsDirectory.path + "/" + "app.db";
@@ -40,26 +43,27 @@ class _LoginPageState extends State<LoginPage> {
 
   // Function to validate form fields
   bool validateFields() {
-    if (serverName.isEmpty || studentCount.isEmpty || schoolName.isEmpty) {
+    if (serverName.isEmpty || studentCount.isEmpty || schoolName.isEmpty || cityDistrict.isEmpty || minAge.isEmpty || maxAge.isEmpty) {
       return false;
     }
     return true;
   }
 
-  // Function to validate form fields
+  // Function to validate email field
   bool validateEmailFields() {
-    // Verificação de email
+    // Email validation
     String pattern = r'^[^@]+@[^@]+\.[^@]+';
     RegExp regex = RegExp(pattern);
     if (serverEmail.isEmpty) {
       return true;
     } else if (!regex.hasMatch(serverEmail)) {
       return false;
-    } else
+    } else {
       return true;
+    }
   }
 
-  // Function to save form informations about server
+  // Function to save form information about server
   Future<void> _saveFormData() async {
     final db = await _database;
     await db.transaction((txn) async {
@@ -69,6 +73,9 @@ class _LoginPageState extends State<LoginPage> {
         'server_email': serverEmail,
         'student_count': studentCount,
         'school_name': schoolName,
+        'min_age': minAge,
+        'max_age': maxAge,
+        'city_district': cityDistrict,  // Save cidade/bairro
       };
       await txn.insert('login_info', data);
     });
@@ -115,139 +122,139 @@ class _LoginPageState extends State<LoginPage> {
       builder: (BuildContext context) {
         return Center(
           child: AlertDialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            titlePadding: EdgeInsets.zero,
+            contentPadding: EdgeInsets.zero,
+            title: Container(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(16),
+                  topRight: Radius.circular(16),
+                ),
               ),
-              titlePadding: EdgeInsets.zero,
-              contentPadding: EdgeInsets.zero,
-              title: Container(
+              padding: const EdgeInsets.all(16.0),
+              child: const Text(
+                '  Sobre esta Aplicação',
+                style: TextStyle(
+                  color: Color(0xFF0088B7),
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.left,
+              ),
+            ),
+            content: SingleChildScrollView(
+              child: Container(
                 decoration: const BoxDecoration(
-                  color: Colors.white,
+                  color: Color(0xFF0088B7),
                   borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(16),
-                    topRight: Radius.circular(16),
+                    bottomLeft: Radius.circular(16),
+                    bottomRight: Radius.circular(16),
                   ),
                 ),
-                padding: const EdgeInsets.all(16.0),
-                child: const Text(
-                  '  Sobre esta Aplicação',
-                  style: TextStyle(
-                    color: Color(0xFF0088B7),
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.left,
-                ),
-              ),
-              content: SingleChildScrollView(
-                child: Container(
-                  decoration: const BoxDecoration(
-                    color: Color(0xFF0088B7),
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(16),
-                      bottomRight: Radius.circular(16),
+                padding: const EdgeInsets.all(32),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Desenvolvedores voluntários (Acadêmicos dos cursos da Faculdade de Computação):',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.left,
                     ),
-                  ),
-                  padding: const EdgeInsets.all(32),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Desenvolvedores voluntários (Acadêmicos dos cursos da Faculdade de Computação):',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.left,
+
+                    const SizedBox(height: 20),
+
+                    const Text(
+                      'Arthur Henrique - Desenvolvedor Full-Stack 👻',
+                      style: TextStyle(color: Colors.white),
+                      textAlign: TextAlign.left,
+                    ),
+
+                    const SizedBox(height: 5),
+
+                    const Text(
+                      '(arthur.h.a.farias@ufms.br)',
+                      style: TextStyle(color: Colors.white, fontSize: 14),
+                      textAlign: TextAlign.left,
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    const Text(
+                      'Daniel Yudi de Carvalho - Desenvolvedor Back-End',
+                      style: TextStyle(color: Colors.white, fontSize: 14),
+                      textAlign: TextAlign.left,
+                    ),
+
+                    const SizedBox(height: 5),
+
+                    const Text(
+                      '(daniel@ufms.br)',
+                      style: TextStyle(color: Colors.white, fontSize: 14),
+                      textAlign: TextAlign.left,
+                    ),
+
+                    const SizedBox(height: 5),
+                    const SizedBox(height: 20),
+
+                    const Text(
+                      'João Pedro Rodrigues - Desenvolvedor Front-End',
+                      style: TextStyle(color: Colors.white, fontSize: 14),
+                      textAlign: TextAlign.left,
+                    ),
+
+                    const SizedBox(height: 5),
+
+                    const Text(
+                      '(joao_pedro_rodrigues@ufms.br)',
+                      style: TextStyle(color: Colors.white, fontSize: 14),
+                      textAlign: TextAlign.left,
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    const Text(
+                      'Orientação:',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
                       ),
-                
-                      const SizedBox(height: 20),
-                
-                      const Text(
-                        'Arthur Henrique - Desenvolvedor Full-Stack 👻',
-                        style: TextStyle(color: Colors.white),
-                        textAlign: TextAlign.left,
-                      ),
-                
-                      const SizedBox(height: 5),
-                
-                      const Text(
-                        '(arthur.h.a.farias@ufms.br)',
-                        style: TextStyle(color: Colors.white, fontSize: 14),
-                        textAlign: TextAlign.left,
-                      ),
-                
-                      const SizedBox(height: 20),
-                
-                      const Text(
-                        'Daniel Yudi de Carvalho - Desenvolvedor Back-End',
-                        style: TextStyle(color: Colors.white, fontSize: 14),
-                        textAlign: TextAlign.left,
-                      ),
-                
-                      const SizedBox(height: 5),
-                
-                      const Text(
-                        '(daniel@ufms.br)',
-                        style: TextStyle(color: Colors.white, fontSize: 14),
-                        textAlign: TextAlign.left,
-                      ),
-                
-                      const SizedBox(height: 5),
-                      const SizedBox(height: 20),
-                
-                      const Text(
-                        'João Pedro Rodrigues - Desenvolvedor Front-End',
-                        style: TextStyle(color: Colors.white, fontSize: 14),
-                        textAlign: TextAlign.left,
-                      ),
-                
-                      const SizedBox(height: 5),
-                
-                      const Text(
-                        '(joao_pedro_rodrigues@ufms.br)',
-                        style: TextStyle(color: Colors.white, fontSize: 14),
-                        textAlign: TextAlign.left,
-                      ),
-                
-                      const SizedBox(height: 20),
-                
-                      const Text(
-                        'Orientação:',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.left,
-                      ),
-                
-                      const SizedBox(height: 20),
-                
-                      const Text(
-                        'Luciana Montera (Professora da Faculdade de Computação)',
-                        style: TextStyle(color: Colors.white),
-                        textAlign: TextAlign.left,
-                      ),
-                      const SizedBox(height: 20),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          TextButton(
-                            child: const Text(
-                              'Fechar',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
+                      textAlign: TextAlign.left,
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    const Text(
+                      'Luciana Montera (Professora da Faculdade de Computação)',
+                      style: TextStyle(color: Colors.white),
+                      textAlign: TextAlign.left,
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        TextButton(
+                          child: const Text(
+                            'Fechar',
+                            style: TextStyle(color: Colors.white),
                           ),
-                        ],
-                      ),
-                    ],
-                  ),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ),
+          ),
         );
       },
     );
@@ -361,6 +368,48 @@ class _LoginPageState extends State<LoginPage> {
                     keyboardType: TextInputType.number,
                     decoration: const InputDecoration(
                       labelText: "Número de Estudantes da Visita",
+                      labelStyle: TextStyle(color: Color(0xFF0088B7)),
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  // Campo para faixa etária dos estudantes
+
+                  TextField(
+                    onChanged: (text) {
+                      minAge = text;
+                    },
+                    decoration: const InputDecoration(
+                      labelText: "Idade Mínima",
+                      labelStyle: TextStyle(color: Color(0xFF0088B7)),
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  TextField(
+                    onChanged: (text) {
+                      maxAge = text;
+                    },
+                    decoration: const InputDecoration(
+                      labelText: "Idade máxima",
+                      labelStyle: TextStyle(color: Color(0xFF0088B7)),
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  // Campo para cidade/bairro da escola visitante
+                  TextField(
+                    onChanged: (text) {
+                      cityDistrict = text;
+                    },
+                    decoration: const InputDecoration(
+                      labelText: "Cidade/Bairro da Escola Visitante",
                       labelStyle: TextStyle(color: Color(0xFF0088B7)),
                       border: OutlineInputBorder(),
                     ),

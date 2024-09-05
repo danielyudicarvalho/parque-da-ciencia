@@ -85,7 +85,6 @@ class _QuestionBoxState extends State<QuestionBoxHappy> {
           ),
         ),
       ),
-
       content: SingleChildScrollView(
         child: SizedBox(
           width: 800,
@@ -94,24 +93,24 @@ class _QuestionBoxState extends State<QuestionBoxHappy> {
             children: [
               Theme(
                 data: ThemeData(
-                checkboxTheme: CheckboxThemeData(
-                  shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(2.0),
-                  ),
-                  side: WidgetStateBorderSide.resolveWith(
-                    (states) => const BorderSide(
-                      color: Colors.white,
-                      width: 2.0,
+                  checkboxTheme: CheckboxThemeData(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(2.0),
                     ),
-                  ),
-                  checkColor: WidgetStateProperty.all(
-                    const Color(0xFF0088B7),
-                  ),
-                  fillColor: WidgetStateProperty.resolveWith(
-                    (states) {
-                      if (states.contains(MaterialState.selected)) {
-                        return Colors.white;
-                      }
+                    side: MaterialStateBorderSide.resolveWith(
+                          (states) => const BorderSide(
+                        color: Colors.white,
+                        width: 2.0,
+                      ),
+                    ),
+                    checkColor: MaterialStateProperty.all(
+                      const Color(0xFF0088B7),
+                    ),
+                    fillColor: MaterialStateProperty.resolveWith(
+                          (states) {
+                        if (states.contains(MaterialState.selected)) {
+                          return Colors.white;
+                        }
                         return Colors.transparent;
                       },
                     ),
@@ -181,7 +180,7 @@ class _QuestionBoxState extends State<QuestionBoxHappy> {
                   ],
                 ),
               ),
-              const SizedBox(height: 65), // Aumentei o espaçamento aqui
+              const SizedBox(height: 65),
               // Campo de explicação
               TextField(
                 onChanged: (text) {
@@ -203,9 +202,7 @@ class _QuestionBoxState extends State<QuestionBoxHappy> {
                     text: "Cancelar",
                     onPressed: widget.onCancel,
                   ),
-
                   const SizedBox(width: 75),
-
                   MyButton(
                     text: "Salvar",
                     onPressed: isSaveButtonEnabled() ? handleSavePressed : () {},
