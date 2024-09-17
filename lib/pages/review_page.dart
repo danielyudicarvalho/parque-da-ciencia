@@ -1,16 +1,15 @@
 import 'dart:io';
-
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:pc_app/pages/login_page.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
 
 import '../util/my_button.dart';
 import 'generic_pop_up.dart';
-
+import 'login_page.dart';
 
 class ReviewPage extends StatefulWidget {
   const ReviewPage({Key? key}) : super(key: key);
@@ -28,170 +27,241 @@ class _ReviewPageState extends State<ReviewPage> {
   @override
   void initState() {
     super.initState();
-    _totalReviewsFuture = _getTotalReviews('reports');
-    _totalMonitorReportsFuture = _getTotalReviews('monitor_reports');
+    _totalReviewsFuture = _getTotalCount('reports');
+    _totalMonitorReportsFuture = _getTotalCount('monitor_reports');
     _emailsFuture = _getEmails();
   }
 
   Future<void> sendEmail(List<String> csvPaths, String recipient, String emailBody, String schoolName, String serverName) async {
     final smtpServer = gmail('dipc.proece@ufms.br', 'vpov fewv ytse rzqg');
 
-    final message = Message()
-      ..from = Address('dipc.proece@ufms.br', 'PC-App')
-      ..recipients.add(recipient)
-      ..subject = 'Resultado $schoolName - $serverName'
-      ..text = emailBody
-      ..attachments.addAll(csvPaths.map((path) => FileAttachment(File(path))));
-
     try {
+      for (var path in csvPaths) {
+        if (!await File(path).exists()) {
+          print('File does not exist at path: $path');
+          throw 'File does not exist at path: $path';
+        }
+      }
+
+      // Validate recipient, email body, and attachments
+      if (recipient.isEmpty || emailBody.isEmpty || csvPaths.isEmpty) {
+        throw 'Invalid email parameters: recipient, body, or attachments are missing.';
+      }
+
+      final message = Message()
+        ..from = Address('dipc.proece@ufms.br', 'PC-App')
+        ..recipients.add(recipient)
+        ..subject = 'Resultado $schoolName - $serverName'
+        ..text = emailBody
+        ..attachments.addAll(csvPaths.map((path) {
+          print('Attaching file: $path');
+          return FileAttachment(File(path));
+        }));
+
+      print('Sending email to: $recipient with subject: Resultado $schoolName - $serverName');
       await send(message, smtpServer);
-      print('Email sent');
+      print('Email sent successfully.');
     } catch (e) {
       print('Error sending email: $e');
     }
   }
 
-  Future<Database> _openDatabase() async {
-    Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = documentsDirectory.path + "/" + "reports.db";
+
+  Future<Database> _openDatabase(String dbName) async {
+    final path = (await getApplicationDocumentsDirectory()).path + "/$dbName.db";
     return await openDatabase(path, version: 1);
   }
 
-  Future<int> _getTotalReviews(String tableName) async {
-    final database = await _openDatabase();
-    final count = Sqflite.firstIntValue(
-      await database.rawQuery('SELECT COUNT(*) FROM $tableName'),
-    );
-    print('Count for $tableName: $count');
-    return count ?? 0;
+  Future<int> _getTotalCount(String tableName) async {
+    final database = await _openDatabase("reports");
+    return Sqflite.firstIntValue(await database.rawQuery('SELECT COUNT(*) FROM $tableName')) ?? 0;
   }
 
   Future<Map<String, dynamic>> _getEmails() async {
-    final Database database = await _openEmailsDatabase();
+    final database = await _openDatabase("app");
     final List<Map<String, dynamic>> maps = await database.query(
       'login_info',
       orderBy: 'id DESC',
       limit: 1,
     );
-    return maps.isNotEmpty ? maps.first : {};
+
+    if (maps.isEmpty) {
+      print('No emails found in the database.');
+      return {};
+    } else {
+      print('Retrieved email information: ${maps.first}');
+      return maps.first;
+    }
   }
 
-  Future<Database> _openEmailsDatabase() async {
-    Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = documentsDirectory.path + "/app.db";
-    return await openDatabase(path, version: 1);
-  }
 
-  Future<List<Map<String, dynamic>>> _getReviews(String tableName) async {
-    final database = await _openDatabase();
+  Future<List<Map<String, dynamic>>> _getData(String tableName) async {
+    final database = await _openDatabase("reports");
     return await database.query(tableName);
   }
+ // Add this import for email validation
 
   Future<void> _submitForm(List<String> emails, List<Map<String, dynamic>> reviews, List<Map<String, dynamic>> monitorReports, Map<String, dynamic> loginInfo) async {
-    final csvContentReviews = _generateCSV(reviews, loginInfo, 'reports');
-    final csvContentMonitorReports = _generateCSV(monitorReports, loginInfo, 'monitor_reports');
+    if (reviews.isEmpty && monitorReports.isEmpty) {
+      _showErrorMessage();
+      return;
+    }
+
+    final csvPaths = await Future.wait([
+      _saveCSV(_generateCSV(reviews, loginInfo), 'aval_alunos_${loginInfo['school_name']}.csv'),
+      _saveCSV(_generateCSV(monitorReports, loginInfo), 'aval_responsaveis_${loginInfo['school_name']}.csv'),
+    ]);
 
     final emailBody = _generateEmailBody(loginInfo);
 
-    final schoolName = loginInfo['school_name'];
-    final serverName = loginInfo['server_name'];
-
-    final csvPathReviews = await _saveCSV(csvContentReviews, 'aval_alunos_${schoolName}.csv');
-    final csvPathMonitorReports = await _saveCSV(csvContentMonitorReports, 'aval_responsaveis_${schoolName}.csv');
-
     for (var email in emails) {
-      try {
-        await sendEmail([csvPathReviews, csvPathMonitorReports], email, emailBody, schoolName, serverName);
-      } catch (e) {
-        print('Error sending email: $e');
+      if (email.isNotEmpty && EmailValidator.validate(email)) {
+        try {
+          print('Attempting to send email to: $email');
+          await sendEmail(csvPaths, email, emailBody, loginInfo['school_name'], loginInfo['server_name']);
+        } catch (e) {
+          print('Error sending email to $email: $e');
+        }
+      } else {
+        print('Invalid email address: $email. Skipping...');
       }
     }
 
-    await _deleteReviews('reports');
-    await _deleteReviews('monitor_reports');
+    await _clearTable('reports');
+    await _clearTable('monitor_reports');
   }
 
+
+  String _generateEmailBody(Map<String, dynamic> loginInfo) {
+    final dateTime = DateFormat('yyyy-MM-dd HH:mm').format(DateTime.now());
+    final emailBody = '''
+  Nome da escola: ${loginInfo['school_name']}
+  Servidor responsável: ${loginInfo['server_name']}
+  Número de alunos durante a visita: ${loginInfo['student_count']}
+  Idade Mínima: ${loginInfo['min_age']}
+  Idade Máxima: ${loginInfo['max_age']}
+  Cidade: ${loginInfo['city_district']}
+  Data e Hora: $dateTime
+  ''';
+
+    print('Generated Email Body: $emailBody');
+    return emailBody;
+  }
+
+
+  // Helper method to get formatted date and time
   String getFormattedDateTime() {
     DateTime now = DateTime.now();
     DateFormat formatter = DateFormat('yyyy-MM-dd HH:mm');
     return formatter.format(now);
   }
 
-  String _generateEmailBody(Map<String, dynamic> loginInfo) {
-    final StringBuffer buffer = StringBuffer();
-    buffer.writeln('Nome da escola: ${loginInfo['school_name']}');
-    buffer.writeln('Servidor responsável: ${loginInfo['server_name']}');
-    buffer.writeln('Número de alunos durante a visita: ${loginInfo['student_count']}');
-    buffer.writeln('Idade Mínima: ${loginInfo['min_age']}');
-    buffer.writeln('Idade Máxima: ${loginInfo['max_age']}');
-    buffer.writeln('Cidade: ${loginInfo['city_district']}');
-    buffer.writeln('Data e Hora: ${getFormattedDateTime()}');
-    return buffer.toString();
-  }
 
-  String _generateCSV(List<Map<String, dynamic>> data, Map<String, dynamic> loginInfo, String tableName) {
+// Generate CSV with the updated structure
+  String _generateCSV(List<Map<String, dynamic>> data, Map<String, dynamic> loginInfo) {
     final csvBuffer = StringBuffer();
-    if (tableName == 'reports') {
-      csvBuffer.write('Nome da escola: ${loginInfo['school_name']}\n');
-      csvBuffer.write('Servidor responsável: ${loginInfo['server_name']}\n');
-      csvBuffer.write('Número de alunos durante a visita: ${loginInfo['student_count']}\n');
-      csvBuffer.write('Data e Hora: ${getFormattedDateTime()}\n');
-      csvBuffer.write('Avaliação\n');
-    } else {
-      csvBuffer.write('Nome da escola: ${loginInfo['school_name']}\n');
-      csvBuffer.write('Servidor responsável: ${loginInfo['server_name']}\n');
-      csvBuffer.write('Número de alunos durante a visita: ${loginInfo['student_count']}\n');
-      csvBuffer.write('Data e Hora: ${getFormattedDateTime()}\n');
-      csvBuffer.write('Avaliação, Feedback, Opção 1 , Opção 2, Opção 3, Opção 4 \n');
-    }
 
+    // Write the header with additional fields
+    csvBuffer.writeln(
+        'School_Name, Server_Responsible, Student_Count, Visit_DateTime, '
+            'Rating, Feedback, Option_1, Option_2, Option_3, Option_4, '
+            'Min_Age, Max_Age, City_District'
+    );
+
+    // Write the rows with additional fields
     for (var row in data) {
-      if (tableName == 'reports') {
-        csvBuffer.write('${row['rating']}\n');
-      } else {
-        csvBuffer.write('${row['rating']},${row['feedback']},${row['option1']},${row['option2']},${row['option3']},${row['option4']}\n');
-      }
+      csvBuffer.writeln(
+          '${loginInfo['school_name']},'
+              '${loginInfo['server_name']},'
+              '${loginInfo['student_count']},'
+              '${getFormattedDateTime()},'
+              '${row['rating']},'
+              '${row['feedback']},'
+              '${row['option1']},'
+              '${row['option2']},'
+              '${row['option3']},'
+              '${row['option4']},'
+              '${loginInfo['min_age']},'
+              '${loginInfo['max_age']},'
+              '${loginInfo['city_district']}'
+      );
     }
 
     return csvBuffer.toString();
   }
 
+  String _generateServerCSV(List<Map<String, dynamic>> data, Map<String, dynamic> loginInfo) {
+    final csvBuffer = StringBuffer();
+
+    // Write the header with additional fields
+    csvBuffer.writeln(
+        'School_Name, Server_Responsible, Student_Count, Visit_DateTime, '
+            'Server_Rating, Feedback, Option_1, Option_2, Option_3, Option_4, '
+            'Min_Age, Max_Age, City_District'
+    );
+
+    // Write the rows with additional fields
+    for (var row in data) {
+      csvBuffer.writeln(
+          '${loginInfo['school_name']},'
+              '${loginInfo['server_name']},'
+              '${loginInfo['student_count']},'
+              '${getFormattedDateTime()},'
+              '${row['rating']},'
+              '${row['feedback']},'
+              '${row['option1']},'
+              '${row['option2']},'
+              '${row['option3']},'
+              '${row['option4']},'
+              '${loginInfo['min_age']},'
+              '${loginInfo['max_age']},'
+              '${loginInfo['city_district']}'
+      );
+    }
+
+    return csvBuffer.toString();
+  }
+
+
   Future<String> _saveCSV(String csvContent, String fileName) async {
-    final Directory directory = await getApplicationDocumentsDirectory();
-    final String filePath = '${directory.path}/$fileName';
-    final File file = File(filePath);
+    final filePath = '${(await getApplicationDocumentsDirectory()).path}/$fileName';
+    final file = File(filePath);
+
+    // Debugging the CSV content and file path
+    print('Saving CSV to path: $filePath');
+    print('CSV Content: $csvContent');
+
     await file.writeAsString(csvContent);
+    print('CSV saved successfully at: $filePath');
+
     return filePath;
   }
 
-  Future<void> _deleteReviews(String tableName) async {
-    final database = await _openDatabase();
+
+  Future<void> _clearTable(String tableName) async {
+    final database = await _openDatabase("reports");
     await database.delete(tableName);
+    print('Cleared table: $tableName');
   }
 
-  void showErrorMessage(){
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Não é possível enviar sem avaliações!'),
-        backgroundColor: Colors.red,
-      ),
+
+  void _showErrorMessage() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return const GenericPopUp(image: 'lib/images/warning.png', frase: 'Nenhuma avaliação!');
+        }
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    final ButtonStyle buttonStyle = ElevatedButton.styleFrom(
+    final buttonStyle = ElevatedButton.styleFrom(
       backgroundColor: Colors.white,
       minimumSize: const Size(360, 60),
       padding: const EdgeInsets.symmetric(vertical: 10),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
-      textStyle: const TextStyle(
-        fontSize: 18,
-        fontWeight: FontWeight.bold,
-        color: Colors.white,
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
     );
 
     return AlertDialog(
@@ -204,26 +274,23 @@ class _ReviewPageState extends State<ReviewPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(height: 25,),
+              const SizedBox(height: 25),
 
               FutureBuilder<int>(
                 future: _totalReviewsFuture,
                 builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    final totalReviews = snapshot.data!;
-                    return Center(
-                      child: Text('Total de Avaliações de Alunos: $totalReviews',
-                        style: const TextStyle(
-                          fontSize: 30,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    );
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
                   } else if (snapshot.hasError) {
                     return Center(child: Text('Error: ${snapshot.error}'));
+                  } else {
+                    return Center(
+                      child: Text(
+                        'Total de Avaliações de Alunos: ${snapshot.data}',
+                        style: const TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold),
+                      ),
+                    );
                   }
-                  return const Center(child: CircularProgressIndicator());
                 },
               ),
 
@@ -232,124 +299,74 @@ class _ReviewPageState extends State<ReviewPage> {
               FutureBuilder<int>(
                 future: _totalMonitorReportsFuture,
                 builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    final totalMonitorReports = snapshot.data!;
-                    return Center(
-                      child: Text('Total de Avaliações de Responsáveis pela Escola: $totalMonitorReports',
-                        style: const TextStyle(
-                          fontSize: 30,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    );
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
                   } else if (snapshot.hasError) {
                     return Center(child: Text('Error: ${snapshot.error}'));
+                  } else {
+                    return Center(
+                      child: Text(
+                        'Total de Avaliações de Responsáveis pela Escola: ${snapshot.data}',
+                        style: const TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold),
+                      ),
+                    );
                   }
-                  return const Center(child: CircularProgressIndicator());
+                },
+              ),
+
+              const SizedBox(height: 35),
+
+              ElevatedButton(
+                style: buttonStyle,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: const [
+                    Icon(Icons.email_rounded, color: Colors.black, size: 50),
+                    SizedBox(width: 10),
+                    Text('Enviar Avaliações', style: TextStyle(fontSize: 24, color: Colors.black)),
+                  ],
+                ),
+                onPressed: () async {
+                  final reviews = await _getData('reports');
+                  final monitorReports = await _getData('monitor_reports');
+                  final emails = await _getEmails();
+
+                  if (reviews.isEmpty && monitorReports.isEmpty) {
+                    _showErrorMessage();
+                    return;
+                  }
+
+                  await _submitForm(emails.values.map((e) => e.toString()).toList(), reviews, monitorReports, emails);
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (
+                          context) => const LoginPage()), (
+                      Route<dynamic> route) => false
+                  );
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return const GenericPopUp(image: 'lib/images/mail_sent.png', frase: 'Email enviado!');
+                      }
+                  );
                 },
               ),
 
               const SizedBox(height: 20),
 
-              FutureBuilder<Map<String, dynamic>>(
-                future: _emailsFuture,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    final Map<String, dynamic> emailInfo = snapshot.data!;
-                    final String email = emailInfo['server_email'] ?? '';
-                    final totalReviews = snapshot.data!;
-
-                    return Column(
-                      children: [
-                        ListTile(
-                          title: Text('E-mail para envio: $email',
-                            style: const TextStyle(
-                              fontSize: 30,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 25),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            MyButton(
-                              text: "Enviar",
-                              onPressed: () async {
-                                // Variáveis para contagem de avaliações
-                                final reviews = await _totalReviewsFuture;
-                                final monit_reviews = await _totalMonitorReportsFuture;
-
-                                if ((reviews > 0) || (monit_reviews > 0)) { // Verifica se há avaliações tanto dos alunos quanto dos monitores
-                                  final reviews = await _getReviews('reports');
-                                  final monitorReports = await _getReviews(
-                                      'monitor_reports');
-                                  _submitForm([email], reviews, monitorReports,
-                                      emailInfo);
-                                  Navigator.of(context).pop();
-                                  Navigator.of(context).pushAndRemoveUntil(
-                                      MaterialPageRoute(builder: (
-                                          context) => const LoginPage()), (
-                                      Route<dynamic> route) => false);
-                                  showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return const GenericPopUp(image: 'lib/images/mail_sent.png', frase: 'Email enviado!');
-                                      }
-                                  );
-                                } else {  // Caso não existam avaliações, mostra uma mensagem de erro
-                                  showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return const GenericPopUp(image: 'lib/images/warning.png', frase: 'Nenhuma avaliação!');
-                                      }
-                                  );
-                                }
-                              },
-                            ),
-
-                            const SizedBox(width: 75),
-
-                            MyButton(
-                              text: "Cancelar",
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                            ),
-
-                            const SizedBox(width: 130),
-                          ],
-                        ),
-                        const SizedBox(height: 25,)
-                        // ElevatedButton(
-                        //   style: buttonStyle,
-                        //   onPressed: () async {
-                        //     final reviews = await _getReviews('reports');
-                        //     final monitorReports = await _getReviews('monitor_reports');
-                        //     _submitForm([email], reviews, monitorReports, emailInfo);
-                        //     Navigator.of(context).pop();
-                        //     Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const LoginPage()), (Route<dynamic> route) => false);
-                        //     openConfirmationPage();
-                        //   },
-                        //   child: const Text('SIM'),
-                        // ),
-                        // const SizedBox(height: 25),
-                        // ElevatedButton(
-                        //   style: buttonStyle,
-                        //   onPressed: () {
-                        //     Navigator.push(context, MaterialPageRoute(builder: (context) => OptionPage()));
-                        //   },
-                        //   child: const Text('NÃO'),
-                        // ),
-                      ],
-                    );
-                  } else if (snapshot.hasError) {
-                    return Center(child: Text('Error: ${snapshot.error}'));
-                  }
-                  return const Center(child: CircularProgressIndicator());
+              ElevatedButton(
+                style: buttonStyle,
+                onPressed: () {
+                  Navigator.pop(context);
                 },
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: const [
+                    Icon(Icons.arrow_back, color: Colors.black, size: 50),
+                    SizedBox(width: 10),
+                    Text('Voltar para o Início', style: TextStyle(fontSize: 24, color: Colors.black)),
+                  ],
+                ),
               ),
             ],
           ),
