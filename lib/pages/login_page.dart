@@ -23,7 +23,8 @@ class _LoginPageState extends State<LoginPage> {
   String schoolName = '';
   String minAge = '';
   String maxAge = '';
-  String cityDistrict = '';  // Cidade/Bairro da escola visitante
+  String city = '';
+  String district = '';// Cidade/Bairro da escola visitante
   late Future<Database> _database;
 
   @override
@@ -43,7 +44,7 @@ class _LoginPageState extends State<LoginPage> {
 
   // Function to validate form fields
   bool validateFields() {
-    if (serverName.isEmpty || studentCount.isEmpty || schoolName.isEmpty || cityDistrict.isEmpty || minAge.isEmpty || maxAge.isEmpty) {
+    if (serverName.isEmpty || studentCount.isEmpty || schoolName.isEmpty || city.isEmpty || minAge.isEmpty || maxAge.isEmpty || district.isEmpty) {
       return false;
     }
     return true;
@@ -75,7 +76,8 @@ class _LoginPageState extends State<LoginPage> {
         'school_name': schoolName,
         'min_age': minAge,
         'max_age': maxAge,
-        'city_district': cityDistrict,  // Save cidade/bairro
+        'city': city,
+        'district':  district// Save cidade/bairro
       };
       await txn.insert('login_info', data);
     });
@@ -235,6 +237,30 @@ class _LoginPageState extends State<LoginPage> {
                       style: TextStyle(color: Colors.white),
                       textAlign: TextAlign.left,
                     ),
+
+                    const SizedBox(height: 30),
+                      // Adicionando a imagem da Fundect
+                    Center(
+                      child: Image.asset(
+                        'lib/images/logo_fundect.png',
+                        width: 150,
+                        height: 100,
+                      ),
+                    ),
+
+                    const SizedBox(height: 20),
+                    // Adicionando a frase de agradecimento
+                    Center(
+                      child: const Text(
+                        'A equipe agradece à Fundect pelo apoio',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
                     const SizedBox(height: 20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -381,6 +407,7 @@ class _LoginPageState extends State<LoginPage> {
                     onChanged: (text) {
                       minAge = text;
                     },
+                    keyboardType: TextInputType.number,
                     decoration: const InputDecoration(
                       labelText: "Idade Mínima",
                       labelStyle: TextStyle(color: Color(0xFF0088B7)),
@@ -394,6 +421,7 @@ class _LoginPageState extends State<LoginPage> {
                     onChanged: (text) {
                       maxAge = text;
                     },
+                    keyboardType: TextInputType.number,
                     decoration: const InputDecoration(
                       labelText: "Idade máxima",
                       labelStyle: TextStyle(color: Color(0xFF0088B7)),
@@ -406,10 +434,23 @@ class _LoginPageState extends State<LoginPage> {
                   // Campo para cidade/bairro da escola visitante
                   TextField(
                     onChanged: (text) {
-                      cityDistrict = text;
+                      city = text;
                     },
                     decoration: const InputDecoration(
-                      labelText: "Cidade/Bairro da Escola Visitante",
+                      labelText: "Cidade da escola visitante",
+                      labelStyle: TextStyle(color: Color(0xFF0088B7)),
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  TextField(
+                    onChanged: (text) {
+                      district = text;
+                    },
+                    decoration: const InputDecoration(
+                      labelText: "Bairro da escola visitante",
                       labelStyle: TextStyle(color: Color(0xFF0088B7)),
                       border: OutlineInputBorder(),
                     ),

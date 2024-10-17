@@ -47,7 +47,8 @@ void main() async {
           school_name TEXT,
           min_age TEXT,
           max_age TEXT,
-          city_district TEXT
+          city TEXT,
+          district TEXT
         )
       ''');
     },

@@ -140,7 +140,8 @@ class _ReviewPageState extends State<ReviewPage> {
   Número de alunos durante a visita: ${loginInfo['student_count']}
   Idade Mínima: ${loginInfo['min_age']}
   Idade Máxima: ${loginInfo['max_age']}
-  Cidade: ${loginInfo['city_district']}
+  Cidade: ${loginInfo['city']}
+  Bairro: ${loginInfo['district']}
   Data e Hora: $dateTime
   ''';
 
@@ -165,7 +166,7 @@ class _ReviewPageState extends State<ReviewPage> {
     csvBuffer.writeln(
         'School_Name, Server_Responsible, Student_Count, Visit_DateTime, '
             'Rating, Feedback, Option_1, Option_2, Option_3, Option_4, '
-            'Min_Age, Max_Age, City_District'
+            'Min_Age, Max_Age, City, District'
     );
 
     // Write the rows with additional fields
@@ -183,7 +184,8 @@ class _ReviewPageState extends State<ReviewPage> {
               '${row['option4']},'
               '${loginInfo['min_age']},'
               '${loginInfo['max_age']},'
-              '${loginInfo['city_district']}'
+              '${loginInfo['city']}'
+              '${loginInfo['district']}'
       );
     }
 
@@ -197,7 +199,7 @@ class _ReviewPageState extends State<ReviewPage> {
     csvBuffer.writeln(
         'School_Name, Server_Responsible, Student_Count, Visit_DateTime, '
             'Server_Rating, Feedback, Option_1, Option_2, Option_3, Option_4, '
-            'Min_Age, Max_Age, City_District'
+            'Min_Age, Max_Age, City, District'
     );
 
     // Write the rows with additional fields
@@ -215,7 +217,8 @@ class _ReviewPageState extends State<ReviewPage> {
               '${row['option4']},'
               '${loginInfo['min_age']},'
               '${loginInfo['max_age']},'
-              '${loginInfo['city_district']}'
+              '${loginInfo['city']}'
+              '${loginInfo['district']}'
       );
     }
 
