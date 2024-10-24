@@ -131,7 +131,7 @@ class _LoginPageState extends State<LoginPage> {
             contentPadding: EdgeInsets.zero,
             title: Container(
               decoration: const BoxDecoration(
-                color: Colors.white,
+                color: Color(0xFF0088B7),
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(16),
                   topRight: Radius.circular(16),
@@ -141,7 +141,7 @@ class _LoginPageState extends State<LoginPage> {
               child: const Text(
                 '  Sobre esta Aplicação',
                 style: TextStyle(
-                  color: Color(0xFF0088B7),
+                  color: Colors.white,
                   fontWeight: FontWeight.bold,
                 ),
                 textAlign: TextAlign.left,
@@ -150,7 +150,7 @@ class _LoginPageState extends State<LoginPage> {
             content: SingleChildScrollView(
               child: Container(
                 decoration: const BoxDecoration(
-                  color: Color(0xFF0088B7),
+                  color: Colors.white,
                   borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(16),
                     bottomRight: Radius.circular(16),
@@ -164,7 +164,7 @@ class _LoginPageState extends State<LoginPage> {
                     const Text(
                       'Desenvolvedores voluntários (Acadêmicos dos cursos da Faculdade de Computação):',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: Color(0xFF0088B7),
                         fontWeight: FontWeight.bold,
                       ),
                       textAlign: TextAlign.left,
@@ -173,8 +173,8 @@ class _LoginPageState extends State<LoginPage> {
                     const SizedBox(height: 20),
 
                     const Text(
-                      'Arthur Henrique - Desenvolvedor Full-Stack 👻',
-                      style: TextStyle(color: Colors.white),
+                      'Arthur Henrique - Desenvolvedor Full-Stack',
+                      style: TextStyle(color: Color(0xFF0088B7)),
                       textAlign: TextAlign.left,
                     ),
 
@@ -182,7 +182,7 @@ class _LoginPageState extends State<LoginPage> {
 
                     const Text(
                       '(arthur.h.a.farias@ufms.br)',
-                      style: TextStyle(color: Colors.white, fontSize: 14),
+                      style: TextStyle(color: Color(0xFF0088B7), fontSize: 14),
                       textAlign: TextAlign.left,
                     ),
 
@@ -190,7 +190,7 @@ class _LoginPageState extends State<LoginPage> {
 
                     const Text(
                       'Daniel Yudi de Carvalho - Desenvolvedor Back-End',
-                      style: TextStyle(color: Colors.white, fontSize: 14),
+                      style: TextStyle(color: Color(0xFF0088B7), fontSize: 14),
                       textAlign: TextAlign.left,
                     ),
 
@@ -198,7 +198,7 @@ class _LoginPageState extends State<LoginPage> {
 
                     const Text(
                       '(daniel@ufms.br)',
-                      style: TextStyle(color: Colors.white, fontSize: 14),
+                      style: TextStyle(color: Color(0xFF0088B7), fontSize: 14),
                       textAlign: TextAlign.left,
                     ),
 
@@ -207,7 +207,7 @@ class _LoginPageState extends State<LoginPage> {
 
                     const Text(
                       'João Pedro Rodrigues - Desenvolvedor Front-End',
-                      style: TextStyle(color: Colors.white, fontSize: 14),
+                      style: TextStyle(color: Color(0xFF0088B7), fontSize: 14),
                       textAlign: TextAlign.left,
                     ),
 
@@ -215,7 +215,7 @@ class _LoginPageState extends State<LoginPage> {
 
                     const Text(
                       '(joao_pedro_rodrigues@ufms.br)',
-                      style: TextStyle(color: Colors.white, fontSize: 14),
+                      style: TextStyle(color: Color(0xFF0088B7), fontSize: 14),
                       textAlign: TextAlign.left,
                     ),
 
@@ -224,7 +224,7 @@ class _LoginPageState extends State<LoginPage> {
                     const Text(
                       'Orientação:',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: Color(0xFF0088B7),
                         fontWeight: FontWeight.bold,
                       ),
                       textAlign: TextAlign.left,
@@ -234,27 +234,27 @@ class _LoginPageState extends State<LoginPage> {
 
                     const Text(
                       'Luciana Montera (Professora da Faculdade de Computação)',
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: Color(0xFF0088B7)),
                       textAlign: TextAlign.left,
                     ),
 
-                    const SizedBox(height: 30),
+                    const SizedBox(height: 4),
                       // Adicionando a imagem da Fundect
                     Center(
                       child: Image.asset(
                         'lib/images/logo_fundect.png',
-                        width: 150,
-                        height: 100,
+                        width: 300,
+                        height: 250,
                       ),
                     ),
 
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 8),
                     // Adicionando a frase de agradecimento
                     Center(
                       child: const Text(
                         'A equipe agradece à Fundect pelo apoio',
                         style: TextStyle(
-                          color: Colors.white,
+                          color: Color(0xFF0088B7),
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
@@ -268,7 +268,7 @@ class _LoginPageState extends State<LoginPage> {
                         TextButton(
                           child: const Text(
                             'Fechar',
-                            style: TextStyle(color: Colors.white),
+                            style: TextStyle(color: Color(0xFF0088B7)),
                           ),
                           onPressed: () {
                             Navigator.of(context).pop();
