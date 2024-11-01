@@ -1,3 +1,4 @@
+import 'dart:convert'; // Import to use jsonDecode
 import 'dart:io';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
@@ -43,7 +44,6 @@ class _ReviewPageState extends State<ReviewPage> {
         }
       }
 
-      // Validate recipient, email body, and attachments
       if (recipient.isEmpty || emailBody.isEmpty || csvPaths.isEmpty) {
         throw 'Invalid email parameters: recipient, body, or attachments are missing.';
       }
@@ -66,10 +66,31 @@ class _ReviewPageState extends State<ReviewPage> {
     }
   }
 
-
   Future<Database> _openDatabase(String dbName) async {
-    final path = (await getApplicationDocumentsDirectory()).path + "/$dbName.db";
-    return await openDatabase(path, version: 1);
+    final directory = await getApplicationDocumentsDirectory();
+    final path = directory.path + "/$dbName.db";
+
+    return openDatabase(
+      path,
+      version: 1,
+      onOpen: (db) {
+        print('Database opened at $path');
+      },
+      onCreate: (Database db, int version) async {
+        await db.execute('''
+          CREATE TABLE login_info (
+            id INTEGER PRIMARY KEY,
+            server_name TEXT,
+            server_email TEXT,
+            student_count TEXT,
+            school_name TEXT,
+            age_ranges TEXT,
+            city TEXT,
+            district TEXT
+          )
+        ''');
+      },
+    );
   }
 
   Future<int> _getTotalCount(String tableName) async {
@@ -90,16 +111,19 @@ class _ReviewPageState extends State<ReviewPage> {
       return {};
     } else {
       print('Retrieved email information: ${maps.first}');
-      return maps.first;
+      Map<String, dynamic> loginInfo = Map<String, dynamic>.from(maps.first);
+
+      if (loginInfo.containsKey('age_ranges')) {
+        loginInfo['age_ranges'] = jsonDecode(loginInfo['age_ranges']);
+      }
+      return loginInfo;
     }
   }
-
 
   Future<List<Map<String, dynamic>>> _getData(String tableName) async {
     final database = await _openDatabase("reports");
     return await database.query(tableName);
   }
- // Add this import for email validation
 
   Future<void> _submitForm(List<String> emails, List<Map<String, dynamic>> reviews, List<Map<String, dynamic>> monitorReports, Map<String, dynamic> loginInfo) async {
     if (reviews.isEmpty && monitorReports.isEmpty) {
@@ -131,15 +155,14 @@ class _ReviewPageState extends State<ReviewPage> {
     await _clearTable('monitor_reports');
   }
 
-
   String _generateEmailBody(Map<String, dynamic> loginInfo) {
     final dateTime = DateFormat('yyyy-MM-dd HH:mm').format(DateTime.now());
+    final ageRanges = (loginInfo['age_ranges'] as List<dynamic>).join(", ");
     final emailBody = '''
   Nome da escola: ${loginInfo['school_name']}
   Servidor responsável: ${loginInfo['server_name']}
   Número de alunos durante a visita: ${loginInfo['student_count']}
-  Idade Mínima: ${loginInfo['min_age']}
-  Idade Máxima: ${loginInfo['max_age']}
+  Faixa etária selecionada: $ageRanges
   Cidade: ${loginInfo['city']}
   Bairro: ${loginInfo['district']}
   Data e Hora: $dateTime
@@ -148,89 +171,53 @@ class _ReviewPageState extends State<ReviewPage> {
     print('Generated Email Body: $emailBody');
     return emailBody;
   }
+      
 
 
-  // Helper method to get formatted date and time
-  String getFormattedDateTime() {
-    DateTime now = DateTime.now();
-    DateFormat formatter = DateFormat('yyyy-MM-dd HH:mm');
-    return formatter.format(now);
-  }
-
-
-// Generate CSV with the updated structure
   String _generateCSV(List<Map<String, dynamic>> data, Map<String, dynamic> loginInfo) {
-    final csvBuffer = StringBuffer();
+  final csvBuffer = StringBuffer();
 
-    // Write the header with additional fields
-    csvBuffer.writeln(
-        'School_Name, Server_Responsible, Student_Count, Visit_DateTime, '
-            'Rating, Feedback, Option_1, Option_2, Option_3, Option_4, '
-            'Min_Age, Max_Age, City, District'
+  // Write the header including each age range as a separate column
+  csvBuffer.write('School_Name,Server_Responsible,Student_Count,Visit_DateTime,Rating,Feedback,Option_1,Option_2,Option_3,Option_4,');
+  final ageRanges = loginInfo['age_ranges'] as List<dynamic>;
+  // Adding age range columns
+  for (var ageRange in ageRanges) {
+    csvBuffer.write('$ageRange,');
+  }
+  csvBuffer.writeln('City,District');
+
+  // Write the rows including the boolean values for each age range
+  for (var row in data) {
+    csvBuffer.write(
+        '${loginInfo['school_name']},'
+        '${loginInfo['server_name']},'
+        '${loginInfo['student_count']},'
+        '${getFormattedDateTime()},'
+        '${row['rating'] ?? ''},'
+        '${row['feedback'] ?? ''},'
+        '${row['option1'] ?? ''},'
+        '${row['option2'] ?? ''},'
+        '${row['option3'] ?? ''},'
+        '${row['option4'] ?? ''},'
     );
 
-    // Write the rows with additional fields
-    for (var row in data) {
-      csvBuffer.writeln(
-          '${loginInfo['school_name']},'
-              '${loginInfo['server_name']},'
-              '${loginInfo['student_count']},'
-              '${getFormattedDateTime()},'
-              '${row['rating']},'
-              '${row['feedback']},'
-              '${row['option1']},'
-              '${row['option2']},'
-              '${row['option3']},'
-              '${row['option4']},'
-              '${loginInfo['min_age']},'
-              '${loginInfo['max_age']},'
-              '${loginInfo['city']}'
-              '${loginInfo['district']}'
-      );
+    // Adding the age range columns
+    List<String> selectedAgeRanges = List<String>.from(loginInfo['age_ranges']);
+    for (var ageRange in ageRanges) {
+      csvBuffer.write('${selectedAgeRanges.contains(ageRange) ? 'true' : 'false'},');
     }
 
-    return csvBuffer.toString();
+    csvBuffer.writeln('${loginInfo['city']},${loginInfo['district']}');
   }
 
-  String _generateServerCSV(List<Map<String, dynamic>> data, Map<String, dynamic> loginInfo) {
-    final csvBuffer = StringBuffer();
-
-    // Write the header with additional fields
-    csvBuffer.writeln(
-        'School_Name, Server_Responsible, Student_Count, Visit_DateTime, '
-            'Server_Rating, Feedback, Option_1, Option_2, Option_3, Option_4, '
-            'Min_Age, Max_Age, City, District'
-    );
-
-    // Write the rows with additional fields
-    for (var row in data) {
-      csvBuffer.writeln(
-          '${loginInfo['school_name']},'
-              '${loginInfo['server_name']},'
-              '${loginInfo['student_count']},'
-              '${getFormattedDateTime()},'
-              '${row['rating']},'
-              '${row['feedback']},'
-              '${row['option1']},'
-              '${row['option2']},'
-              '${row['option3']},'
-              '${row['option4']},'
-              '${loginInfo['min_age']},'
-              '${loginInfo['max_age']},'
-              '${loginInfo['city']}'
-              '${loginInfo['district']}'
-      );
-    }
-
-    return csvBuffer.toString();
-  }
+  return csvBuffer.toString();
+}
 
 
   Future<String> _saveCSV(String csvContent, String fileName) async {
     final filePath = '${(await getApplicationDocumentsDirectory()).path}/$fileName';
     final file = File(filePath);
 
-    // Debugging the CSV content and file path
     print('Saving CSV to path: $filePath');
     print('CSV Content: $csvContent');
 
@@ -240,21 +227,29 @@ class _ReviewPageState extends State<ReviewPage> {
     return filePath;
   }
 
-
   Future<void> _clearTable(String tableName) async {
     final database = await _openDatabase("reports");
-    await database.delete(tableName);
-    print('Cleared table: $tableName');
+    try {
+      await database.delete(tableName);
+      print('Cleared table: $tableName');
+    } catch (e) {
+      print('Error clearing table: $e');
+    }
   }
-
 
   void _showErrorMessage() {
     showDialog(
-        context: context,
-        builder: (context) {
-          return const GenericPopUp(image: 'lib/images/warning.png', frase: 'Nenhuma avaliação!');
-        }
+      context: context,
+      builder: (context) {
+        return const GenericPopUp(image: 'lib/images/warning.png', frase: 'Nenhuma avaliação!');
+      }
     );
+  }
+
+  String getFormattedDateTime() {
+    DateTime now = DateTime.now();
+    DateFormat formatter = DateFormat('yyyy-MM-dd HH:mm');
+    return formatter.format(now);
   }
 
   @override
@@ -342,15 +337,14 @@ class _ReviewPageState extends State<ReviewPage> {
                   await _submitForm(emails.values.map((e) => e.toString()).toList(), reviews, monitorReports, emails);
                   Navigator.of(context).pop();
                   Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (
-                          context) => const LoginPage()), (
-                      Route<dynamic> route) => false
+                    MaterialPageRoute(builder: (context) => const LoginPage()), 
+                    (Route<dynamic> route) => false
                   );
                   showDialog(
-                      context: context,
-                      builder: (context) {
-                        return const GenericPopUp(image: 'lib/images/mail_sent.png', frase: 'Email enviado!');
-                      }
+                    context: context,
+                    builder: (context) {
+                      return const GenericPopUp(image: 'lib/images/mail_sent.png', frase: 'Email enviado!');
+                    }
                   );
                 },
               ),

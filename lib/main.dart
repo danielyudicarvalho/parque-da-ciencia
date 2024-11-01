@@ -36,7 +36,7 @@ void main() async {
   // Initialize the app database for storing login information
   final appDatabase = openDatabase(
     path,
-    version: 1,
+    version: 2, // Increment version to indicate changes in schema
     onCreate: (Database db, int version) async {
       await db.execute('''
         CREATE TABLE login_info (
@@ -45,12 +45,27 @@ void main() async {
           server_email TEXT,
           student_count TEXT,
           school_name TEXT,
-          min_age TEXT,
-          max_age TEXT,
+          age_ranges TEXT, 
           city TEXT,
           district TEXT
         )
       ''');
+    },
+    onUpgrade: (Database db, int oldVersion, int newVersion) async {
+      if (oldVersion < 2) {
+        await db.execute('''
+          ALTER TABLE login_info
+          DROP COLUMN min_age
+        ''');
+        await db.execute('''
+          ALTER TABLE login_info
+          DROP COLUMN max_age
+        ''');
+        await db.execute('''
+          ALTER TABLE login_info
+          ADD COLUMN age_ranges TEXT
+        ''');
+      }
     },
   );
 
