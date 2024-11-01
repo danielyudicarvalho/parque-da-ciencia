@@ -289,20 +289,36 @@ Future<void> _saveFormData() async {
                   const SizedBox(height: 10),
 
                   // Age range selection
+                  // Age range selection with label
                   Column(
-                    children: List.generate(ageRanges.length, (index) {
-                      return CheckboxListTile(
-                        title: Text(ageRanges[index]),
-                        value: selectedAgeRanges[index],
-                        onChanged: (bool? value) {
-                          setState(() {
-                            selectedAgeRanges[index] = value!;
-                          });
-                        },
-                        activeColor: const Color(0xFF0088B7),
-                      );
-                    }),
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Faixa Etária', // This is the field name label for the age range options
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF0088B7),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Column(
+                        children: List.generate(ageRanges.length, (index) {
+                          return CheckboxListTile(
+                            title: Text(ageRanges[index]),
+                            value: selectedAgeRanges[index],
+                            onChanged: (bool? value) {
+                              setState(() {
+                                selectedAgeRanges[index] = value!;
+                              });
+                            },
+                            activeColor: const Color(0xFF0088B7),
+                          );
+                        }),
+                      ),
+                    ],
                   ),
+
                   const SizedBox(height: 25),
 
                   // Start button
