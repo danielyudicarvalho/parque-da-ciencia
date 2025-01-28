@@ -71,7 +71,7 @@ class _LoginPageState extends State<LoginPage> {
     String pattern = r'^[^@]+@[^@]+\.[^@]+';
     RegExp regex = RegExp(pattern);
     if (serverEmail.isEmpty) {
-      return true;
+      return false;
     } else if (!regex.hasMatch(serverEmail)) {
       return false;
     } else {
@@ -126,7 +126,7 @@ Future<void> _saveFormData() async {
     if (validateFields() && validateEmailFields()) {
       // Process form data (e.g., save to database, navigate)
       await _saveFormData();
-      if (serverEmail.isEmpty) serverEmail = "dipc.proece@ufms.br";
+      if (serverEmail.isEmpty) serverEmail = "";
       goToOptionsPage();
       print("*** EMAIL: $serverEmail ***");
     } else if (validateFields() && !validateEmailFields()) {
@@ -148,9 +148,9 @@ Future<void> _saveFormData() async {
     }
   }
 
-  // Initialize the TextEditingController with pre-filled email
-  final TextEditingController _emailController =
-  TextEditingController(text: 'dipc.proece@ufms.br');
+  // Initialize the TextEditingController with pre-filled email - não funciona, tem que digitar o email
+  // final TextEditingController _emailController =
+  // TextEditingController(text: 'sepoc.proece@ufms.br');
 
   @override
   Widget build(BuildContext context) {
@@ -217,7 +217,7 @@ Future<void> _saveFormData() async {
 
                   // Server email field
                   TextFormField(
-                    controller: _emailController,
+                    // controller: _emailController,
                     onChanged: (text) {
                       serverEmail = text;
                     },
@@ -226,6 +226,7 @@ Future<void> _saveFormData() async {
                       labelText: "Email do Servidor Responsável",
                       labelStyle: TextStyle(color: Color(0xFF0088B7)),
                       border: OutlineInputBorder(),
+                      hintText: "sepoc.proece@ufms.br"
                     ),
                   ),
 

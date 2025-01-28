@@ -7,8 +7,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
-
-import '../util/my_button.dart';
 import 'generic_pop_up.dart';
 import 'login_page.dart';
 
@@ -34,7 +32,7 @@ class _ReviewPageState extends State<ReviewPage> {
   }
 
   Future<void> sendEmail(List<String> csvPaths, String recipient, String emailBody, String schoolName, String serverName) async {
-    final smtpServer = gmail('dipc.proece@ufms.br', 'vpov fewv ytse rzqg');
+    final smtpServer = gmail('sepoc.proece@ufms.br', 'jsyb cqnf ybtr wztm');
 
     try {
       for (var path in csvPaths) {
@@ -49,7 +47,7 @@ class _ReviewPageState extends State<ReviewPage> {
       }
 
       final message = Message()
-        ..from = Address('dipc.proece@ufms.br', 'PC-App')
+        ..from = Address('sepoc.proece@ufms.br', 'PC-App')
         ..recipients.add(recipient)
         ..subject = 'Resultado $schoolName - $serverName'
         ..text = emailBody
