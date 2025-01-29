@@ -207,9 +207,10 @@ Future<void> _saveFormData() async {
                       serverName = text;
                     },
                     decoration: const InputDecoration(
-                      labelText: "Nome do Servidor Responsável",
+                      labelText: "Nome do Servidor Responsável / E-mail do Servidor Responsável (opcional)",
                       labelStyle: TextStyle(color: Color(0xFF0088B7)),
                       border: OutlineInputBorder(),
+                      hintText: "João / joao@gmail.com"
                     ),
                   ),
 
@@ -223,7 +224,7 @@ Future<void> _saveFormData() async {
                     },
                     keyboardType: TextInputType.emailAddress,
                     decoration: const InputDecoration(
-                      labelText: "Email do Servidor Responsável",
+                      labelText: "E-mail para Envio das Avaliações",
                       labelStyle: TextStyle(color: Color(0xFF0088B7)),
                       border: OutlineInputBorder(),
                       hintText: "sepoc.proece@ufms.br"
