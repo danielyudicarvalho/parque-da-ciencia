@@ -51,7 +51,7 @@ dev_dependencies:
 
 flutter_launcher_icons:
   android: "launcher_icon"
-  image_path: "lib/images/icon_logo_pc.png"
+  image_path: "lib/images/logo_parque_nova.png"
   min_sdk_android: 21
 
   # The "flutter_lints" package below contains a set of recommended lints to
@@ -73,6 +73,8 @@ flutter:
     - lib/images/meio_infeliz.png
     - lib/images/infeliz.png
     - lib/images/logo_parque.png
+    - lib/images/logo_parque_nova.png
+    - lib/images/logo_parque_nova_2.png
     - lib/images/capi_movimento.gif
     - lib/images/balao_mov.gif
     - lib/images/logo_vem_p_ufms.png

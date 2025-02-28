@@ -96,8 +96,10 @@ class _OptionPageState extends State<OptionPage> {
         child: Center(
           child: Column(
             children: [
-              Image.asset("lib/images/logo_parque.png",
-                  width: 280, height: 280),
+              Image.asset("lib/images/logo_parque_nova_2.png",
+                  width: 400,
+                  height: 200
+              ),
 
               const SizedBox(height: 10),
 

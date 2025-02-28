@@ -196,9 +196,9 @@ Future<void> _saveFormData() async {
                 children: [
                   // Logo image
                   Image.asset(
-                    "lib/images/logo_parque.png",
-                    width: 265,
-                    height: 265,
+                    "lib/images/logo_parque_nova_2.png",
+                    width: 400,
+                    height: 200,
                   ),
 
                   // Server name field
