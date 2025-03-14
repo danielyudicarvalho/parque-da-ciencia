@@ -50,7 +50,7 @@ class _ComplexNpsPageState extends State<ComplexNpsPage> {
     showDialog(
       context: context,
       builder: (context) {
-        return const GenericPopUp(image: "lib/images/logo_parque_transp.png", frase: "Obrigado pelo seu feedback!");
+        return const GenericPopUp(image: "lib/images/logo_parque_nova_2.png", frase: "Obrigado pelo seu feedback!");
       }
     );
   }
@@ -244,7 +244,7 @@ class _ComplexNpsPageState extends State<ComplexNpsPage> {
             top: 490, // ajuste a posição vertical conforme necessário
             right: 16, // ajuste a posição horizontal conforme necessário
             child: Image.asset(
-              'lib/images/logo_parque.png',
+              "lib/images/logo_parque_nova_2.png",
               width: 230, // ajuste o tamanho da imagem conforme necessário
               height: 230,
             ),

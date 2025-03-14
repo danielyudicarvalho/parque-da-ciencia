@@ -312,6 +312,26 @@ class _ReviewPageState extends State<ReviewPage> {
 
               const SizedBox(height: 35),
 
+              FutureBuilder<Map<String, dynamic>>(
+                future: _emailsFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else {
+                    return Center(
+                      child: Text(
+                        '(CONFIRMAR) Email: ${snapshot.data?['server_email']}',
+                        style: const TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold),
+                      ),
+                    );
+                  }
+                },
+              ),
+
+              const SizedBox(height: 35),
+
               ElevatedButton(
                 style: buttonStyle,
                 child: Row(
@@ -323,27 +343,79 @@ class _ReviewPageState extends State<ReviewPage> {
                   ],
                 ),
                 onPressed: () async {
-                  final reviews = await _getData('reports');
-                  final monitorReports = await _getData('monitor_reports');
-                  final emails = await _getEmails();
-
-                  if (reviews.isEmpty && monitorReports.isEmpty) {
-                    _showErrorMessage();
-                    return;
-                  }
-
-                  await _submitForm(emails.values.map((e) => e.toString()).toList(), reviews, monitorReports, emails);
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(builder: (context) => const LoginPage()), 
-                    (Route<dynamic> route) => false
-                  );
                   showDialog(
                     context: context,
+                    barrierDismissible: false, // Impede o usuário de fechar manualmente
                     builder: (context) {
-                      return const GenericPopUp(image: 'lib/images/mail_sent.png', frase: 'Email enviado!');
-                    }
+                      return const AlertDialog(
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            CircularProgressIndicator(),
+                            SizedBox(height: 10),
+                            Text("Enviando emails..."),
+                          ],
+                        ),
+                      );
+                    },
                   );
+
+                  try {
+                    final reviews = await _getData('reports');
+                    final monitorReports = await _getData('monitor_reports');
+                    final emails = await _getEmails();
+
+                    // Fechar o loading antes de mostrar erro
+                    if (reviews.isEmpty && monitorReports.isEmpty) {
+                      Navigator.of(context).pop(); // Fecha o loading
+                      _showErrorMessage(); // Mostra pop-up de erro
+                      return;
+                    }
+
+                    await _submitForm(emails.values.map((e) => e.toString()).toList(), reviews, monitorReports, emails);
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (context) => const LoginPage()),
+                      (Route<dynamic> route) => false
+                    );
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return const GenericPopUp(image: 'lib/images/mail_sent.png', frase: 'Email enviado!');
+                      }
+                    );
+
+                    // Espera um curto tempo para o usuário ver o sucesso antes de sair
+                    await Future.delayed(Duration(seconds: 2));
+
+                    // Navega para a tela de login
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (context) => const LoginPage()),
+                          (Route<dynamic> route) => false,
+                    );
+                  } catch (error) {
+                    // Fechar o loading em caso de erro
+                    Navigator.of(context).pop();
+
+                    // Exibir pop-up de erro
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Text("Erro"),
+                          content: Text("Falha ao enviar os emails. Tente novamente."),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop(); // Fechar o pop-up de erro
+                              },
+                              child: Text("OK"),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
                 },
               ),
 

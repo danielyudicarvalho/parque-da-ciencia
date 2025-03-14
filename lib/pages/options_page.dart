@@ -30,10 +30,10 @@ class _OptionPageState extends State<OptionPage> {
       showDialog(
           context: context,
           builder: (context) {
-            return const GenericPopUp(image: 'lib/images/no-wifi.png', frase: 'Sem conexão com a internet!');
+            return GenericPopUp(image: 'lib/images/no-wifi.png', frase: 'Sem conexão com a internet!');
           }
       );
-    } else {
+    } else if(connectivityResult.contains(ConnectivityResult.wifi) || connectivityResult.contains(ConnectivityResult.ethernet) || connectivityResult.contains(ConnectivityResult.mobile)) {
       showDialog(
           context: context,
           builder: (context) {

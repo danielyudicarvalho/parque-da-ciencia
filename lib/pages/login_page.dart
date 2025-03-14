@@ -1,6 +1,5 @@
 import 'dart:convert'; // Import to use jsonEncode
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
@@ -8,6 +7,7 @@ import 'package:pc_app/pages/generic_pop_up.dart';
 import 'package:pc_app/pages/options_page.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/sqlite_api.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -17,6 +17,21 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  void verifyConnection() async {
+    final List<ConnectivityResult> connectivityResult = await(Connectivity().checkConnectivity());
+
+    if(connectivityResult.contains(ConnectivityResult.none)){
+      showDialog(
+          context: context,
+          builder: (context) {
+            return GenericPopUp(image: 'lib/images/no-wifi.png', frase: 'Sem conexão com a internet!');
+          }
+      );
+    }else if(connectivityResult.contains(ConnectivityResult.wifi) || connectivityResult.contains(ConnectivityResult.ethernet) || connectivityResult.contains(ConnectivityResult.mobile)) {
+      goToOptionsPage();
+    }
+  }
+
   // Define fields based on requirements
   String serverName = '';
   String serverEmail = '';
@@ -127,7 +142,7 @@ Future<void> _saveFormData() async {
       // Process form data (e.g., save to database, navigate)
       await _saveFormData();
       if (serverEmail.isEmpty) serverEmail = "";
-      goToOptionsPage();
+      verifyConnection();
       print("*** EMAIL: $serverEmail ***");
     } else if (validateFields() && !validateEmailFields()) {
       showDialog(
